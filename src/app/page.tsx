@@ -12,7 +12,6 @@ import {
 import {
   Sheet,
   SheetContent,
-  SheetTrigger,
 } from "@/components/ui/sheet";
 import {
   Music,
@@ -38,15 +37,16 @@ import {
   Clock,
   Zap,
   Globe,
-  Handshake,
   Send,
   MapPin,
   Mail,
   MessageSquare,
-  UserPlus,
-  Upload,
-  Settings,
   Rocket,
+  ArrowUp,
+  Search,
+  ShieldCheck,
+  AudioLines,
+  CalendarClock,
 } from "lucide-react";
 
 /* ─── Animated Counter Hook ─── */
@@ -99,15 +99,44 @@ function AnimatedStat({ target, suffix, prefix, label, icon }: {
   );
 }
 
+/* ─── Music Note Particles ─── */
+function MusicParticles() {
+  const notes = ["♪", "♫", "♬", "♩", "♪", "♫"];
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-[2]">
+      {notes.map((note, i) => (
+        <span
+          key={i}
+          className="absolute text-teal-400/15 text-lg select-none"
+          style={{
+            left: `${12 + i * 15}%`,
+            top: `${20 + (i % 3) * 25}%`,
+            animation: `music-float ${6 + i * 0.8}s ease-in-out ${i * 1.2}s infinite`,
+          }}
+        >
+          {note}
+        </span>
+      ))}
+    </div>
+  );
+}
+
 /* ─── Navbar ─── */
 function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const [mobileOpen, setMobileOpen] = useState(false);
+
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      setScrollProgress(totalHeight > 0 ? (window.scrollY / totalHeight) * 100 : 0);
+    };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
   const navLinks = [
     { label: "About", href: "#about" },
     { label: "Benefits", href: "#benefits" },
@@ -116,11 +145,16 @@ function Navbar() {
     { label: "RBTs", href: "#rbts" },
     { label: "Contact", href: "#contact" },
   ];
+
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${scrolled ? "navbar-scrolled py-3" : "bg-transparent py-5 sm:py-6"}`}>
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "navbar-scrolled py-3" : "bg-transparent py-5 sm:py-6"}`}>
+      {/* Scroll progress indicator */}
+      <div className="absolute top-0 left-0 right-0 z-10">
+        <div className="scroll-progress" style={{ width: `${scrollProgress}%` }} />
+      </div>
       <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 flex items-center justify-between">
         <a href="#" className="flex items-center group shrink-0">
-          <img src="/logo.png" alt="TunePoa" className="h-7 sm:h-9 lg:h-10 w-auto max-w-[120px] sm:max-w-none object-contain group-hover:scale-105 transition-transform duration-500" />
+          <img src="/logo.png" alt="TunePoa" className="h-7 sm:h-9 lg:h-10 w-auto max-w-[120px] sm:max-w-none object-contain group-hover:scale-105 transition-transform duration-300" />
         </a>
         <div className="hidden lg:flex items-center gap-10">
           {navLinks.map((link) => (
@@ -128,11 +162,14 @@ function Navbar() {
               {link.label}
             </a>
           ))}
-          <Button asChild className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-white font-semibold px-7 rounded-full shadow-lg shadow-teal-500/25 hover:shadow-teal-500/50 transition-all duration-500 hover:scale-105">
+          <Button asChild variant="ghost" className="text-white/50 hover:text-white hover:bg-white/5 font-medium px-5 rounded-full border border-white/10 hover:border-white/20 transition-all duration-300 text-sm">
+            <a href="#contact">Request Demo</a>
+          </Button>
+          <Button asChild className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-white font-semibold px-7 rounded-full shadow-lg shadow-teal-500/25 hover:shadow-teal-500/50 transition-all duration-300 hover:scale-105">
             <a href="#contact">Get Started</a>
           </Button>
         </div>
-        {/* Mobile: Toggle menu only */}
+        {/* Mobile: Toggle menu */}
         <button className="lg:hidden text-white/70 hover:text-white p-2 -mr-2 rounded-xl hover:bg-white/5 transition-all duration-300" aria-label="Toggle menu" onClick={() => setMobileOpen(true)}>
           <Menu className="w-6 h-6" />
         </button>
@@ -142,11 +179,19 @@ function Navbar() {
               <img src="/logo.png" alt="TunePoa" className="h-7 w-auto max-w-[100px] object-contain" />
             </div>
             <div className="flex flex-col gap-1">
-              {navLinks.map((link) => (
-                <a key={link.label} href={link.href} onClick={() => setMobileOpen(false)} className="text-white/50 hover:text-teal-300 hover:bg-white/5 transition-all duration-300 text-[15px] font-medium py-3 px-4 rounded-xl">
+              {navLinks.map((link, i) => (
+                <a key={link.label} href={link.href} onClick={() => setMobileOpen(false)} className="mobile-menu-link text-white/50 hover:text-teal-300 hover:bg-white/5 transition-all duration-300 text-[15px] font-medium py-3 px-4 rounded-xl" style={{ animationDelay: `${i * 0.06}s` }}>
                   {link.label}
                 </a>
               ))}
+              <div className="mt-4 flex flex-col gap-3">
+                <Button asChild variant="ghost" className="text-white/50 hover:text-white hover:bg-white/5 font-medium rounded-full border border-white/10 hover:border-white/20 transition-all duration-300 text-sm justify-start">
+                  <a href="#contact">Request Demo</a>
+                </Button>
+                <Button asChild className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-white font-semibold px-7 rounded-full shadow-lg shadow-teal-500/20 transition-all duration-300">
+                  <a href="#contact">Get Started</a>
+                </Button>
+              </div>
             </div>
           </SheetContent>
         </Sheet>
@@ -157,15 +202,44 @@ function Navbar() {
 
 /* ─── Hero Section ─── */
 function HeroSection() {
+  const [typedText, setTypedText] = useState("");
+  const fullText = "call-waiting";
+  const [showCursor, setShowCursor] = useState(true);
+
+  useEffect(() => {
+    let i = 0;
+    const interval = setInterval(() => {
+      if (i <= fullText.length) {
+        setTypedText(fullText.slice(0, i));
+        i++;
+      } else {
+        clearInterval(interval);
+      }
+    }, 80);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const cursorInterval = setInterval(() => setShowCursor((v) => !v), 530);
+    return () => clearInterval(cursorInterval);
+  }, []);
+
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden">
+    <section className="relative min-h-screen flex items-center overflow-hidden grain-overlay">
       <div className="absolute inset-0 bg-[#050c18]" />
+      {/* Aurora / mesh gradient background */}
+      <div className="absolute inset-0 opacity-40">
+        <div className="absolute top-[5%] right-[5%] w-[700px] h-[700px] bg-teal-500/10 rounded-full blur-[150px] animate-aurora" />
+        <div className="absolute bottom-[10%] left-[0%] w-[600px] h-[600px] bg-cyan-500/8 rounded-full blur-[130px] animate-aurora" style={{ animationDelay: "4s" }} />
+        <div className="absolute top-[40%] left-[30%] w-[400px] h-[400px] bg-emerald-500/6 rounded-full blur-[100px] animate-aurora" style={{ animationDelay: "8s" }} />
+      </div>
       <div className="absolute inset-0 bg-gradient-to-br from-teal-950/70 via-[#081525] to-cyan-950/50" />
-      <div className="absolute inset-0 opacity-[0.025]" style={{ backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
-      <div className="absolute top-[8%] right-[8%] w-[600px] h-[600px] bg-teal-500/[0.06] rounded-full blur-[120px] animate-float" />
-      <div className="absolute bottom-[5%] left-[3%] w-[500px] h-[500px] bg-cyan-500/[0.05] rounded-full blur-[100px] animate-float" style={{ animationDelay: "3s" }} />
+      <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
+      <div className="absolute top-[8%] right-[8%] w-[600px] h-[600px] bg-teal-500/[0.06] rounded-full blur-[120px] animate-float animate-morph" />
+      <div className="absolute bottom-[5%] left-[3%] w-[500px] h-[500px] bg-cyan-500/[0.05] rounded-full blur-[100px] animate-float animate-morph" style={{ animationDelay: "3s" }} />
       <div className="absolute top-[15%] left-[10%] w-72 h-72 border border-teal-500/[0.04] rounded-full animate-spin-slow" />
       <div className="absolute bottom-[20%] right-[15%] w-96 h-96 border border-cyan-500/[0.03] rounded-full animate-spin-slow" style={{ animationDirection: "reverse" }} />
+      <MusicParticles />
 
       <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 pt-28 sm:pt-32 pb-20 sm:pb-28 w-full">
         <div className="grid lg:grid-cols-2 gap-10 sm:gap-16 items-center">
@@ -174,22 +248,37 @@ function HeroSection() {
             <ScrollReveal animation="reveal-up" stagger={1}>
               <h1 className="text-4xl sm:text-5xl lg:text-[4.2rem] font-extrabold text-white leading-[1.08] sm:leading-[1.06] mb-5 sm:mb-7 tracking-tight">
                 Revolutionize the<br />
-                <span className="bg-gradient-to-r from-teal-300 via-emerald-400 to-cyan-400 bg-clip-text text-transparent">call-waiting</span> experience!
+                <span className="bg-gradient-to-r from-teal-300 via-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+                  {typedText}
+                </span>
+                <span className={`inline-block w-[3px] h-[0.85em] bg-teal-400 ml-1 align-middle transition-opacity duration-100 ${showCursor && typedText.length <= fullText.length ? "opacity-100" : "opacity-0"}`} />
+                {" "}experience!
               </h1>
             </ScrollReveal>
             <ScrollReveal animation="reveal-up" stagger={2}>
               <p className="text-base sm:text-lg lg:text-xl text-white/45 leading-relaxed mb-8 sm:mb-10 max-w-xl">
-                Defne&apos;s RBT replaces boring beeps with delightful melodies, transforming call experiences while driving revenue and enhancing satisfaction.
+                TunePoa&apos;s RBT replaces boring beeps with delightful melodies, transforming call experiences while driving revenue and enhancing satisfaction.
               </p>
             </ScrollReveal>
             <ScrollReveal animation="reveal-up" stagger={3}>
               <div className="flex flex-wrap gap-3 sm:gap-5">
-              <Button asChild size="lg" className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-white font-semibold px-7 sm:px-9 py-6 sm:py-7 rounded-full shadow-2xl shadow-teal-500/20 hover:shadow-teal-500/40 text-sm sm:text-base group transition-all duration-500 hover:scale-105">
-                <a href="#contact">Get Started <ArrowRight className="w-4 sm:w-5 h-4 sm:h-5 ml-2 group-hover:translate-x-1.5 transition-transform duration-300" /></a>
-              </Button>
-              <Button asChild size="lg" variant="ghost" className="text-white/50 hover:text-white hover:bg-white/5 font-medium px-5 sm:px-7 py-6 sm:py-7 rounded-full border border-white/10 hover:border-white/20 group transition-all duration-300 text-sm sm:text-base">
-                <a href="#rbts">Tune Sample</a>
-              </Button>
+                <Button asChild size="lg" className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-white font-semibold px-7 sm:px-9 py-6 sm:py-7 rounded-full shadow-2xl shadow-teal-500/20 hover:shadow-teal-500/40 text-sm sm:text-base group transition-all duration-300 hover:scale-105">
+                  <a href="#contact">Get Started <ArrowRight className="w-4 sm:w-5 h-4 sm:h-5 ml-2 group-hover:translate-x-1.5 transition-transform duration-300" /></a>
+                </Button>
+                <Button asChild size="lg" variant="ghost" className="text-white/50 hover:text-white hover:bg-white/5 font-medium px-5 sm:px-7 py-6 sm:py-7 rounded-full border border-white/10 hover:border-white/20 group transition-all duration-300 text-sm sm:text-base">
+                  <a href="#rbts">Tune Sample</a>
+                </Button>
+              </div>
+              {/* Social proof line */}
+              <div className="flex items-center gap-3 mt-6 sm:mt-8">
+                <div className="flex -space-x-2">
+                  {["bg-teal-500", "bg-cyan-500", "bg-emerald-500", "bg-amber-500"].map((bg, i) => (
+                    <div key={i} className={`w-7 h-7 rounded-full ${bg} border-2 border-[#050c18] flex items-center justify-center text-white text-[9px] font-bold`}>
+                      {["TP", "SC", "AK", "VM"][i]}
+                    </div>
+                  ))}
+                </div>
+                <p className="text-white/30 text-xs sm:text-sm font-medium">Trusted by <span className="text-teal-400 font-semibold">2,000+</span> businesses across Africa</p>
               </div>
             </ScrollReveal>
           </div>
@@ -229,7 +318,7 @@ function HeroSection() {
                   </div>
                   <div className="flex items-end gap-2 h-28">
                     {[40, 55, 45, 65, 50, 75, 90].map((h, i) => (
-                      <div key={i} className="flex-1 rounded-lg bg-gradient-to-t from-teal-600/20 to-teal-400/40 transition-all duration-300 hover:from-teal-600/40 hover:to-teal-400/70 cursor-pointer" style={{ height: `${h}%` }} />
+                      <div key={i} className="flex-1 rounded-lg bg-gradient-to-t from-teal-600/20 to-teal-400/40 transition-all duration-300 hover:from-teal-600/40 hover:to-teal-400/70 cursor-pointer animate-chart-grow" style={{ height: `${h}%`, animationDelay: `${0.8 + i * 0.1}s`, transformOrigin: "bottom" }} />
                     ))}
                   </div>
                   <div className="flex justify-between mt-3">
@@ -257,8 +346,22 @@ function AboutSection() {
     { target: 98, suffix: "%", label: "Satisfaction", icon: <Sparkles className="w-6 h-6" />, color: "from-amber-500 to-orange-500" },
     { target: 24, suffix: "/7", label: "Support", icon: <Headphones className="w-6 h-6" />, color: "from-violet-500 to-purple-500" },
   ];
+  const [inView, setInView] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) setInView(true); }, { threshold: 0.2 });
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  const count3 = useCountUp(3, 2200, inView);
+  const count2 = useCountUp(2, 2200, inView);
+  const count98 = useCountUp(98, 2200, inView);
+  const count24 = useCountUp(24, 2200, inView);
+  const counts = [count3, count2, count98, count24];
+
   return (
-    <section id="about" className="py-20 sm:py-28 lg:py-36 relative overflow-hidden">
+    <section id="about" ref={sectionRef} className="py-24 sm:py-32 lg:py-40 relative overflow-hidden">
       <div className="absolute inset-0 bg-[#050c18]" />
       <div className="absolute inset-0 bg-gradient-to-br from-teal-950/60 via-[#081525] to-cyan-950/40" />
       <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
@@ -283,19 +386,26 @@ function AboutSection() {
             </p>
           </ScrollReveal>
           <ScrollReveal animation="reveal-up" stagger={3}>
-            <p className="text-base sm:text-lg text-white/40 leading-relaxed max-w-2xl mx-auto px-2">
+            <p className="text-base sm:text-lg text-white/40 leading-relaxed max-w-2xl mx-auto px-2 mb-4">
               This service enhances customer experience, boosts brand visibility, and engages callers with professional, branded content. We help reduce perceived wait times and leave a lasting impression on clients.
             </p>
           </ScrollReveal>
+          <ScrollReveal animation="reveal-up" stagger={4}>
+            <a href="#benefits" className="inline-flex items-center gap-1.5 text-teal-400 hover:text-teal-300 font-semibold text-sm transition-colors duration-300 group">
+              Learn More <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+            </a>
+          </ScrollReveal>
         </div>
+        {/* Horizontal divider above stats */}
+        <div className="line-glow mb-10 sm:mb-14" />
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
-          {stats.map((stat) => (
-            <div key={stat.label} className="glass-card rounded-xl sm:rounded-2xl p-4 sm:p-7 text-center group transition-all duration-500 hover:scale-[1.03] hover:border-white/15">
-              <div className={`w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-gradient-to-br ${stat.color} flex items-center justify-center text-white mx-auto mb-3 sm:mb-5 shadow-lg group-hover:scale-110 transition-all duration-500`}>
+          {stats.map((stat, i) => (
+            <div key={stat.label} className="glass-card rounded-xl sm:rounded-2xl p-4 sm:p-7 text-center group transition-all duration-300 hover:scale-[1.03] hover:border-white/15">
+              <div className={`w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-gradient-to-br ${stat.color} flex items-center justify-center text-white mx-auto mb-3 sm:mb-5 shadow-lg group-hover:scale-110 transition-all duration-300`}>
                 {stat.icon}
               </div>
               <p className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mb-1 sm:mb-1.5">
-                {stat.target.toLocaleString()}{stat.suffix}
+                {counts[i].toLocaleString()}{stat.suffix}
               </p>
               <p className="text-xs sm:text-sm text-white/40 font-medium">{stat.label}</p>
             </div>
@@ -309,12 +419,15 @@ function AboutSection() {
 /* ─── Benefits Section ─── */
 function BenefitsSection() {
   const benefits = [
-    { icon: <Megaphone className="w-7 h-7" />, title: "Enhanced Brand Identity", description: "Customize the ringback tone to reflect your business's personality, making every call a branding opportunity. It's a subtle yet effective way to ensure your brand resonates with customers.", accent: "from-red-500/15 to-orange-500/15", iconColor: "text-red-400", hoverShadow: "group-hover:shadow-red-500/15" },
-    { icon: <Users className="w-7 h-7" />, title: "Increased Customer Engagement", description: "With a captive audience waiting for their call to connect, RBT ensures your message is heard, keeping customers engaged and more likely to remember your brand.", accent: "from-orange-500/15 to-amber-500/15", iconColor: "text-orange-400", hoverShadow: "group-hover:shadow-orange-500/15" },
-    { icon: <TrendingUp className="w-7 h-7" />, title: "Cost-Effective Advertising", description: "RBT provides a direct channel to advertise your products or services without costly traditional ad campaigns, ensuring maximum reach at a fraction of the cost.", accent: "from-amber-500/15 to-yellow-500/15", iconColor: "text-amber-400", hoverShadow: "group-hover:shadow-amber-500/15" },
+    { icon: <Megaphone className="w-7 h-7" />, title: "Enhanced Brand Identity", description: "Customize the ringback tone to reflect your business's personality, making every call a branding opportunity. It's a subtle yet effective way to ensure your brand resonates with customers.", accent: "from-red-500/15 to-orange-500/15", iconColor: "text-red-400", hoverShadow: "group-hover:shadow-red-500/15", num: "01" },
+    { icon: <Users className="w-7 h-7" />, title: "Increased Customer Engagement", description: "With a captive audience waiting for their call to connect, RBT ensures your message is heard, keeping customers engaged and more likely to remember your brand.", accent: "from-orange-500/15 to-amber-500/15", iconColor: "text-orange-400", hoverShadow: "group-hover:shadow-orange-500/15", num: "02" },
+    { icon: <TrendingUp className="w-7 h-7" />, title: "Cost-Effective Advertising", description: "RBT provides a direct channel to advertise your products or services without costly traditional ad campaigns, ensuring maximum reach at a fraction of the cost.", accent: "from-amber-500/15 to-yellow-500/15", iconColor: "text-amber-400", hoverShadow: "group-hover:shadow-amber-500/15", num: "03" },
+    { icon: <Phone className="w-7 h-7" />, title: "Reduced Call Abandonment", description: "Engaging ringback tones keep callers entertained while they wait, significantly reducing hang-ups and abandoned calls that cost your business revenue.", accent: "from-teal-500/15 to-cyan-500/15", iconColor: "text-teal-400", hoverShadow: "group-hover:shadow-teal-500/15", num: "04" },
+    { icon: <BarChart3 className="w-7 h-7" />, title: "Real-Time Analytics", description: "Monitor call engagement, tone performance, and listener behavior with our comprehensive analytics dashboard. Make data-driven decisions to optimize your RBT strategy.", accent: "from-cyan-500/15 to-blue-500/15", iconColor: "text-cyan-400", hoverShadow: "group-hover:shadow-cyan-500/15", num: "05" },
+    { icon: <Zap className="w-7 h-7" />, title: "Seamless Integration", description: "Connect with your existing PBX, CRM, and telecom infrastructure in minutes. Our API-first approach ensures smooth deployment without disrupting your operations.", accent: "from-emerald-500/15 to-green-500/15", iconColor: "text-emerald-400", hoverShadow: "group-hover:shadow-emerald-500/15", num: "06" },
   ];
   return (
-    <section id="benefits" className="py-20 sm:py-28 lg:py-36 relative overflow-hidden">
+    <section id="benefits" className="py-24 sm:py-32 lg:py-40 relative overflow-hidden">
       <div className="absolute inset-0 bg-[#050c18]" />
       <div className="absolute inset-0 bg-gradient-to-br from-teal-950/60 via-[#081525] to-cyan-950/40" />
       <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
@@ -328,20 +441,29 @@ function BenefitsSection() {
                 More Than Just <span className="bg-gradient-to-r from-teal-300 via-emerald-400 to-cyan-400 bg-clip-text text-transparent">Music</span>
               </h2>
               <p className="text-base sm:text-lg text-white/40 leading-relaxed mb-8 sm:mb-10">With TunePoa, your ringback tone is not just music — it&apos;s a powerful tool for branding, advertising, and customer engagement.</p>
-              <Button asChild className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-white font-semibold px-9 rounded-full shadow-lg shadow-teal-500/25 group transition-all duration-500 hover:scale-105">
+              <Button asChild className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-white font-semibold px-9 rounded-full shadow-lg shadow-teal-500/25 group transition-all duration-300 hover:scale-105">
                 <a href="#contact">Get Started <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1.5 transition-transform duration-300" /></a>
               </Button>
             </div>
           </ScrollReveal>
-          {/* Right - Photo */}
+          {/* Right - Photo with gradient overlay + play button hint */}
           <ScrollReveal animation="reveal-right" className="hidden lg:block">
-            <img src="/images/woman-phone.png" alt="More Than Just Music" className="w-full h-auto object-contain rounded-[2rem]" />
+            <div className="relative group cursor-pointer">
+              <img src="/images/woman-phone.png" alt="More Than Just Music" className="w-full h-auto object-contain rounded-[2rem]" />
+              <div className="absolute inset-0 bg-gradient-to-t from-teal-950/60 via-transparent to-transparent rounded-[2rem] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute bottom-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-y-0 translate-y-4">
+                <div className="w-14 h-14 rounded-full bg-gradient-to-r from-teal-500 to-cyan-500 flex items-center justify-center shadow-xl shadow-teal-500/30">
+                  <Play className="w-6 h-6 text-white ml-0.5" />
+                </div>
+              </div>
+            </div>
           </ScrollReveal>
         </div>
         <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-5 sm:gap-7">
           {benefits.map((benefit, index) => (
-            <div key={index} className="glass-card rounded-2xl sm:rounded-[1.5rem] p-6 sm:p-9 group">
-              <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${benefit.accent} flex items-center justify-center ${benefit.iconColor} mb-7 group-hover:scale-110 group-hover:shadow-lg ${benefit.hoverShadow} transition-all duration-500`}>{benefit.icon}</div>
+            <div key={index} className="glass-card rounded-2xl sm:rounded-[1.5rem] p-6 sm:p-9 group relative">
+              <span className="absolute top-5 right-5 text-white/[0.06] text-3xl font-extrabold tracking-tighter select-none">{benefit.num}</span>
+              <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${benefit.accent} flex items-center justify-center ${benefit.iconColor} mb-7 group-hover:scale-110 group-hover:shadow-lg ${benefit.hoverShadow} transition-all duration-300`}>{benefit.icon}</div>
               <h4 className="text-xl font-bold text-white mb-4 tracking-tight">{benefit.title}</h4>
               <p className="text-white/35 leading-relaxed text-[15px]">{benefit.description}</p>
             </div>
@@ -355,12 +477,12 @@ function BenefitsSection() {
 /* ─── How It Works / Steps Section ─── */
 function StepsSection() {
   const steps = [
-    { icon: <Disc3 className="w-7 h-7" />, title: "We Script Your Tune", description: "Our creative team crafts the perfect script and composition tailored to your brand." },
-    { icon: <Music className="w-7 h-7" />, title: "We Record", description: "Professional studio production with voice artists and crystal-clear audio quality." },
-    { icon: <Rocket className="w-7 h-7" />, title: "We Put Live", description: "Instant deployment and activation across all supported telecom networks." },
+    { icon: <Disc3 className="w-7 h-7" />, title: "We Script Your Tune", description: "Our creative team crafts the perfect script and composition tailored to your brand.", num: "01" },
+    { icon: <Music className="w-7 h-7" />, title: "We Record", description: "Professional studio production with voice artists and crystal-clear audio quality.", num: "02" },
+    { icon: <Rocket className="w-7 h-7" />, title: "We Put Live", description: "Instant deployment and activation across all supported telecom networks.", num: "03" },
   ];
   return (
-    <section id="steps" className="py-20 sm:py-28 lg:py-36 relative overflow-hidden">
+    <section id="steps" className="py-24 sm:py-32 lg:py-40 relative overflow-hidden">
       <div className="absolute inset-0 bg-[#050c18]" />
       <div className="absolute inset-0 bg-gradient-to-br from-teal-950/60 via-[#081525] to-cyan-950/40" />
       <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
@@ -368,7 +490,10 @@ function StepsSection() {
       <div className="relative z-10 max-w-5xl mx-auto px-6 sm:px-8 lg:px-10">
         <div className="text-center mb-12 sm:mb-20">
           <ScrollReveal animation="blur-in">
-            <div className="gradient-border-animated inline-block mb-6 sm:mb-8"><span>How It Works</span></div>
+            <div className="inline-flex items-center gap-2 glass rounded-full px-5 py-2 mb-6 sm:mb-8 border-teal-400/10">
+              <Clock className="w-4 h-4 text-teal-400" />
+              <span className="text-xs font-bold text-teal-400 tracking-[0.15em] uppercase">Timeline</span>
+            </div>
           </ScrollReveal>
           <ScrollReveal animation="reveal-up" stagger={1}>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-[1.1] mb-4 sm:mb-5 tracking-tight">
@@ -380,26 +505,36 @@ function StepsSection() {
           </ScrollReveal>
         </div>
 
-        <div className="grid sm:grid-cols-3 gap-5 sm:gap-8">
-          {steps.map((item, i) => (
-            <div key={i} className="glass-card rounded-2xl sm:rounded-[1.5rem] p-6 sm:p-8 text-center group transition-all duration-500 hover:scale-[1.02] hover:border-white/15">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center text-white mx-auto mb-6 shadow-lg shadow-teal-500/20 group-hover:scale-110 transition-all duration-500">
-                {item.icon}
+        <div className="relative">
+          {/* Connecting line - hidden on mobile */}
+          <div className="hidden sm:block absolute top-1/2 left-[16.6%] right-[16.6%] h-[2px] -translate-y-1/2 z-0" style={{ backgroundImage: "repeating-linear-gradient(90deg, rgba(13,148,136,0.3), rgba(13,148,136,0.3) 8px, transparent 8px, transparent 16px)" }} />
+          <div className="grid sm:grid-cols-3 gap-5 sm:gap-8 relative z-10">
+            {steps.map((item, i) => (
+              <div key={i} className="glass-card rounded-2xl sm:rounded-[1.5rem] p-6 sm:p-8 text-center group transition-all duration-300 hover:scale-[1.02] hover:border-white/15">
+                <span className="text-5xl font-extrabold bg-gradient-to-b from-teal-400/20 to-transparent bg-clip-text text-transparent select-none block mb-4">{item.num}</span>
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center text-white mx-auto mb-6 shadow-lg shadow-teal-500/20 group-hover:scale-110 transition-all duration-300">
+                  {item.icon}
+                </div>
+                <h4 className="text-lg font-bold text-white mb-3 tracking-tight">{item.title}</h4>
+                <p className="text-white/35 text-sm leading-relaxed">{item.description}</p>
               </div>
-              <h4 className="text-lg font-bold text-white mb-3 tracking-tight">{item.title}</h4>
-              <p className="text-white/35 text-sm leading-relaxed">{item.description}</p>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>
   );
 }
 
-/* ─── Express Through Tones - Redesigned ─── */
+/* ─── Express Through Tones ─── */
 function IntegrationsSection() {
+  const features = [
+    { text: "500+ Licensed Tones", icon: <Music className="w-4 h-4" /> },
+    { text: "Custom Voice Messages", icon: <MessageSquare className="w-4 h-4" /> },
+    { text: "Time-Based Scheduling", icon: <CalendarClock className="w-4 h-4" /> },
+  ];
   return (
-    <section id="integrations" className="py-20 sm:py-28 lg:py-36 relative overflow-hidden">
+    <section id="integrations" className="py-24 sm:py-32 lg:py-40 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-white via-gray-50/60 to-white" />
       <div className="absolute top-1/2 right-0 w-[400px] h-[400px] bg-teal-100/20 rounded-full blur-[100px]" />
       <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
@@ -412,8 +547,14 @@ function IntegrationsSection() {
           <ScrollReveal animation="reveal-right">
             <div>
               <div className="inline-flex items-center gap-2.5 glass-card-light rounded-full px-5 py-2 mb-6 sm:mb-8">
-                <Disc3 className="w-4 h-4 text-teal-500" />
+                <AudioLines className="w-4 h-4 text-teal-500" />
                 <span className="text-xs font-bold text-teal-600 tracking-[0.15em] uppercase">Express</span>
+                {/* Waveform animation */}
+                <div className="flex items-center gap-[2px] ml-1">
+                  {[8, 14, 10, 16, 6].map((h, i) => (
+                    <div key={i} className="w-[2px] rounded-full bg-teal-500/60" style={{ height: `${h}px`, animation: `wave-bar ${0.6 + i * 0.15}s ease-in-out ${i * 0.1}s infinite` }} />
+                  ))}
+                </div>
               </div>
               <h3 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 leading-[1.1] mb-5 sm:mb-7 tracking-tight">
                 Express Through <span className="bg-gradient-to-r from-teal-600 via-emerald-600 to-cyan-600 bg-clip-text text-transparent">Tones</span>
@@ -424,7 +565,19 @@ function IntegrationsSection() {
               <p className="text-base sm:text-lg text-gray-500/80 leading-relaxed mb-6 sm:mb-8">
                 With RBT, businesses can share promotions, updates, or special offers, creating an engaging way to connect with customers while reinforcing their brand message.
               </p>
-              <Button asChild className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-white font-semibold px-9 rounded-full shadow-lg shadow-teal-500/20 group transition-all duration-500 hover:scale-105">
+              {/* Feature checkmarks */}
+              <div className="flex flex-col gap-3 mb-8">
+                {features.map((feat) => (
+                  <div key={feat.text} className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-teal-500/10 flex items-center justify-center text-teal-600 shrink-0">
+                      {feat.icon}
+                    </div>
+                    <span className="text-gray-700 font-medium text-sm">{feat.text}</span>
+                    <CheckCircle2 className="w-4 h-4 text-teal-500 ml-auto shrink-0" />
+                  </div>
+                ))}
+              </div>
+              <Button asChild className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-white font-semibold px-9 rounded-full shadow-lg shadow-teal-500/20 group transition-all duration-300 hover:scale-105">
                 <a href="#contact">Get Started <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" /></a>
               </Button>
             </div>
@@ -446,7 +599,7 @@ function TelecomIntegrationsSection() {
     { name: "Maroc Telecom", logo: "/images/logo-maroc.png" },
   ];
   return (
-    <section id="telecom-integrations" className="py-20 sm:py-28 lg:py-36 relative overflow-hidden">
+    <section id="telecom-integrations" className="py-24 sm:py-32 lg:py-40 relative overflow-hidden">
       <div className="absolute inset-0 bg-[#050c18]" />
       <div className="absolute inset-0 bg-gradient-to-br from-teal-950/50 via-[#081525] to-cyan-950/30" />
       <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
@@ -462,15 +615,22 @@ function TelecomIntegrationsSection() {
             </h2>
           </ScrollReveal>
           <ScrollReveal animation="reveal-up" stagger={2}>
-            <p className="text-base sm:text-lg text-white/35 max-w-2xl mx-auto">Seamlessly integrated with Africa&apos;s leading telecom networks for reliable, crystal-clear ringback tone delivery.</p>
+            <p className="text-base sm:text-lg text-white/35 max-w-2xl mx-auto mb-6">Seamlessly integrated with Africa&apos;s leading telecom networks for reliable, crystal-clear ringback tone delivery.</p>
+          </ScrollReveal>
+          <ScrollReveal animation="reveal-up" stagger={3}>
+            <div className="inline-flex items-center gap-2 pro-badge">
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>6+ Networks</span>
+            </div>
           </ScrollReveal>
         </div>
         {/* Logo Slider */}
         <div className="relative overflow-hidden">
           <div className="flex animate-slide gap-10 items-center w-max">
             {[...providers, ...providers].map((provider, i) => (
-              <div key={`${provider.name}-${i}`} className="rounded-2xl px-8 py-5 border border-white/10 backdrop-blur-md bg-transparent hover:border-white/20 transition-all duration-300 flex-shrink-0">
+              <div key={`${provider.name}-${i}`} className="telecom-card rounded-2xl px-8 py-5 border border-white/10 backdrop-blur-md bg-transparent flex flex-col items-center gap-3 flex-shrink-0">
                 <img src={provider.logo} alt={provider.name} className="h-12 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity duration-300" />
+                <span className="text-white/20 text-[9px] font-bold uppercase tracking-[0.15em] flex items-center gap-1"><ShieldCheck className="w-3 h-3" /> Verified</span>
               </div>
             ))}
           </div>
@@ -484,13 +644,13 @@ function TelecomIntegrationsSection() {
 function PricingSection() {
   const [annual, setAnnual] = useState(false);
   const plans = [
-    { name: "Starter", monthlyPrice: 20000, annualPrice: 16000, perLabel: "per User", description: "Perfect for small businesses getting started with ringback tones.", features: ["Customizable Tones", "High-quality Experience", "Scheduled Tones"], popular: false, cta: "Get Started" },
-    { name: "Pro", monthlyPrice: 57000, annualPrice: 45600, perLabel: "per 3 Users", description: "Ideal for growing businesses that want to maximize brand engagement.", features: ["Customizable Tones", "High-quality Experience", "Scheduled Tones"], popular: true, cta: "Select Plan" },
-    { name: "Enterprise", monthlyPrice: 0, annualPrice: 0, perLabel: "", description: "For large organizations requiring full RBT platform capabilities.", features: ["Customizable Tones", "High-quality Experience", "Scheduled Tones"], popular: false, cta: "Contact Us" },
+    { name: "Starter", monthlyPrice: 20000, annualPrice: 16000, perLabel: "per User", description: "Perfect for small businesses getting started with ringback tones.", features: ["Customizable Tones", "High-quality Audio", "Scheduled Tones", "Email Support"], popular: false, cta: "Get Started" },
+    { name: "Pro", monthlyPrice: 57000, annualPrice: 45600, perLabel: "per 3 Users", description: "Ideal for growing businesses that want to maximize brand engagement.", features: ["Customizable Tones", "High-quality Audio", "Scheduled Tones", "Priority Support", "Analytics Dashboard", "Multi-User Access", "API Access"], popular: true, cta: "Select Plan" },
+    { name: "Enterprise", monthlyPrice: 0, annualPrice: 0, perLabel: "", description: "For large organizations requiring full RBT platform capabilities.", features: ["Customizable Tones", "High-quality Audio", "Scheduled Tones", "Priority Support", "Analytics Dashboard", "Multi-User Access", "API Access", "Dedicated Account Manager", "Custom Integrations", "SLA Guarantee", "Unlimited Users"], popular: false, cta: "Contact Us" },
   ];
   const formatTZS = (amount: number) => amount.toLocaleString();
   return (
-    <section id="pricing" className="py-20 sm:py-28 lg:py-36 relative overflow-hidden">
+    <section id="pricing" className="py-24 sm:py-32 lg:py-40 relative overflow-hidden">
       <div className="absolute inset-0 bg-[#050c18]" />
       <div className="absolute inset-0 bg-gradient-to-br from-teal-950/50 via-[#081525] to-cyan-950/30" />
       <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
@@ -507,16 +667,20 @@ function PricingSection() {
             <p className="text-base sm:text-lg text-white/35 max-w-2xl mx-auto mb-8 sm:mb-10">Choose the plan that fits your business. All plans include our core RBT features with no hidden fees.</p>
           </ScrollReveal>
           <div className="inline-flex glass rounded-full p-1.5">
-            <button onClick={() => setAnnual(false)} className={`px-8 py-3 rounded-full text-sm font-semibold transition-all duration-500 ${!annual ? "bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-lg shadow-teal-500/20" : "text-white/35 hover:text-white/55"}`}>Monthly</button>
-            <button onClick={() => setAnnual(true)} className={`px-8 py-3 rounded-full text-sm font-semibold transition-all duration-500 ${annual ? "bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-lg shadow-teal-500/20" : "text-white/35 hover:text-white/55"}`}>
+            <button onClick={() => setAnnual(false)} className={`px-8 py-3 rounded-full text-sm font-semibold transition-all duration-300 ${!annual ? "bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-lg shadow-teal-500/20" : "text-white/35 hover:text-white/55"}`}>Monthly</button>
+            <button onClick={() => setAnnual(true)} className={`px-8 py-3 rounded-full text-sm font-semibold transition-all duration-300 ${annual ? "bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-lg shadow-teal-500/20" : "text-white/35 hover:text-white/55"}`}>
               Annual <span className="ml-2 text-[10px] font-bold bg-teal-400/15 text-teal-300 px-2 py-0.5 rounded-full">-20%</span>
             </button>
           </div>
         </div>
         <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-5 sm:gap-7">
           {plans.map((plan) => (
-            <div key={plan.name} className={`relative rounded-2xl sm:rounded-[1.5rem] p-6 sm:p-9 transition-all duration-700 ${plan.popular ? "glass-premium glow-teal-strong sm:scale-[1.02]" : "glass-card"}`}>
-              {plan.popular && (<div className="absolute -top-5 left-1/2 -translate-x-1/2"><span className="bg-gradient-to-r from-teal-500 to-cyan-500 text-white text-[11px] font-bold px-6 py-2.5 rounded-full uppercase tracking-[0.15em] shadow-xl shadow-teal-500/30">Most Popular</span></div>)}
+            <div key={plan.name} className={`relative rounded-2xl sm:rounded-[1.5rem] p-6 sm:p-9 transition-all duration-500 ${plan.popular ? "glass-premium glow-teal-strong sm:scale-[1.02]" : "glass-card"}`}>
+              {plan.popular && (
+                <div className="absolute -top-5 left-1/2 -translate-x-1/2">
+                  <span className="bg-gradient-to-r from-teal-500 to-cyan-500 text-white text-[11px] font-bold px-6 py-2.5 rounded-full uppercase tracking-[0.15em] shadow-xl shadow-teal-500/30 animate-pulse-badge">Most Popular</span>
+                </div>
+              )}
               <h3 className="text-xl font-bold text-white mb-2 tracking-tight">{plan.name}</h3>
               <p className="text-white/30 text-sm mb-7">{plan.description}</p>
               <div className="mb-9">
@@ -531,15 +695,20 @@ function PricingSection() {
                 {plan.perLabel && <span className="text-white/25 text-sm ml-2">{plan.perLabel}</span>}
                 {annual && plan.name !== "Enterprise" && <p className="text-teal-400 text-xs mt-2 font-semibold">Billed annually</p>}
               </div>
-              <ul className="space-y-4 mb-9">
-                {plan.features.map((feature) => (<li key={feature} className="flex items-start gap-3"><CheckCircle2 className="w-5 h-5 text-teal-400 shrink-0 mt-0.5" /><span className="text-white/50 text-sm">{feature}</span></li>))}
+              <ul className="space-y-3 mb-9">
+                {plan.features.map((feature) => (<li key={feature} className="flex items-start gap-3"><CheckCircle2 className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" /><span className="text-white/50 text-sm">{feature}</span></li>))}
               </ul>
-              <Button asChild className={`w-full font-semibold rounded-full py-5 transition-all duration-500 ${plan.popular ? "bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-white shadow-lg shadow-teal-500/20 hover:scale-[1.02]" : "glass hover:bg-white/10 text-white hover:scale-[1.02]"}`}>
+              <Button asChild className={`w-full font-semibold rounded-full py-5 transition-all duration-300 ${plan.popular ? "bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-white shadow-lg shadow-teal-500/20 hover:scale-[1.02]" : "glass hover:bg-white/10 text-white hover:scale-[1.02]"}`}>
                 <a href="#contact">{plan.cta}</a>
               </Button>
             </div>
           ))}
         </div>
+        <ScrollReveal animation="reveal-up" stagger={3}>
+          <div className="text-center mt-8">
+            <a href="#contact" className="text-teal-400/60 hover:text-teal-300 text-sm font-medium transition-colors duration-300 underline underline-offset-4 decoration-teal-400/20 hover:decoration-teal-400/40">Compare Plans in Detail</a>
+          </div>
+        </ScrollReveal>
       </div>
     </section>
   );
@@ -574,7 +743,7 @@ function TestimonialsSection() {
   const visibleTestimonials = testimonials.slice(current * itemsPerView, current * itemsPerView + itemsPerView);
 
   return (
-    <section id="testimonials" className="py-20 sm:py-28 lg:py-36 relative overflow-hidden">
+    <section id="testimonials" className="py-24 sm:py-32 lg:py-40 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-white via-teal-50/15 to-white" />
       <div className="absolute bottom-0 right-0 w-[600px] h-[400px] bg-teal-100/20 rounded-full blur-[100px]" />
       <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
@@ -602,10 +771,13 @@ function TestimonialsSection() {
 
         <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-5 sm:gap-7 transition-all duration-500">
           {visibleTestimonials.map((testimonial) => (
-            <div key={testimonial.name} className="glass-card-light rounded-2xl sm:rounded-[1.5rem] p-6 sm:p-9 group">
-              <div className="flex items-center gap-1.5 mb-6">
+            <div key={testimonial.name} className="glass-card-light rounded-2xl sm:rounded-[1.5rem] p-6 sm:p-9 group relative">
+              {/* Decorative quote icon */}
+              <span className="absolute top-5 right-6 text-teal-500/10 text-6xl font-serif leading-none select-none">&ldquo;</span>
+              {/* Star ratings */}
+              <div className="flex items-center gap-1.5 mb-5">
                 {[...Array(5)].map((_, i) => (
-                  <svg key={i} className="w-5 h-5 text-amber-400 fill-current" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" /></svg>
+                  <svg key={i} className="w-4 h-4 text-amber-400 fill-current" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" /></svg>
                 ))}
               </div>
               <p className="text-gray-500 leading-relaxed mb-8 text-[15px]">&ldquo;{testimonial.quote}&rdquo;</p>
@@ -644,40 +816,39 @@ function RBTsSection() {
     { name: "Education", icon: <Globe className="w-4 h-4" />, color: "from-violet-500 to-purple-600" },
   ];
 
+  const albumGradients = [
+    "from-amber-600/40 to-orange-800/40",
+    "from-emerald-600/40 to-teal-800/40",
+    "from-blue-600/40 to-indigo-800/40",
+    "from-pink-600/40 to-rose-800/40",
+    "from-violet-600/40 to-purple-800/40",
+  ];
+
   const tones = [
-    // Hospitality - 6 samples
     { name: "Serenity Hotels", sub: "Hotel", category: "Hospitality", duration: "0:30", color: "from-amber-500 to-orange-600", waveformHeights: [30, 55, 40, 70, 45, 65, 35, 80, 50, 60, 40, 75, 55, 45, 70, 35, 65, 50, 40, 60] },
     { name: "QuickBite TZ", sub: "Fast Food", category: "Hospitality", duration: "0:25", color: "from-amber-500 to-orange-600", waveformHeights: [45, 70, 35, 65, 80, 40, 75, 55, 65, 45, 80, 35, 60, 70, 50, 65, 40, 75, 55, 45] },
     { name: "Zanzibar Resorts", sub: "Resort", category: "Hospitality", duration: "0:20", color: "from-amber-500 to-orange-600", waveformHeights: [35, 60, 50, 70, 40, 75, 55, 65, 45, 80, 35, 60, 50, 70, 40, 55, 65, 45, 75, 55] },
     { name: "Java House", sub: "Cafe", category: "Hospitality", duration: "0:30", color: "from-amber-500 to-orange-600", waveformHeights: [25, 45, 60, 35, 55, 70, 40, 65, 50, 30, 55, 70, 45, 60, 35, 50, 65, 40, 55, 30] },
     { name: "Moyo Safari Lodge", sub: "Safari", category: "Hospitality", duration: "0:25", color: "from-amber-500 to-orange-600", waveformHeights: [50, 75, 60, 45, 80, 35, 70, 55, 65, 40, 75, 50, 60, 70, 45, 80, 35, 65, 55, 70] },
     { name: "CloudNine Spa", sub: "Spa & Wellness", category: "Hospitality", duration: "0:20", color: "from-amber-500 to-orange-600", waveformHeights: [40, 55, 65, 45, 70, 50, 60, 35, 75, 55, 45, 65, 40, 55, 70, 50, 60, 45, 55, 35] },
-
-    // Healthcare - 6 samples
     { name: "Aga Khan Hospital", sub: "Hospital", category: "Healthcare", duration: "0:30", color: "from-emerald-500 to-teal-600", waveformHeights: [35, 60, 50, 70, 40, 75, 55, 65, 45, 80, 35, 60, 50, 70, 40, 55, 65, 45, 75, 55] },
     { name: "CarePoint Clinic", sub: "Clinic", category: "Healthcare", duration: "0:25", color: "from-emerald-500 to-teal-600", waveformHeights: [25, 45, 60, 35, 55, 70, 40, 65, 50, 30, 55, 70, 45, 60, 35, 50, 65, 40, 55, 30] },
     { name: "MedPlus Pharmacy", sub: "Pharmacy", category: "Healthcare", duration: "0:20", color: "from-emerald-500 to-teal-600", waveformHeights: [40, 55, 65, 45, 70, 50, 60, 35, 75, 55, 45, 65, 40, 55, 70, 50, 60, 45, 55, 35] },
     { name: "SmileCare Dental", sub: "Dental", category: "Healthcare", duration: "0:30", color: "from-emerald-500 to-teal-600", waveformHeights: [50, 75, 60, 45, 80, 35, 70, 55, 65, 40, 75, 50, 60, 70, 45, 80, 35, 65, 55, 70] },
     { name: "VisionFirst Opticals", sub: "Optical", category: "Healthcare", duration: "0:25", color: "from-emerald-500 to-teal-600", waveformHeights: [30, 55, 40, 70, 45, 65, 35, 80, 50, 60, 40, 75, 55, 45, 70, 35, 65, 50, 40, 60] },
     { name: "Zen Wellness Center", sub: "Wellness", category: "Healthcare", duration: "0:20", color: "from-emerald-500 to-teal-600", waveformHeights: [45, 70, 35, 65, 80, 40, 75, 55, 65, 45, 80, 35, 60, 70, 50, 65, 40, 75, 55, 45] },
-
-    // Finance - 6 samples
     { name: "CRDB Bank", sub: "Bank", category: "Finance", duration: "0:30", color: "from-blue-500 to-indigo-600", waveformHeights: [50, 75, 60, 45, 80, 35, 70, 55, 65, 40, 75, 50, 60, 70, 45, 80, 35, 65, 55, 70] },
     { name: "Azania Insurance", sub: "Insurance", category: "Finance", duration: "0:25", color: "from-blue-500 to-indigo-600", waveformHeights: [40, 55, 65, 45, 70, 50, 60, 35, 75, 55, 45, 65, 40, 55, 70, 50, 60, 45, 55, 35] },
     { name: "PesaPal Microfinance", sub: "Microfinance", category: "Finance", duration: "0:20", color: "from-blue-500 to-indigo-600", waveformHeights: [35, 60, 50, 70, 40, 75, 55, 65, 45, 80, 35, 60, 50, 70, 40, 55, 65, 45, 75, 55] },
     { name: "DarCapital Investments", sub: "Investment", category: "Finance", duration: "0:30", color: "from-blue-500 to-indigo-600", waveformHeights: [30, 55, 40, 70, 45, 65, 35, 80, 50, 60, 40, 75, 55, 45, 70, 35, 65, 50, 40, 60] },
     { name: "SwiftRemit", sub: "Remittance", category: "Finance", duration: "0:25", color: "from-blue-500 to-indigo-600", waveformHeights: [25, 45, 60, 35, 55, 70, 40, 65, 50, 30, 55, 70, 45, 60, 35, 50, 65, 40, 55, 30] },
     { name: "TrustAudit Co.", sub: "Audit Firm", category: "Finance", duration: "0:20", color: "from-blue-500 to-indigo-600", waveformHeights: [45, 70, 35, 65, 80, 40, 75, 55, 65, 45, 80, 35, 60, 70, 50, 65, 40, 75, 55, 45] },
-
-    // Corporate - 6 samples
     { name: "Vodacom Tanzania", sub: "Telecom", category: "Corporate", duration: "0:30", color: "from-pink-500 to-rose-600", waveformHeights: [55, 75, 40, 60, 80, 50, 70, 45, 65, 55, 75, 35, 60, 80, 50, 70, 40, 65, 55, 75] },
     { name: "Twiga Foods", sub: "Logistics", category: "Corporate", duration: "0:25", color: "from-pink-500 to-rose-600", waveformHeights: [40, 60, 50, 70, 35, 65, 55, 75, 45, 60, 40, 70, 55, 65, 35, 75, 50, 60, 45, 55] },
     { name: "SaharaTech Solutions", sub: "IT Services", category: "Corporate", duration: "0:20", color: "from-pink-500 to-rose-600", waveformHeights: [35, 55, 70, 45, 60, 75, 40, 65, 55, 45, 70, 50, 60, 75, 40, 55, 65, 50, 70, 45] },
     { name: "KPMG East Africa", sub: "Consulting", category: "Corporate", duration: "0:30", color: "from-pink-500 to-rose-600", waveformHeights: [30, 50, 65, 40, 55, 70, 45, 60, 35, 75, 50, 65, 40, 55, 70, 45, 60, 50, 35, 65] },
     { name: "SimbaLogistics", sub: "Transport", category: "Corporate", duration: "0:25", color: "from-pink-500 to-rose-600", waveformHeights: [50, 75, 60, 45, 80, 35, 70, 55, 65, 40, 75, 50, 60, 70, 45, 80, 35, 65, 55, 70] },
     { name: "Orbit Advertising", sub: "Agency", category: "Corporate", duration: "0:20", color: "from-pink-500 to-rose-600", waveformHeights: [45, 70, 35, 65, 80, 40, 75, 55, 65, 45, 80, 35, 60, 70, 50, 65, 40, 75, 55, 45] },
-
-    // Education - 6 samples
     { name: "University of Dar", sub: "University", category: "Education", duration: "0:30", color: "from-violet-500 to-purple-600", waveformHeights: [35, 55, 70, 45, 60, 75, 40, 65, 55, 45, 70, 50, 60, 75, 40, 55, 65, 50, 70, 45] },
     { name: "BrightPath Academy", sub: "Academy", category: "Education", duration: "0:25", color: "from-violet-500 to-purple-600", waveformHeights: [30, 50, 65, 40, 55, 70, 45, 60, 35, 75, 50, 65, 40, 55, 70, 45, 60, 50, 35, 65] },
     { name: "eLearn Africa", sub: "E-Learning", category: "Education", duration: "0:20", color: "from-violet-500 to-purple-600", waveformHeights: [50, 75, 60, 45, 80, 35, 70, 55, 65, 40, 75, 50, 60, 70, 45, 80, 35, 65, 55, 70] },
@@ -688,9 +859,10 @@ function RBTsSection() {
 
   const filteredTones = tones.filter((t) => t.category === activeCategory);
   const handlePlay = (index: number) => setPlayingIndex(playingIndex === index ? null : index);
+  const catIndex = categories.findIndex((c) => c.name === activeCategory);
 
   return (
-    <section id="rbts" className="py-20 sm:py-28 lg:py-36 relative overflow-hidden">
+    <section id="rbts" className="py-24 sm:py-32 lg:py-40 relative overflow-hidden">
       <div className="absolute inset-0 bg-[#050c18]" />
       <div className="absolute inset-0 bg-gradient-to-br from-teal-950/40 via-[#081525] to-cyan-950/30" />
       <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-teal-500/[0.035] rounded-full blur-[100px]" />
@@ -713,7 +885,7 @@ function RBTsSection() {
         {/* Category Tabs */}
         <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-10 sm:mb-14">
           {categories.map((cat) => (
-            <button key={cat.name} onClick={() => setActiveCategory(cat.name)} className={`flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-full text-xs sm:text-sm font-semibold transition-all duration-500 ${activeCategory === cat.name ? `bg-gradient-to-r ${cat.color} text-white shadow-lg` : "glass text-white/40 hover:text-white/70 hover:bg-white/10"}`}>
+            <button key={cat.name} onClick={() => { setActiveCategory(cat.name); setPlayingIndex(null); }} className={`flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 ${activeCategory === cat.name ? `bg-gradient-to-r ${cat.color} text-white shadow-lg` : "glass text-white/40 hover:text-white/70 hover:bg-white/10"}`}>
               {cat.icon}
               {cat.name}
             </button>
@@ -722,18 +894,36 @@ function RBTsSection() {
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredTones.map((tone, index) => (
-            <div key={tone.name} className={`glass-card rounded-[1.5rem] p-6 group cursor-pointer transition-all duration-500 ${playingIndex === index ? "border-teal-400/25 scale-[1.02]" : ""}`} onClick={() => handlePlay(index)}>
+            <div key={tone.name} className={`glass-card rounded-[1.5rem] p-6 group cursor-pointer transition-all duration-300 ${playingIndex === index ? "border-teal-400/25 scale-[1.02]" : ""}`} onClick={() => handlePlay(index)}>
               <div className="flex items-center justify-between mb-5">
                 <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-teal-400/70 bg-teal-400/10 px-3 py-1 rounded-full">{tone.sub}</span>
                 <span className="text-white/20 text-xs font-medium">{tone.duration}</span>
               </div>
+              {/* Album art + Now Playing */}
               <div className="flex items-center gap-4 mb-5">
-                <button className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500 shrink-0 ${playingIndex === index ? "bg-gradient-to-r from-teal-500 to-cyan-500 shadow-lg shadow-teal-500/30 scale-110" : "glass hover:bg-white/10 hover:scale-105"}`} onClick={(e) => { e.stopPropagation(); handlePlay(index); }}>
-                  {playingIndex === index ? <Pause className="w-5 h-5 text-white" /> : <Play className="w-5 h-5 text-white ml-0.5" />}
-                </button>
-                <div className="min-w-0">
-                  <h4 className="text-base font-bold text-white truncate tracking-tight">{tone.name}</h4>
+                <div className="relative shrink-0">
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${albumGradients[catIndex] ?? albumGradients[0]} flex items-center justify-center`}>
+                    <Music className="w-5 h-5 text-white/60" />
+                  </div>
+                  {playingIndex === index && (
+                    <div className="absolute -bottom-1 -right-1 flex items-end gap-[2px]">
+                      {[6, 10, 7].map((h, i) => (
+                        <div key={i} className="now-playing-bar playing" style={{ height: `${h}px`, animationDelay: `${i * 0.15}s` }} />
+                      ))}
+                    </div>
+                  )}
                 </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <h4 className="text-base font-bold text-white truncate tracking-tight">{tone.name}</h4>
+                  </div>
+                  {playingIndex === index && (
+                    <span className="text-teal-400 text-[10px] font-bold uppercase tracking-wider">Now Playing</span>
+                  )}
+                </div>
+                <button className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 shrink-0 ${playingIndex === index ? "bg-gradient-to-r from-teal-500 to-cyan-500 shadow-lg shadow-teal-500/30 scale-110" : "glass hover:bg-white/10 hover:scale-105"}`} onClick={(e) => { e.stopPropagation(); handlePlay(index); }}>
+                  {playingIndex === index ? <Pause className="w-4 h-4 text-white" /> : <Play className="w-4 h-4 text-white ml-0.5" />}
+                </button>
               </div>
               <div className="flex items-center gap-[3px] h-8">
                 {tone.waveformHeights.map((h, i) => (
@@ -763,21 +953,24 @@ function FAQSection() {
     { q: "Is the service compatible with all telecom networks?", a: "TunePoa integrates with all major telecom networks. As a Vodacom core partner, we ensure seamless deployment regardless of your carrier, handling all technical integration on our end." },
   ];
   return (
-    <section id="faq" className="py-20 sm:py-28 lg:py-36 relative overflow-hidden">
+    <section id="faq" className="py-24 sm:py-32 lg:py-40 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-white via-gray-50/40 to-white" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-teal-100/15 rounded-full blur-[120px]" />
       <div className="relative z-10 max-w-4xl mx-auto px-6 sm:px-8 lg:px-10">
         <div className="text-center mb-10 sm:mb-16">
           <ScrollReveal animation="blur-in">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 leading-[1.1] mb-4 sm:mb-5 tracking-tight">Frequently asked questions</h2>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 leading-[1.1] mb-3 sm:mb-4 tracking-tight">Frequently asked questions</h2>
           </ScrollReveal>
           <ScrollReveal animation="reveal-up" stagger={1}>
+            <p className="text-sm text-gray-400 flex items-center justify-center gap-1.5 mb-2"><Search className="w-4 h-4" />Common Questions</p>
+          </ScrollReveal>
+          <ScrollReveal animation="reveal-up" stagger={2}>
             <p className="text-base sm:text-lg text-gray-400">Still have more questions? Don&apos;t hesitate to <a href="#contact" className="text-teal-600 font-semibold hover:text-teal-700 underline underline-offset-4 decoration-teal-300/30 hover:decoration-teal-400 transition-all">contact us</a>!</p>
           </ScrollReveal>
         </div>
         <Accordion type="single" collapsible className="space-y-4">
           {faqs.map((faq, i) => (
-            <AccordionItem key={i} value={`item-${i}`} className="glass-card-light rounded-2xl px-7 overflow-hidden data-[state=open]:border-teal-200/50">
+            <AccordionItem key={i} value={`item-${i}`} className="glass-card-light rounded-2xl px-7 overflow-hidden data-[state=open]:border-teal-200/50 data-[state=open]:faq-item-open">
               <AccordionTrigger className="text-left font-semibold text-gray-800 hover:text-teal-600 hover:no-underline py-6 text-[15px]">{faq.q}</AccordionTrigger>
               <AccordionContent className="text-gray-500 leading-relaxed pb-6">{faq.a}</AccordionContent>
             </AccordionItem>
@@ -808,7 +1001,7 @@ function ContactSection() {
   };
 
   return (
-    <section id="contact" className="py-20 sm:py-28 lg:py-36 relative overflow-hidden">
+    <section id="contact" className="py-24 sm:py-32 lg:py-40 relative overflow-hidden">
       <div className="absolute inset-0 bg-[#050c18]" />
       <div className="absolute inset-0 bg-gradient-to-br from-teal-950/60 via-[#081525] to-cyan-950/40" />
       <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
@@ -827,6 +1020,12 @@ function ContactSection() {
               <p className="text-base sm:text-lg text-white/40 leading-relaxed mb-10 sm:mb-12 max-w-lg">
                 Ready to transform your call-waiting experience? Get in touch and we&apos;ll help you find the perfect ringback tone solution for your business.
               </p>
+
+              {/* Response guarantee badge */}
+              <div className="inline-flex items-center gap-2 pro-badge mb-8">
+                <Clock className="w-3.5 h-3.5" />
+                <span>Response within 24 hours</span>
+              </div>
 
               <div className="space-y-6">
                 <div className="flex items-center gap-4">
@@ -866,6 +1065,27 @@ function ContactSection() {
                   </div>
                 </div>
               </div>
+
+              {/* Map placeholder */}
+              <div className="mt-8 rounded-2xl bg-gradient-to-br from-teal-950/50 to-cyan-950/30 border border-white/5 h-36 flex items-center justify-center relative overflow-hidden">
+                <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "20px 20px" }} />
+                <div className="flex flex-col items-center gap-2 relative z-10">
+                  <MapPin className="w-6 h-6 text-teal-400/50" />
+                  <span className="text-white/20 text-xs font-medium">Dar es Salaam, Tanzania</span>
+                </div>
+              </div>
+
+              {/* Social links */}
+              <div className="flex items-center gap-3 mt-6">
+                {[
+                  { icon: <Twitter className="w-4 h-4" />, label: "Twitter" },
+                  { icon: <Linkedin className="w-4 h-4" />, label: "LinkedIn" },
+                  { icon: <Facebook className="w-4 h-4" />, label: "Facebook" },
+                  { icon: <Instagram className="w-4 h-4" />, label: "Instagram" },
+                ].map((social) => (
+                  <a key={social.label} href="#" aria-label={social.label} className="w-10 h-10 rounded-xl glass hover:bg-white/10 flex items-center justify-center text-white/30 hover:text-teal-300 transition-all duration-300 hover:scale-110">{social.icon}</a>
+                ))}
+              </div>
             </div>
           </ScrollReveal>
 
@@ -885,47 +1105,59 @@ function ContactSection() {
                   <div className="grid sm:grid-cols-2 gap-5">
                     <div>
                       <label className="text-white/40 text-xs font-semibold uppercase tracking-wider mb-2 block">Full Name *</label>
-                      <input
-                        type="text"
-                        required
-                        value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        placeholder="John Doe"
-                        className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3.5 text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-teal-400/40 focus:bg-white/[0.06] transition-all duration-300"
-                      />
+                      <div className="relative">
+                        <Users className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/15" />
+                        <input
+                          type="text"
+                          required
+                          value={formData.name}
+                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                          placeholder="John Doe"
+                          className="w-full bg-white/[0.04] border border-white/10 rounded-xl pl-10 pr-4 py-3.5 text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-teal-400/40 focus:bg-white/[0.06] transition-all duration-300"
+                        />
+                      </div>
                     </div>
                     <div>
                       <label className="text-white/40 text-xs font-semibold uppercase tracking-wider mb-2 block">Email *</label>
-                      <input
-                        type="email"
-                        required
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        placeholder="john@company.com"
-                        className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3.5 text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-teal-400/40 focus:bg-white/[0.06] transition-all duration-300"
-                      />
+                      <div className="relative">
+                        <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/15" />
+                        <input
+                          type="email"
+                          required
+                          value={formData.email}
+                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                          placeholder="john@company.com"
+                          className="w-full bg-white/[0.04] border border-white/10 rounded-xl pl-10 pr-4 py-3.5 text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-teal-400/40 focus:bg-white/[0.06] transition-all duration-300"
+                        />
+                      </div>
                     </div>
                   </div>
                   <div className="grid sm:grid-cols-2 gap-5">
                     <div>
                       <label className="text-white/40 text-xs font-semibold uppercase tracking-wider mb-2 block">Phone</label>
-                      <input
-                        type="tel"
-                        value={formData.phone}
-                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        placeholder="+255 123 456 789"
-                        className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3.5 text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-teal-400/40 focus:bg-white/[0.06] transition-all duration-300"
-                      />
+                      <div className="relative">
+                        <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/15" />
+                        <input
+                          type="tel"
+                          value={formData.phone}
+                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                          placeholder="+255 123 456 789"
+                          className="w-full bg-white/[0.04] border border-white/10 rounded-xl pl-10 pr-4 py-3.5 text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-teal-400/40 focus:bg-white/[0.06] transition-all duration-300"
+                        />
+                      </div>
                     </div>
                     <div>
                       <label className="text-white/40 text-xs font-semibold uppercase tracking-wider mb-2 block">Company</label>
-                      <input
-                        type="text"
-                        value={formData.company}
-                        onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                        placeholder="Your Company"
-                        className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3.5 text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-teal-400/40 focus:bg-white/[0.06] transition-all duration-300"
-                      />
+                      <div className="relative">
+                        <Globe className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/15" />
+                        <input
+                          type="text"
+                          value={formData.company}
+                          onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                          placeholder="Your Company"
+                          className="w-full bg-white/[0.04] border border-white/10 rounded-xl pl-10 pr-4 py-3.5 text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-teal-400/40 focus:bg-white/[0.06] transition-all duration-300"
+                        />
+                      </div>
                     </div>
                   </div>
                   <div>
@@ -941,7 +1173,7 @@ function ContactSection() {
                   </div>
                   <Button
                     type="submit"
-                    className="w-full bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-white font-semibold py-4 rounded-xl shadow-lg shadow-teal-500/20 hover:shadow-teal-500/40 transition-all duration-500 hover:scale-[1.02]"
+                    className="w-full bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-white font-semibold py-4 rounded-xl shadow-lg shadow-teal-500/20 hover:shadow-teal-500/40 transition-all duration-300 hover:scale-[1.02]"
                   >
                     <span className="flex items-center justify-center gap-2">
                       Send Message <Send className="w-4 h-4" />
@@ -959,17 +1191,48 @@ function ContactSection() {
 
 /* ─── Footer ─── */
 function Footer() {
+  const [email, setEmail] = useState("");
+  const [subscribed, setSubscribed] = useState(false);
+
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (email) {
+      setSubscribed(true);
+      setEmail("");
+      setTimeout(() => setSubscribed(false), 3000);
+    }
+  };
+
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+
   return (
     <footer className="bg-[#040810] pt-16 sm:pt-24 pb-8 sm:pb-10 relative overflow-hidden">
       <div className="section-divider absolute top-0 left-0 right-0" />
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[200px] bg-teal-500/[0.025] rounded-full blur-[80px]" />
       <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-14 mb-14 sm:mb-20">
-          <div>
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-8 sm:gap-14 mb-14 sm:mb-20">
+          <div className="col-span-2">
             <div className="flex items-center gap-3 mb-6">
               <img src="/logo.png" alt="TunePoa" className="h-9 w-auto" />
             </div>
-            <p className="text-white/30 text-sm font-medium leading-relaxed mb-8">Make your callers&apos; wait unique to you. Whether you want a song that defines your mood or a personalized message, our service lets you choose the perfect tone to fit your style.</p>
+            <p className="text-white/30 text-sm font-medium leading-relaxed mb-8 max-w-xs">Make your callers&apos; wait unique to you. Whether you want a song that defines your mood or a personalized message, our service lets you choose the perfect tone to fit your style.</p>
+            {/* Newsletter signup */}
+            <div className="mb-6">
+              <p className="text-white/40 text-xs font-semibold uppercase tracking-wider mb-3">Stay Updated</p>
+              <form onSubmit={handleSubscribe} className="flex gap-2">
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email"
+                  className="flex-1 bg-white/[0.04] border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-teal-400/40 transition-all duration-300"
+                />
+                <Button type="submit" size="sm" className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-white font-semibold rounded-lg px-4 shrink-0 transition-all duration-300">
+                  {subscribed ? "✓" : "Subscribe"}
+                </Button>
+              </form>
+            </div>
             <div className="flex items-center gap-3">
               {[{ icon: <Twitter className="w-4 h-4" />, label: "X-twitter" }, { icon: <Linkedin className="w-4 h-4" />, label: "Linkedin" }, { icon: <Facebook className="w-4 h-4" />, label: "Facebook" }, { icon: <Instagram className="w-4 h-4" />, label: "Instagram" }].map((social) => (
                 <a key={social.label} href="#" aria-label={social.label} className="w-10 h-10 rounded-xl glass hover:bg-white/10 flex items-center justify-center text-white/30 hover:text-white transition-all duration-300 hover:scale-110">{social.icon}</a>
@@ -985,13 +1248,17 @@ function Footer() {
             <ul className="space-y-4">{["API", "Partnership", "Coverage", "Support Desk", "Blog"].map((item) => (<li key={item}><a href="#" className="text-white/30 hover:text-white/70 transition-colors duration-300 text-sm font-medium">{item}</a></li>))}</ul>
           </div>
           <div>
-            <h6 className="text-xs font-bold text-teal-400 tracking-[0.2em] uppercase mb-7">Other</h6>
+            <h6 className="text-xs font-bold text-teal-400 tracking-[0.2em] uppercase mb-7">Legal</h6>
             <ul className="space-y-4">{[{ name: "Privacy Policy", href: "/privacy" }, { name: "Terms Of Services", href: "/terms" }, { name: "Refund Policy", href: "/refund" }, { name: "Cookies Policy", href: "/cookies" }, { name: "FAQ", href: "/faq" }].map((item) => (<li key={item.name}><a href={item.href} className="text-white/30 hover:text-white/70 transition-colors duration-300 text-sm font-medium">{item.name}</a></li>))}</ul>
           </div>
         </div>
         <div className="section-divider mb-8" />
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <a href="#" className="text-white/20 text-xs sm:text-sm hover:text-white/40 transition-colors font-medium">&copy; Tune Poa {new Date().getFullYear()} All Rights Reserved.</a>
+          <a href="#" className="text-white/20 text-xs sm:text-sm hover:text-white/40 transition-colors font-medium">&copy; {new Date().getFullYear()} Tune Poa. All Rights Reserved.</a>
+          <button onClick={scrollToTop} className="flex items-center gap-2 text-white/20 hover:text-teal-400 text-xs font-medium transition-colors duration-300 group" aria-label="Back to top">
+            <ArrowUp className="w-3.5 h-3.5 group-hover:-translate-y-0.5 transition-transform duration-300" />
+            Back to Top
+          </button>
         </div>
       </div>
     </footer>
@@ -1001,9 +1268,9 @@ function Footer() {
 /* ─── Main Page ─── */
 export default function HomePage() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <main>
       <Navbar />
-      <main className="flex-1">
+      <div>
         <HeroSection />
         <AboutSection />
         <BenefitsSection />
@@ -1015,8 +1282,8 @@ export default function HomePage() {
         <RBTsSection />
         <FAQSection />
         <ContactSection />
-      </main>
+      </div>
       <Footer />
-    </div>
+    </main>
   );
 }

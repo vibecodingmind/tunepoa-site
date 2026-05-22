@@ -227,7 +227,7 @@ export default function RootLayout({
         <meta name="geo.region" content="TZ" />
         <meta name="geo.country" content="Africa" />
       </head>
-      <body className={`${inter.variable} antialiased bg-background text-foreground font-sans`}>
+      <body className={`${inter.variable} antialiased bg-background text-foreground font-sans overflow-x-hidden`}>
         {children}
         <Toaster />
         <LiveChat />
