@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { ScrollReveal } from "@/components/ScrollReveal";
+import { useAuth } from "@/lib/auth-context";
 import {
   Accordion,
   AccordionContent,
@@ -126,6 +127,7 @@ function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { user, logout } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -165,6 +167,19 @@ function Navbar() {
           <Button asChild className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-white font-semibold px-7 rounded-full shadow-lg shadow-teal-500/25 hover:shadow-teal-500/50 transition-all duration-300 hover:scale-105">
             <a href="#contact">Get Started</a>
           </Button>
+          {user ? (
+            <div className="flex items-center gap-3">
+              <a href="/dashboard" className="flex items-center gap-2 text-[13px] text-teal-300 hover:text-teal-200 font-semibold transition-colors duration-300">
+                <Users className="w-4 h-4" />
+                Dashboard
+              </a>
+              <button onClick={logout} className="text-[13px] text-white/40 hover:text-white/70 font-medium transition-colors duration-300">
+                Logout
+              </button>
+            </div>
+          ) : (
+            <a href="/login" className="text-[13px] text-white/60 hover:text-teal-300 transition-all duration-300 font-medium">Login</a>
+          )}
         </div>
         {/* Mobile: Toggle menu */}
         <button className="lg:hidden text-white/70 hover:text-white p-2 -mr-2 rounded-xl hover:bg-white/5 transition-all duration-300" aria-label="Toggle menu" onClick={() => setMobileOpen(true)}>
@@ -184,8 +199,22 @@ function Navbar() {
               ))}
               <div className="mt-4 flex flex-col gap-3">
                 <Button asChild className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-white font-semibold px-7 rounded-full shadow-lg shadow-teal-500/20 transition-all duration-300">
-                  <a href="#contact">Get Started</a>
+                  <a href="#contact" onClick={() => setMobileOpen(false)}>Get Started</a>
                 </Button>
+                {user ? (
+                  <>
+                    <Button asChild variant="ghost" className="text-teal-300 hover:text-teal-200 hover:bg-white/5 font-medium px-7 rounded-full border border-teal-500/20 transition-all duration-300">
+                      <a href="/dashboard" onClick={() => setMobileOpen(false)}>Dashboard</a>
+                    </Button>
+                    <button onClick={() => { logout(); setMobileOpen(false); }} className="text-white/40 hover:text-white/70 text-sm font-medium py-2 transition-colors duration-300">
+                      Logout
+                    </button>
+                  </>
+                ) : (
+                  <Button asChild variant="ghost" className="text-white/50 hover:text-white hover:bg-white/5 font-medium px-7 rounded-full border border-white/10 transition-all duration-300">
+                    <a href="/login" onClick={() => setMobileOpen(false)}>Login</a>
+                  </Button>
+                )}
               </div>
             </div>
           </SheetContent>

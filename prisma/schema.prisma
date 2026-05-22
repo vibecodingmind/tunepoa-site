@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,19 +8,56 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String
+  password      String
+  phone         String?
+  company       String?
+  avatar        String?
+  role          String    @default("user") // "user" | "admin"
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  subscriptions Subscription[]
 }
 
-model Post {
-  id        String   @id @default(cuid())
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  authorId  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Package {
+  id          String   @id @default(cuid())
+  category    String   // "starter" | "business" | "premium"
+  tier        String   // "silver" | "bronze" | "gold" | "ruby"
+  name        String   // Display name
+  maxPhoneNumbers Int   // Max phone numbers for RBT
+  features    String   // JSON string of features
+  price3mo    Int      // Price for 3 months in TZS
+  price6mo    Int      // Price for 6 months in TZS
+  price12mo   Int      // Price for 12 months in TZS
+  popular     Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  subscriptions Subscription[]
+}
+
+model Subscription {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  packageId   String
+  package     Package  @relation(fields: [packageId], references: [id])
+  billingCycle String  // "3mo" | "6mo" | "12mo"
+  status      String   @default("active") // "active" | "cancelled" | "expired"
+  phoneNumbers String  // JSON array of assigned phone numbers
+  startDate   DateTime @default(now())
+  endDate     DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model AdminService {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  icon        String?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

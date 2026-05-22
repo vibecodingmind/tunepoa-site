@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { LiveChat } from "@/components/LiveChat";
+import { AuthProvider } from "@/lib/auth-context";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -228,7 +229,9 @@ export default function RootLayout({
         <meta name="geo.country" content="Africa" />
       </head>
       <body className={`${inter.variable} antialiased bg-background text-foreground font-sans overflow-x-hidden`}>
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
         <Toaster />
         <LiveChat />
       </body>
