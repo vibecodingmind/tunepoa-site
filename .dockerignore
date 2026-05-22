@@ -1,0 +1,11 @@
+node_modules
+.next
+.git
+.gitignore
+README.md
+dev.log
+server.log
+*.db
+db/
+tunepoa-front/
+agent-ctx/
