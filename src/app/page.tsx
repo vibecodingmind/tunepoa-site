@@ -645,20 +645,20 @@ function TelecomIntegrationsSection() {
   );
 }
 
-/* ─── Pricing Tiers Table Section ─── */
+/* ─── Pricing Tiers Section ─── */
 function PricingTiersSection() {
   const tiers = [
-    { label: "Month 1", color: "from-orange-500 to-amber-500", badge: "" },
-    { label: "Month 3", color: "from-blue-500 to-indigo-500", badge: "Popular" },
-    { label: "Month 6", color: "from-pink-500 to-rose-500", badge: "" },
-    { label: "Month 12", color: "from-emerald-500 to-green-500", badge: "Best Value" },
+    { label: "1 Month", icon: <Clock className="w-5 h-5" />, color: "from-orange-500 to-amber-500", glowColor: "shadow-orange-500/10", badge: "" },
+    { label: "3 Months", icon: <CalendarClock className="w-5 h-5" />, color: "from-blue-500 to-indigo-500", glowColor: "shadow-blue-500/15", badge: "Popular" },
+    { label: "6 Months", icon: <CalendarClock className="w-5 h-5" />, color: "from-pink-500 to-rose-500", glowColor: "shadow-pink-500/10", badge: "" },
+    { label: "12 Months", icon: <ShieldCheck className="w-5 h-5" />, color: "from-emerald-500 to-green-500", glowColor: "shadow-emerald-500/15", badge: "Best Value" },
   ];
 
   const rows = [
-    { lines: "1 - 10", prices: ["25,000", "23,000", "21,000", "19,000"] },
-    { lines: "11 - 25", prices: ["23,000", "21,000", "19,000", "17,000"] },
-    { lines: "25 - 50", prices: ["21,000", "19,000", "17,000", "15,000"] },
-    { lines: "50+", prices: ["19,000", "17,000", "15,000", "13,000"] },
+    { lines: "1 - 10", icon: <Phone className="w-4 h-4" />, prices: ["25,000", "23,000", "21,000", "19,000"], savings: ["", "8%", "16%", "24%"] },
+    { lines: "11 - 25", icon: <Users className="w-4 h-4" />, prices: ["23,000", "21,000", "19,000", "17,000"], savings: ["", "9%", "17%", "26%"] },
+    { lines: "25 - 50", icon: <Users className="w-4 h-4" />, prices: ["21,000", "19,000", "17,000", "15,000"], savings: ["", "10%", "19%", "29%"] },
+    { lines: "50+", icon: <Rocket className="w-4 h-4" />, prices: ["19,000", "17,000", "15,000", "13,000"], savings: ["", "11%", "21%", "32%"] },
   ];
 
   return (
@@ -666,152 +666,161 @@ function PricingTiersSection() {
       <div className="absolute inset-0 bg-[#050c18]" />
       <div className="absolute inset-0 bg-gradient-to-br from-teal-950/50 via-[#081525] to-cyan-950/30" />
       <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
-      <div className="absolute top-0 right-1/4 w-[700px] h-[500px] bg-teal-500/[0.03] rounded-full blur-[140px]" />
+      <div className="absolute top-0 left-1/4 w-[600px] h-[400px] bg-teal-500/[0.03] rounded-full blur-[140px]" />
+      <div className="absolute bottom-0 right-1/4 w-[500px] h-[300px] bg-cyan-500/[0.025] rounded-full blur-[120px]" />
 
-      <div className="relative z-10 max-w-5xl mx-auto px-5 sm:px-8 lg:px-10">
+      <div className="relative z-10 max-w-6xl mx-auto px-5 sm:px-8 lg:px-10">
         {/* Section Header */}
-        <div className="text-center mb-12 sm:mb-16">
+        <div className="text-center mb-14 sm:mb-20">
           <ScrollReveal animation="blur-in">
-            <div className="gradient-border-animated inline-block mb-6 sm:mb-8"><span>Service Pricing</span></div>
+            <div className="inline-flex items-center gap-2 glass rounded-full px-5 py-2 mb-6 sm:mb-8 border-teal-400/10">
+              <Sparkles className="w-4 h-4 text-teal-400" />
+              <span className="text-xs font-bold text-teal-400 tracking-[0.15em] uppercase">Service Pricing</span>
+            </div>
           </ScrollReveal>
           <ScrollReveal animation="reveal-up" stagger={1}>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-[1.1] mb-4 sm:mb-5 tracking-tight">
-              Service <span className="bg-gradient-to-r from-teal-300 via-emerald-400 to-cyan-400 bg-clip-text text-transparent">Pricing Tiers</span>
+            <h2 className="text-3xl sm:text-4xl lg:text-[3.5rem] font-extrabold text-white leading-[1.08] mb-4 sm:mb-6 tracking-tight">
+              Simple Pricing,<br /><span className="bg-gradient-to-r from-teal-300 via-emerald-400 to-cyan-400 bg-clip-text text-transparent">Maximum Value</span>
             </h2>
           </ScrollReveal>
           <ScrollReveal animation="reveal-up" stagger={2}>
-            <p className="text-base sm:text-lg text-white/35 max-w-2xl mx-auto">Transparent per-line pricing based on your subscription duration. The longer you commit, the more you save.</p>
+            <p className="text-base sm:text-lg text-white/35 max-w-xl mx-auto">Per-line pricing that rewards commitment. Longer plans save you more.</p>
           </ScrollReveal>
         </div>
 
-        {/* Pricing Table */}
+        {/* Duration Cards Row */}
         <ScrollReveal animation="reveal-up" stagger={2}>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-8 sm:mb-10">
+            {tiers.map((tier) => (
+              <div key={tier.label} className={`relative rounded-2xl sm:rounded-[1.25rem] p-4 sm:p-5 text-center transition-all duration-300 hover:scale-[1.03] ${tier.badge ? "glass-premium glow-teal-strong" : "glass-card"} group`}>
+                {tier.badge && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                    <span className={`bg-gradient-to-r ${tier.color} text-white text-[9px] font-bold uppercase tracking-[0.15em] px-4 py-1.5 rounded-full shadow-lg`}>
+                      {tier.badge}
+                    </span>
+                  </div>
+                )}
+                <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br ${tier.color} flex items-center justify-center text-white mx-auto mb-3 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                  {tier.icon}
+                </div>
+                <h4 className={`text-sm sm:text-base font-bold bg-gradient-to-r ${tier.color} bg-clip-text text-transparent`}>{tier.label}</h4>
+              </div>
+            ))}
+          </div>
+        </ScrollReveal>
+
+        {/* Pricing Table */}
+        <ScrollReveal animation="reveal-up" stagger={3}>
           <div className="glass-card rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden">
-            {/* Table */}
             <div className="overflow-x-auto">
               <table className="w-full min-w-[540px]">
-                {/* Header Row */}
                 <thead>
-                  <tr>
-                    <th className="text-left py-5 sm:py-6 px-5 sm:px-7 text-white/40 text-xs font-bold uppercase tracking-[0.18em]">Lines</th>
+                  <tr className="border-b border-white/[0.05]">
+                    <th className="text-left py-5 sm:py-6 px-5 sm:px-7 text-white/30 text-[11px] font-bold uppercase tracking-[0.2em]">Lines</th>
                     {tiers.map((tier) => (
-                      <th key={tier.label} className="py-5 sm:py-6 px-3 sm:px-5 text-center relative">
-                        <div className="flex flex-col items-center gap-2">
-                          {tier.badge && (
-                            <span className={`text-[9px] font-bold uppercase tracking-[0.15em] px-3 py-1 rounded-full bg-gradient-to-r ${tier.color} text-white shadow-lg`}>
-                              {tier.badge}
-                            </span>
-                          )}
-                          {!tier.badge && <div className="h-5" />}
-                          <span className={`text-sm sm:text-base font-bold bg-gradient-to-r ${tier.color} bg-clip-text text-transparent`}>{tier.label}</span>
-                        </div>
+                      <th key={tier.label} className="py-5 sm:py-6 px-2 sm:px-4 text-center">
+                        <span className={`text-xs sm:text-sm font-bold bg-gradient-to-r ${tier.color} bg-clip-text text-transparent`}>{tier.label}</span>
                       </th>
                     ))}
                   </tr>
                 </thead>
-                {/* Divider */}
                 <tbody>
-                  <tr>
-                    <td colSpan={5}>
-                      <div className="line-glow" />
-                    </td>
-                  </tr>
-                  {/* Data Rows */}
                   {rows.map((row, rowIdx) => (
-                    <tr key={row.lines} className={`group transition-all duration-300 ${rowIdx % 2 === 0 ? "bg-white/[0.01]" : ""} hover:bg-white/[0.04]`}>
+                    <tr key={row.lines} className={`group transition-all duration-300 border-b border-white/[0.03] last:border-b-0 ${rowIdx % 2 === 0 ? "bg-white/[0.01]" : ""} hover:bg-white/[0.04]`}>
                       <td className="py-4 sm:py-5 px-5 sm:px-7">
                         <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-teal-500/15 to-cyan-500/15 flex items-center justify-center text-teal-400 shrink-0">
-                            <Phone className="w-4 h-4" />
+                          <div className="w-8 h-8 rounded-lg bg-white/[0.05] flex items-center justify-center text-white/40 group-hover:text-teal-400 transition-colors duration-300 shrink-0">
+                            {row.icon}
                           </div>
-                          <span className="text-white/80 font-bold text-sm sm:text-base tracking-tight">{row.lines}</span>
+                          <span className="text-white/70 font-bold text-sm tracking-tight">{row.lines} lines</span>
                         </div>
                       </td>
                       {row.prices.map((price, colIdx) => (
-                        <td key={colIdx} className="py-4 sm:py-5 px-3 sm:px-5 text-center">
-                          <div className="flex flex-col items-center">
-                            <span className="text-white font-extrabold text-base sm:text-lg tracking-tight">{price}</span>
-                            <span className="text-white/25 text-[10px] sm:text-xs font-medium">TZS</span>
+                        <td key={colIdx} className="py-4 sm:py-5 px-2 sm:px-4 text-center">
+                          <div className="flex flex-col items-center gap-0.5">
+                            <span className="text-white font-extrabold text-sm sm:text-base tracking-tight">{price}</span>
+                            {row.savings[colIdx] && (
+                              <span className={`text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-gradient-to-r ${tiers[colIdx].color} text-white`}>
+                                -{row.savings[colIdx]}
+                              </span>
+                            )}
                           </div>
                         </td>
                       ))}
                     </tr>
                   ))}
-                  {/* Divider */}
-                  <tr>
-                    <td colSpan={5}>
-                      <div className="line-glow" />
-                    </td>
-                  </tr>
-                  {/* Audio Row */}
+                  {/* Audio Recording Row */}
                   <tr className="group hover:bg-white/[0.04] transition-all duration-300">
-                    <td className="py-5 sm:py-6 px-5 sm:px-7">
+                    <td className="py-5 sm:py-6 px-5 sm:px-7 border-t border-white/[0.05]">
                       <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500/15 to-purple-500/15 flex items-center justify-center text-violet-400 shrink-0">
+                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500/20 to-purple-500/20 flex items-center justify-center text-violet-400 shrink-0">
                           <AudioLines className="w-4 h-4" />
                         </div>
-                        <span className="text-white/80 font-bold text-sm sm:text-base tracking-tight">Audio Recording</span>
+                        <span className="text-white/70 font-bold text-sm tracking-tight">Audio Recording</span>
                       </div>
                     </td>
-                    <td colSpan={4} className="py-5 sm:py-6 px-5 text-center">
-                      <div className="inline-flex items-center gap-2 glass rounded-full px-6 py-2.5">
+                    <td colSpan={4} className="py-5 sm:py-6 px-5 border-t border-white/[0.05] text-center">
+                      <div className="inline-flex items-center gap-2">
                         <span className="text-white font-extrabold text-lg tracking-tight">50,000</span>
                         <span className="text-white/30 text-xs font-medium">TZS</span>
+                        <span className="text-[9px] font-bold text-violet-400 bg-violet-400/10 px-2 py-0.5 rounded-full ml-1">one-time</span>
                       </div>
                     </td>
                   </tr>
                 </tbody>
               </table>
             </div>
-
-
           </div>
         </ScrollReveal>
 
-        {/* Promotional Box - KIFURUSHI CHA KUANZIA */}
-        <ScrollReveal animation="reveal-up" stagger={3}>
-          <div className="mt-8 sm:mt-10 relative">
-            <div className="glass-card rounded-[1.5rem] sm:rounded-[2rem] p-6 sm:p-8 relative overflow-hidden">
-              {/* Decorative gradient accent */}
-              <div className="absolute top-0 right-0 w-48 h-48 bg-amber-500/[0.06] rounded-full blur-[80px]" />
-              <div className="absolute bottom-0 left-0 w-36 h-36 bg-teal-500/[0.04] rounded-full blur-[60px]" />
+        {/* Starter Package - Hero Promo */}
+        <ScrollReveal animation="reveal-up" stagger={4}>
+          <div className="mt-8 sm:mt-10">
+            <div className="relative rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden">
+              {/* Gradient background */}
+              <div className="absolute inset-0 bg-gradient-to-br from-amber-600/20 via-orange-600/10 to-rose-600/15" />
+              <div className="absolute inset-0 glass" />
+              <div className="absolute top-0 right-0 w-64 h-64 bg-amber-400/[0.08] rounded-full blur-[100px]" />
+              <div className="absolute bottom-0 left-0 w-48 h-48 bg-orange-400/[0.06] rounded-full blur-[80px]" />
 
-              <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center gap-5 sm:gap-8">
-                {/* Badge */}
-                <div className="shrink-0">
-                  <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[10px] font-bold uppercase tracking-[0.15em] px-5 py-2.5 rounded-full shadow-lg shadow-amber-500/25">
-                    Starter Package
+              <div className="relative z-10 p-6 sm:p-8 lg:p-10">
+                <div className="flex flex-col lg:flex-row items-start lg:items-center gap-6 lg:gap-10">
+                  {/* Left - Deal */}
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[10px] font-bold uppercase tracking-[0.15em] px-5 py-2 rounded-full shadow-lg shadow-amber-500/25 animate-pulse-badge">
+                        Starter Package
+                      </div>
+                      <span className="text-[10px] font-bold bg-rose-500/15 text-rose-400 px-3 py-1.5 rounded-full">SAVE 40%</span>
+                    </div>
+                    <div className="flex items-baseline gap-3 mb-5">
+                      <span className="text-white/25 text-xl sm:text-2xl font-bold line-through tracking-tight">125,000</span>
+                      <span className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">75,000</span>
+                      <span className="text-white/40 text-base font-semibold">TZS</span>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+                      <div className="flex items-center gap-2">
+                        <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
+                        <span className="text-white/60 text-sm font-medium">3 Months</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
+                        <span className="text-white/60 text-sm font-medium">No Setup Fees</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
+                        <span className="text-white/60 text-sm font-medium">Free Audio Recording</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right - CTA */}
+                  <div className="shrink-0 w-full lg:w-auto">
+                    <Button asChild size="lg" className="w-full lg:w-auto bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-bold px-10 py-7 rounded-2xl shadow-xl shadow-amber-500/25 hover:shadow-amber-500/40 transition-all duration-300 hover:scale-105 text-base">
+                      <a href="#contact">Get Started <ArrowRight className="w-5 h-5 ml-2" /></a>
+                    </Button>
                   </div>
                 </div>
-
-                {/* Price */}
-                <div className="flex items-baseline gap-2">
-                  <span className="text-white/30 text-lg sm:text-xl font-bold line-through tracking-tight">125,000</span>
-                  <span className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">75,000</span>
-                  <span className="text-white/40 text-sm font-semibold">TZS</span>
-                  <span className="ml-2 text-[10px] font-bold bg-rose-500/15 text-rose-400 px-2.5 py-1 rounded-full">-40%</span>
-                </div>
-
-                {/* Features */}
-                <div className="flex items-center gap-4 sm:gap-6 flex-wrap">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-teal-400 shrink-0" />
-                    <span className="text-white/60 text-sm font-medium">3 Months</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-teal-400 shrink-0" />
-                    <span className="text-white/60 text-sm font-medium">No Setup Fees</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-teal-400 shrink-0" />
-                    <span className="text-white/60 text-sm font-medium">Free Audio Recording</span>
-                  </div>
-                </div>
-
-                {/* CTA */}
-                <Button asChild className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-semibold px-7 rounded-full shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 transition-all duration-300 hover:scale-105 sm:ml-auto">
-                  <a href="#contact">Get Started</a>
-                </Button>
               </div>
             </div>
           </div>
