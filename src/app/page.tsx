@@ -142,7 +142,7 @@ function Navbar() {
     { label: "Benefits", href: "#benefits" },
     { label: "How It Works", href: "#steps" },
     { label: "Pricing", href: "#pricing" },
-    { label: "RBTs", href: "#rbts" },
+    { label: "Sample Tunes", href: "#rbts" },
     { label: "Contact", href: "#contact" },
   ];
 
@@ -162,9 +162,6 @@ function Navbar() {
               {link.label}
             </a>
           ))}
-          <Button asChild variant="ghost" className="text-white/50 hover:text-white hover:bg-white/5 font-medium px-5 rounded-full border border-white/10 hover:border-white/20 transition-all duration-300 text-sm">
-            <a href="#contact">Request Demo</a>
-          </Button>
           <Button asChild className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-white font-semibold px-7 rounded-full shadow-lg shadow-teal-500/25 hover:shadow-teal-500/50 transition-all duration-300 hover:scale-105">
             <a href="#contact">Get Started</a>
           </Button>
@@ -185,9 +182,6 @@ function Navbar() {
                 </a>
               ))}
               <div className="mt-4 flex flex-col gap-3">
-                <Button asChild variant="ghost" className="text-white/50 hover:text-white hover:bg-white/5 font-medium rounded-full border border-white/10 hover:border-white/20 transition-all duration-300 text-sm justify-start">
-                  <a href="#contact">Request Demo</a>
-                </Button>
                 <Button asChild className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-white font-semibold px-7 rounded-full shadow-lg shadow-teal-500/20 transition-all duration-300">
                   <a href="#contact">Get Started</a>
                 </Button>
@@ -1023,12 +1017,6 @@ function ContactSection() {
                 Ready to transform your call-waiting experience? Get in touch and we&apos;ll help you find the perfect ringback tone solution for your business.
               </p>
 
-              {/* Response guarantee badge */}
-              <div className="inline-flex items-center gap-2 pro-badge mb-8">
-                <Clock className="w-3.5 h-3.5" />
-                <span>Response within 24 hours</span>
-              </div>
-
               <div className="space-y-6">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-teal-500/10 to-cyan-500/10 flex items-center justify-center text-teal-400 shrink-0">
@@ -1068,26 +1056,7 @@ function ContactSection() {
                 </div>
               </div>
 
-              {/* Map placeholder */}
-              <div className="mt-8 rounded-2xl bg-gradient-to-br from-teal-950/50 to-cyan-950/30 border border-white/5 h-36 flex items-center justify-center relative overflow-hidden">
-                <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "20px 20px" }} />
-                <div className="flex flex-col items-center gap-2 relative z-10">
-                  <MapPin className="w-6 h-6 text-teal-400/50" />
-                  <span className="text-white/20 text-xs font-medium">Dar es Salaam, Tanzania</span>
-                </div>
-              </div>
 
-              {/* Social links */}
-              <div className="flex items-center gap-3 mt-6">
-                {[
-                  { icon: <Twitter className="w-4 h-4" />, label: "Twitter" },
-                  { icon: <Linkedin className="w-4 h-4" />, label: "LinkedIn" },
-                  { icon: <Facebook className="w-4 h-4" />, label: "Facebook" },
-                  { icon: <Instagram className="w-4 h-4" />, label: "Instagram" },
-                ].map((social) => (
-                  <a key={social.label} href="#" aria-label={social.label} className="w-10 h-10 rounded-xl glass hover:bg-white/10 flex items-center justify-center text-white/30 hover:text-teal-300 transition-all duration-300 hover:scale-110">{social.icon}</a>
-                ))}
-              </div>
             </div>
           </ScrollReveal>
 
