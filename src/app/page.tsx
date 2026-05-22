@@ -755,7 +755,7 @@ function PricingTiersSection() {
                     </td>
                     <td colSpan={4} className="py-5 sm:py-6 px-5 text-center">
                       <div className="inline-flex items-center gap-2 glass rounded-full px-6 py-2.5">
-                        <span className="text-white font-extrabold text-lg tracking-tight">25,000</span>
+                        <span className="text-white font-extrabold text-lg tracking-tight">50,000</span>
                         <span className="text-white/30 text-xs font-medium">TZS</span>
                       </div>
                     </td>
