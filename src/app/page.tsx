@@ -1176,7 +1176,7 @@ function ContactSection() {
                   </div>
                   <div>
                     <p className="text-white/30 text-[11px] font-semibold uppercase tracking-wider mb-0.5">Phone</p>
-                    <a href="tel:+255123456789" className="text-white/70 hover:text-teal-300 transition-colors text-sm font-medium">+255 123 456 789</a>
+                    <a href="tel:+255798017017" className="text-white/70 hover:text-teal-300 transition-colors text-sm font-medium">+255 798 017 017</a>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
@@ -1257,7 +1257,7 @@ function ContactSection() {
                           type="tel"
                           value={formData.phone}
                           onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                          placeholder="+255 123 456 789"
+                          placeholder="+255 798 017 017"
                           className="w-full bg-white/[0.04] border border-white/10 rounded-xl pl-10 pr-4 py-3.5 text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-teal-400/40 focus:bg-white/[0.06] transition-all duration-300"
                         />
                       </div>
