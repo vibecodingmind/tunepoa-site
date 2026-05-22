@@ -196,11 +196,17 @@ function Navbar() {
 
 /* ─── Hero Section ─── */
 function HeroSection() {
+  const [mounted, setMounted] = useState(false);
   const [typedText, setTypedText] = useState("");
   const fullText = "call-waiting";
   const [showCursor, setShowCursor] = useState(true);
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
     let i = 0;
     const interval = setInterval(() => {
       if (i <= fullText.length) {
@@ -211,12 +217,13 @@ function HeroSection() {
       }
     }, 80);
     return () => clearInterval(interval);
-  }, []);
+  }, [mounted]);
 
   useEffect(() => {
+    if (!mounted) return;
     const cursorInterval = setInterval(() => setShowCursor((v) => !v), 530);
     return () => clearInterval(cursorInterval);
-  }, []);
+  }, [mounted]);
 
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden grain-overlay">
@@ -244,9 +251,9 @@ function HeroSection() {
                 Revolutionize<br />
                 the{" "}
                 <span className="bg-gradient-to-r from-teal-300 via-emerald-400 to-cyan-400 bg-clip-text text-transparent">
-                  {typedText}
+                  {mounted ? typedText : "call-waiting"}
                 </span>
-                <span className={`inline-block w-[3px] h-[0.85em] bg-teal-400 ml-1 align-middle transition-opacity duration-100 ${showCursor && typedText.length <= fullText.length ? "opacity-100" : "opacity-0"}`} />
+                {mounted && <span className={`inline-block w-[3px] h-[0.85em] bg-teal-400 ml-1 align-middle transition-opacity duration-100 ${showCursor && typedText.length <= fullText.length ? "opacity-100" : "opacity-0"}`} />}
                 <br />
                 experience!
               </h1>

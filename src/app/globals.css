@@ -4,11 +4,13 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ─── CSS Custom Properties for Animated Gradients ─── */
-@property --gradient-angle {
+/* @property commented out to prevent browser console warnings.
+   Uncomment if animated gradient angles are needed. */
+/* @property --gradient-angle {
   syntax: "<angle>";
   initial-value: 0deg;
   inherits: false;
-}
+} */
 
 @theme inline {
   --color-background: var(--background);
