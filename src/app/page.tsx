@@ -648,17 +648,17 @@ function TelecomIntegrationsSection() {
 /* ─── Pricing Tiers Table Section ─── */
 function PricingTiersSection() {
   const tiers = [
-    { label: "MWEZI 1", color: "from-orange-500 to-amber-500", badge: "" },
-    { label: "MWEZI 3", color: "from-blue-500 to-indigo-500", badge: "Popular" },
-    { label: "MWEZI 6", color: "from-pink-500 to-rose-500", badge: "" },
-    { label: "MWEZI 12", color: "from-emerald-500 to-green-500", badge: "Best Value" },
+    { label: "Month 1", color: "from-orange-500 to-amber-500", badge: "" },
+    { label: "Month 3", color: "from-blue-500 to-indigo-500", badge: "Popular" },
+    { label: "Month 6", color: "from-pink-500 to-rose-500", badge: "" },
+    { label: "Month 12", color: "from-emerald-500 to-green-500", badge: "Best Value" },
   ];
 
   const rows = [
-    { namba: "1 - 10", prices: ["15,000", "14,000", "13,000", "12,000"] },
-    { namba: "11 - 25", prices: ["14,000", "13,000", "12,000", "11,000"] },
-    { namba: "25 - 50", prices: ["13,000", "12,000", "11,000", "10,000"] },
-    { namba: "50+", prices: ["12,000", "11,000", "10,000", "9,000"] },
+    { lines: "1 - 10", prices: ["15,000", "14,000", "13,000", "12,000"] },
+    { lines: "11 - 25", prices: ["14,000", "13,000", "12,000", "11,000"] },
+    { lines: "25 - 50", prices: ["13,000", "12,000", "11,000", "10,000"] },
+    { lines: "50+", prices: ["12,000", "11,000", "10,000", "9,000"] },
   ];
 
   return (
@@ -672,7 +672,7 @@ function PricingTiersSection() {
         {/* Section Header */}
         <div className="text-center mb-12 sm:mb-16">
           <ScrollReveal animation="blur-in">
-            <div className="gradient-border-animated inline-block mb-6 sm:mb-8"><span>Gharama Za Huduma</span></div>
+            <div className="gradient-border-animated inline-block mb-6 sm:mb-8"><span>Service Pricing</span></div>
           </ScrollReveal>
           <ScrollReveal animation="reveal-up" stagger={1}>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-[1.1] mb-4 sm:mb-5 tracking-tight">
@@ -693,7 +693,7 @@ function PricingTiersSection() {
                 {/* Header Row */}
                 <thead>
                   <tr>
-                    <th className="text-left py-5 sm:py-6 px-5 sm:px-7 text-white/40 text-xs font-bold uppercase tracking-[0.18em]">Namba</th>
+                    <th className="text-left py-5 sm:py-6 px-5 sm:px-7 text-white/40 text-xs font-bold uppercase tracking-[0.18em]">Lines</th>
                     {tiers.map((tier) => (
                       <th key={tier.label} className="py-5 sm:py-6 px-3 sm:px-5 text-center relative">
                         <div className="flex flex-col items-center gap-2">
@@ -718,13 +718,13 @@ function PricingTiersSection() {
                   </tr>
                   {/* Data Rows */}
                   {rows.map((row, rowIdx) => (
-                    <tr key={row.namba} className={`group transition-all duration-300 ${rowIdx % 2 === 0 ? "bg-white/[0.01]" : ""} hover:bg-white/[0.04]`}>
+                    <tr key={row.lines} className={`group transition-all duration-300 ${rowIdx % 2 === 0 ? "bg-white/[0.01]" : ""} hover:bg-white/[0.04]`}>
                       <td className="py-4 sm:py-5 px-5 sm:px-7">
                         <div className="flex items-center gap-3">
                           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-teal-500/15 to-cyan-500/15 flex items-center justify-center text-teal-400 shrink-0">
                             <Phone className="w-4 h-4" />
                           </div>
-                          <span className="text-white/80 font-bold text-sm sm:text-base tracking-tight">{row.namba}</span>
+                          <span className="text-white/80 font-bold text-sm sm:text-base tracking-tight">{row.lines}</span>
                         </div>
                       </td>
                       {row.prices.map((price, colIdx) => (
@@ -783,7 +783,7 @@ function PricingTiersSection() {
                 {/* Badge */}
                 <div className="shrink-0">
                   <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[10px] font-bold uppercase tracking-[0.15em] px-5 py-2.5 rounded-full shadow-lg shadow-amber-500/25">
-                    Kifurushi Cha Kuanzia
+                    Starter Package
                   </div>
                 </div>
 
@@ -797,7 +797,7 @@ function PricingTiersSection() {
                 <div className="flex items-center gap-4 sm:gap-6 flex-wrap">
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-teal-400 shrink-0" />
-                    <span className="text-white/60 text-sm font-medium">1 Month</span>
+                    <span className="text-white/60 text-sm font-medium">1 Month Subscription</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-teal-400 shrink-0" />
