@@ -15,11 +15,6 @@ import {
   Crown,
   Gem,
   Award,
-  BarChart3,
-  Mic,
-  Code,
-  Sparkles,
-  CalendarClock,
   ArrowRight,
   X,
   AlertCircle,
@@ -51,24 +46,7 @@ interface SubscriptionItem {
   package: PackageItem;
 }
 
-interface AdminServiceItem {
-  id: string;
-  title: string;
-  description: string;
-  icon: string | null;
-  active: boolean;
-}
-
 /* ─── Icon mapping ─── */
-const serviceIconMap: Record<string, React.ReactNode> = {
-  Music: <Music className="w-6 h-6" />,
-  Mic: <Mic className="w-6 h-6" />,
-  BarChart3: <BarChart3 className="w-6 h-6" />,
-  Code: <Code className="w-6 h-6" />,
-  Sparkles: <Sparkles className="w-6 h-6" />,
-  CalendarClock: <CalendarClock className="w-6 h-6" />,
-};
-
 const tierIconMap: Record<string, React.ReactNode> = {
   Silver: <Award className="w-5 h-5" />,
   Bronze: <Award className="w-5 h-5" />,
@@ -127,7 +105,6 @@ export default function DashboardPage() {
 
   const [packages, setPackages] = useState<PackageItem[]>([]);
   const [subscriptions, setSubscriptions] = useState<SubscriptionItem[]>([]);
-  const [adminServices, setAdminServices] = useState<AdminServiceItem[]>([]);
   const [billingCycle, setBillingCycle] = useState<"3mo" | "6mo" | "12mo">("3mo");
   const [loadingData, setLoadingData] = useState(true);
   const [subscribingId, setSubscribingId] = useState<string | null>(null);
@@ -156,16 +133,6 @@ export default function DashboardPage() {
     }
   }, [user]);
 
-  const fetchAdminServices = useCallback(async () => {
-    try {
-      const res = await fetch("/api/admin-services");
-      const data = await res.json();
-      setAdminServices(data.services || []);
-    } catch (err) {
-      console.error("Failed to fetch admin services:", err);
-    }
-  }, []);
-
   const seedDatabase = useCallback(async () => {
     try {
       await fetch("/api/seed");
@@ -181,11 +148,11 @@ export default function DashboardPage() {
     }
     if (user) {
       setLoadingData(true);
-      Promise.all([seedDatabase(), fetchPackages(), fetchSubscriptions(), fetchAdminServices()]).finally(() =>
+      Promise.all([seedDatabase(), fetchPackages(), fetchSubscriptions()]).finally(() =>
         setLoadingData(false)
       );
     }
-  }, [user, authLoading, seedDatabase, fetchPackages, fetchSubscriptions, fetchAdminServices]);
+  }, [user, authLoading, seedDatabase, fetchPackages, fetchSubscriptions]);
 
   const handleSubscribe = async (packageId: string) => {
     if (!user) return;
@@ -552,39 +519,6 @@ export default function DashboardPage() {
                     </div>
                   );
                 })}
-              </section>
-
-              <div className="line-glow" />
-
-              {/* ─── Admin Services Section ─── */}
-              <section>
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-500/20 to-cyan-500/20 flex items-center justify-center text-teal-400">
-                    <Sparkles className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">Our Services</h2>
-                    <p className="text-white/35 text-sm">Professional ringback tone services for your business</p>
-                  </div>
-                </div>
-
-                {adminServices.length === 0 ? (
-                  <div className="glass-card rounded-2xl p-8 text-center">
-                    <p className="text-white/40 text-sm">No services available at the moment</p>
-                  </div>
-                ) : (
-                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {adminServices.map((service) => (
-                      <div key={service.id} className="glass-card rounded-2xl p-5 sm:p-6 group">
-                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-teal-500/15 to-cyan-500/15 flex items-center justify-center text-teal-400 mb-4 group-hover:scale-110 transition-transform duration-300">
-                          {service.icon ? serviceIconMap[service.icon] || <Star className="w-6 h-6" /> : <Star className="w-6 h-6" />}
-                        </div>
-                        <h4 className="text-white font-bold text-sm mb-2">{service.title}</h4>
-                        <p className="text-white/35 text-xs leading-relaxed">{service.description}</p>
-                      </div>
-                    ))}
-                  </div>
-                )}
               </section>
             </div>
           )}
