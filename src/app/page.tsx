@@ -719,6 +719,179 @@ function PricingSection() {
   );
 }
 
+/* ─── Pricing Tiers Table Section ─── */
+function PricingTiersSection() {
+  const tiers = [
+    { label: "MWEZI 1", color: "from-orange-500 to-amber-500", badge: "" },
+    { label: "MWEZI 3", color: "from-blue-500 to-indigo-500", badge: "Popular" },
+    { label: "MWEZI 6", color: "from-pink-500 to-rose-500", badge: "" },
+    { label: "MWEZI 12", color: "from-emerald-500 to-green-500", badge: "Best Value" },
+  ];
+
+  const rows = [
+    { namba: "1 - 10", prices: ["15,000", "14,000", "13,000", "12,000"] },
+    { namba: "11 - 25", prices: ["14,000", "13,000", "12,000", "11,000"] },
+    { namba: "25 - 50", prices: ["13,000", "12,000", "11,000", "10,000"] },
+    { namba: "50+", prices: ["12,000", "11,000", "10,000", "9,000"] },
+  ];
+
+  return (
+    <section id="pricing-tiers" className="py-24 sm:py-32 lg:py-40 relative overflow-hidden">
+      <div className="absolute inset-0 bg-[#050c18]" />
+      <div className="absolute inset-0 bg-gradient-to-br from-teal-950/50 via-[#081525] to-cyan-950/30" />
+      <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
+      <div className="absolute top-0 right-1/4 w-[700px] h-[500px] bg-teal-500/[0.03] rounded-full blur-[140px]" />
+
+      <div className="relative z-10 max-w-5xl mx-auto px-5 sm:px-8 lg:px-10">
+        {/* Section Header */}
+        <div className="text-center mb-12 sm:mb-16">
+          <ScrollReveal animation="blur-in">
+            <div className="gradient-border-animated inline-block mb-6 sm:mb-8"><span>Gharama Za Huduma</span></div>
+          </ScrollReveal>
+          <ScrollReveal animation="reveal-up" stagger={1}>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-[1.1] mb-4 sm:mb-5 tracking-tight">
+              Service <span className="bg-gradient-to-r from-teal-300 via-emerald-400 to-cyan-400 bg-clip-text text-transparent">Pricing Tiers</span>
+            </h2>
+          </ScrollReveal>
+          <ScrollReveal animation="reveal-up" stagger={2}>
+            <p className="text-base sm:text-lg text-white/35 max-w-2xl mx-auto">Transparent per-line pricing based on your subscription duration. The longer you commit, the more you save.</p>
+          </ScrollReveal>
+        </div>
+
+        {/* Pricing Table */}
+        <ScrollReveal animation="reveal-up" stagger={2}>
+          <div className="glass-card rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden">
+            {/* Table */}
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[540px]">
+                {/* Header Row */}
+                <thead>
+                  <tr>
+                    <th className="text-left py-5 sm:py-6 px-5 sm:px-7 text-white/40 text-xs font-bold uppercase tracking-[0.18em]">Namba</th>
+                    {tiers.map((tier) => (
+                      <th key={tier.label} className="py-5 sm:py-6 px-3 sm:px-5 text-center relative">
+                        <div className="flex flex-col items-center gap-2">
+                          {tier.badge && (
+                            <span className={`text-[9px] font-bold uppercase tracking-[0.15em] px-3 py-1 rounded-full bg-gradient-to-r ${tier.color} text-white shadow-lg`}>
+                              {tier.badge}
+                            </span>
+                          )}
+                          {!tier.badge && <div className="h-5" />}
+                          <span className={`text-sm sm:text-base font-bold bg-gradient-to-r ${tier.color} bg-clip-text text-transparent`}>{tier.label}</span>
+                        </div>
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                {/* Divider */}
+                <tbody>
+                  <tr>
+                    <td colSpan={5}>
+                      <div className="line-glow" />
+                    </td>
+                  </tr>
+                  {/* Data Rows */}
+                  {rows.map((row, rowIdx) => (
+                    <tr key={row.namba} className={`group transition-all duration-300 ${rowIdx % 2 === 0 ? "bg-white/[0.01]" : ""} hover:bg-white/[0.04]`}>
+                      <td className="py-4 sm:py-5 px-5 sm:px-7">
+                        <div className="flex items-center gap-3">
+                          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-teal-500/15 to-cyan-500/15 flex items-center justify-center text-teal-400 shrink-0">
+                            <Phone className="w-4 h-4" />
+                          </div>
+                          <span className="text-white/80 font-bold text-sm sm:text-base tracking-tight">{row.namba}</span>
+                        </div>
+                      </td>
+                      {row.prices.map((price, colIdx) => (
+                        <td key={colIdx} className="py-4 sm:py-5 px-3 sm:px-5 text-center">
+                          <div className="flex flex-col items-center">
+                            <span className="text-white font-extrabold text-base sm:text-lg tracking-tight">{price}</span>
+                            <span className="text-white/25 text-[10px] sm:text-xs font-medium">TZS</span>
+                          </div>
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                  {/* Divider */}
+                  <tr>
+                    <td colSpan={5}>
+                      <div className="line-glow" />
+                    </td>
+                  </tr>
+                  {/* Audio Row */}
+                  <tr className="group hover:bg-white/[0.04] transition-all duration-300">
+                    <td className="py-5 sm:py-6 px-5 sm:px-7">
+                      <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500/15 to-purple-500/15 flex items-center justify-center text-violet-400 shrink-0">
+                          <AudioLines className="w-4 h-4" />
+                        </div>
+                        <span className="text-white/80 font-bold text-sm sm:text-base tracking-tight">Audio</span>
+                      </div>
+                    </td>
+                    <td colSpan={4} className="py-5 sm:py-6 px-5 text-center">
+                      <div className="inline-flex items-center gap-2 glass rounded-full px-6 py-2.5">
+                        <span className="text-white font-extrabold text-lg tracking-tight">15,000</span>
+                        <span className="text-white/30 text-xs font-medium">TZS</span>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            {/* Per-line note */}
+            <div className="px-5 sm:px-7 pb-5 sm:pb-6 pt-2">
+              <p className="text-white/20 text-xs font-medium text-center">All prices are per line, per month in Tanzanian Shillings (TZS)</p>
+            </div>
+          </div>
+        </ScrollReveal>
+
+        {/* Promotional Box - KIFURUSHI CHA KUANZIA */}
+        <ScrollReveal animation="reveal-up" stagger={3}>
+          <div className="mt-8 sm:mt-10 relative">
+            <div className="glass-card rounded-[1.5rem] sm:rounded-[2rem] p-6 sm:p-8 relative overflow-hidden">
+              {/* Decorative gradient accent */}
+              <div className="absolute top-0 right-0 w-48 h-48 bg-amber-500/[0.06] rounded-full blur-[80px]" />
+              <div className="absolute bottom-0 left-0 w-36 h-36 bg-teal-500/[0.04] rounded-full blur-[60px]" />
+
+              <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center gap-5 sm:gap-8">
+                {/* Badge */}
+                <div className="shrink-0">
+                  <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[10px] font-bold uppercase tracking-[0.15em] px-5 py-2.5 rounded-full shadow-lg shadow-amber-500/25">
+                    Kifurushi Cha Kuanzia
+                  </div>
+                </div>
+
+                {/* Price */}
+                <div className="flex items-baseline gap-2">
+                  <span className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">30,000</span>
+                  <span className="text-white/40 text-sm font-semibold">TZS</span>
+                </div>
+
+                {/* Features */}
+                <div className="flex items-center gap-4 sm:gap-6 flex-wrap">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-teal-400 shrink-0" />
+                    <span className="text-white/60 text-sm font-medium">1 Month</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-teal-400 shrink-0" />
+                    <span className="text-white/60 text-sm font-medium">Audio Recording</span>
+                  </div>
+                </div>
+
+                {/* CTA */}
+                <Button asChild className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-semibold px-7 rounded-full shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 transition-all duration-300 hover:scale-105 sm:ml-auto">
+                  <a href="#contact">Get Started</a>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </ScrollReveal>
+      </div>
+    </section>
+  );
+}
+
 /* ─── Testimonials Carousel ─── */
 function TestimonialsSection() {
   const testimonials = [
@@ -1270,6 +1443,7 @@ export default function HomePage() {
         <IntegrationsSection />
         <TelecomIntegrationsSection />
         <PricingSection />
+        <PricingTiersSection />
         <TestimonialsSection />
         <RBTsSection />
         <FAQSection />
