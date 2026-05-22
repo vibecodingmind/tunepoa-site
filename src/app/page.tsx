@@ -750,12 +750,12 @@ function PricingTiersSection() {
                         <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500/15 to-purple-500/15 flex items-center justify-center text-violet-400 shrink-0">
                           <AudioLines className="w-4 h-4" />
                         </div>
-                        <span className="text-white/80 font-bold text-sm sm:text-base tracking-tight">Audio</span>
+                        <span className="text-white/80 font-bold text-sm sm:text-base tracking-tight">Audio Recording</span>
                       </div>
                     </td>
                     <td colSpan={4} className="py-5 sm:py-6 px-5 text-center">
                       <div className="inline-flex items-center gap-2 glass rounded-full px-6 py-2.5">
-                        <span className="text-white font-extrabold text-lg tracking-tight">15,000</span>
+                        <span className="text-white font-extrabold text-lg tracking-tight">25,000</span>
                         <span className="text-white/30 text-xs font-medium">TZS</span>
                       </div>
                     </td>
@@ -789,19 +789,25 @@ function PricingTiersSection() {
 
                 {/* Price */}
                 <div className="flex items-baseline gap-2">
-                  <span className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">30,000</span>
+                  <span className="text-white/30 text-lg sm:text-xl font-bold line-through tracking-tight">75,000</span>
+                  <span className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">60,000</span>
                   <span className="text-white/40 text-sm font-semibold">TZS</span>
+                  <span className="ml-2 text-[10px] font-bold bg-rose-500/15 text-rose-400 px-2.5 py-1 rounded-full">-20%</span>
                 </div>
 
                 {/* Features */}
                 <div className="flex items-center gap-4 sm:gap-6 flex-wrap">
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-teal-400 shrink-0" />
-                    <span className="text-white/60 text-sm font-medium">1 Month Subscription</span>
+                    <span className="text-white/60 text-sm font-medium">3 Months</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-teal-400 shrink-0" />
-                    <span className="text-white/60 text-sm font-medium">Audio Recording</span>
+                    <span className="text-white/60 text-sm font-medium">No Setup Fees</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-teal-400 shrink-0" />
+                    <span className="text-white/60 text-sm font-medium">Free Audio Recording</span>
                   </div>
                 </div>
 
