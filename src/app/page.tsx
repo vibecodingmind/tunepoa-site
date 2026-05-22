@@ -12,6 +12,7 @@ import {
 import {
   Sheet,
   SheetContent,
+  SheetTitle,
 } from "@/components/ui/sheet";
 import {
   Music,
@@ -174,6 +175,7 @@ function Navbar() {
           <SheetContent side="right" className="bg-[#060e1a]/98 backdrop-blur-2xl border-teal-900/20 w-72">
             <div className="flex items-center gap-3 mb-8 pt-1">
               <img src="/logo.png" alt="TunePoa" className="h-7 w-auto max-w-[100px] object-contain" />
+              <SheetTitle className="sr-only">TunePoa Navigation Menu</SheetTitle>
             </div>
             <div className="flex flex-col gap-1">
               {navLinks.map((link, i) => (
@@ -647,9 +649,9 @@ function TelecomIntegrationsSection() {
 function PricingSection() {
   const [annual, setAnnual] = useState(false);
   const plans = [
-    { name: "Starter", monthlyPrice: 20000, annualPrice: 16000, perLabel: "per User", description: "Perfect for small businesses getting started with ringback tones.", features: ["Customizable Tones", "High-quality Audio", "Scheduled Tones", "Email Support"], popular: false, cta: "Get Started" },
-    { name: "Pro", monthlyPrice: 57000, annualPrice: 45600, perLabel: "per 3 Users", description: "Ideal for growing businesses that want to maximize brand engagement.", features: ["Customizable Tones", "High-quality Audio", "Scheduled Tones", "Priority Support", "Analytics Dashboard", "Multi-User Access", "API Access"], popular: true, cta: "Select Plan" },
-    { name: "Enterprise", monthlyPrice: 0, annualPrice: 0, perLabel: "", description: "For large organizations requiring full RBT platform capabilities.", features: ["Customizable Tones", "High-quality Audio", "Scheduled Tones", "Priority Support", "Analytics Dashboard", "Multi-User Access", "API Access", "Dedicated Account Manager", "Custom Integrations", "SLA Guarantee", "Unlimited Users"], popular: false, cta: "Contact Us" },
+    { name: "Starter", monthlyPrice: 20000, annualPrice: 16000, perLabel: "per User", description: "Perfect for small businesses getting started with ringback tones.", features: ["Customizable Tones", "High-quality Audio", "Scheduled Tones", "Customer Support"], popular: false, cta: "Get Started" },
+    { name: "Pro", monthlyPrice: 57000, annualPrice: 45600, perLabel: "per 3 Users", description: "Ideal for growing businesses that want to maximize brand engagement.", features: ["Customizable Tones", "High-quality Audio", "Scheduled Tones", "Customer Support"], popular: true, cta: "Select Plan" },
+    { name: "Enterprise", monthlyPrice: 0, annualPrice: 0, perLabel: "", description: "For large organizations requiring full RBT platform capabilities.", features: ["Customizable Tones", "High-quality Audio", "Scheduled Tones", "Customer Support"], popular: false, cta: "Contact Us" },
   ];
   const formatTZS = (amount: number) => amount.toLocaleString();
   return (
