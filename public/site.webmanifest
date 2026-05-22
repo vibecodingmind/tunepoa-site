@@ -1,0 +1,22 @@
+{
+  "name": "TunePoa – Ringback Tone Solution",
+  "short_name": "TunePoa",
+  "description": "Professional ringback tone solution for businesses across Africa",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#050c18",
+  "theme_color": "#0d9488",
+  "icons": [
+    {
+      "src": "/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
