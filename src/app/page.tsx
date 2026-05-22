@@ -764,10 +764,7 @@ function PricingTiersSection() {
               </table>
             </div>
 
-            {/* Per-line note */}
-            <div className="px-5 sm:px-7 pb-5 sm:pb-6 pt-2">
-              <p className="text-white/20 text-xs font-medium text-center">All prices are per line, per month in Tanzanian Shillings (TZS)</p>
-            </div>
+
           </div>
         </ScrollReveal>
 
@@ -789,10 +786,10 @@ function PricingTiersSection() {
 
                 {/* Price */}
                 <div className="flex items-baseline gap-2">
-                  <span className="text-white/30 text-lg sm:text-xl font-bold line-through tracking-tight">75,000</span>
-                  <span className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">60,000</span>
+                  <span className="text-white/30 text-lg sm:text-xl font-bold line-through tracking-tight">125,000</span>
+                  <span className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">75,000</span>
                   <span className="text-white/40 text-sm font-semibold">TZS</span>
-                  <span className="ml-2 text-[10px] font-bold bg-rose-500/15 text-rose-400 px-2.5 py-1 rounded-full">-20%</span>
+                  <span className="ml-2 text-[10px] font-bold bg-rose-500/15 text-rose-400 px-2.5 py-1 rounded-full">-40%</span>
                 </div>
 
                 {/* Features */}
