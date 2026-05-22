@@ -1185,7 +1185,7 @@ function ContactSection() {
                   </div>
                   <div>
                     <p className="text-white/30 text-[11px] font-semibold uppercase tracking-wider mb-0.5">Location</p>
-                    <p className="text-white/70 text-sm font-medium">Dar es Salaam, Tanzania</p>
+                    <p className="text-white/70 text-sm font-medium">PAPU Tower 6th Floor, 10636 Moshi Rd, Arusha</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
