@@ -247,12 +247,14 @@ function HeroSection() {
             <ScrollReveal animation="blur-in" className="inline-block mb-8 sm:mb-10"><div className="gradient-border-animated inline-block"><span>Make It Ring</span></div></ScrollReveal>
             <ScrollReveal animation="reveal-up" stagger={1}>
               <h1 className="text-4xl sm:text-5xl lg:text-[4.2rem] font-extrabold text-white leading-[1.08] sm:leading-[1.06] mb-5 sm:mb-7 tracking-tight">
-                Revolutionize the<br />
+                Revolutionize<br />
+                the{" "}
                 <span className="bg-gradient-to-r from-teal-300 via-emerald-400 to-cyan-400 bg-clip-text text-transparent">
                   {typedText}
                 </span>
                 <span className={`inline-block w-[3px] h-[0.85em] bg-teal-400 ml-1 align-middle transition-opacity duration-100 ${showCursor && typedText.length <= fullText.length ? "opacity-100" : "opacity-0"}`} />
-                {" "}experience!
+                <br />
+                experience!
               </h1>
             </ScrollReveal>
             <ScrollReveal animation="reveal-up" stagger={2}>
