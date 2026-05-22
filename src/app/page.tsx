@@ -142,7 +142,7 @@ function Navbar() {
     { label: "About", href: "#about" },
     { label: "Benefits", href: "#benefits" },
     { label: "How It Works", href: "#steps" },
-    { label: "Pricing", href: "#pricing" },
+    { label: "Pricing", href: "#pricing-tiers" },
     { label: "Sample Tunes", href: "#rbts" },
     { label: "Contact", href: "#contact" },
   ];
@@ -640,80 +640,6 @@ function TelecomIntegrationsSection() {
             ))}
           </div>
         </div>
-      </div>
-    </section>
-  );
-}
-
-/* ─── Pricing Section ─── */
-function PricingSection() {
-  const [annual, setAnnual] = useState(false);
-  const plans = [
-    { name: "Starter", monthlyPrice: 20000, annualPrice: 16000, perLabel: "per User", description: "Perfect for small businesses getting started with ringback tones.", features: ["Customizable Tones", "High-quality Audio", "Scheduled Tones", "Customer Support"], popular: false, cta: "Get Started" },
-    { name: "Pro", monthlyPrice: 57000, annualPrice: 45600, perLabel: "per 3 Users", description: "Ideal for growing businesses that want to maximize brand engagement.", features: ["Customizable Tones", "High-quality Audio", "Scheduled Tones", "Customer Support"], popular: true, cta: "Select Plan" },
-    { name: "Enterprise", monthlyPrice: 0, annualPrice: 0, perLabel: "", description: "For large organizations requiring full RBT platform capabilities.", features: ["Customizable Tones", "High-quality Audio", "Scheduled Tones", "Customer Support"], popular: false, cta: "Contact Us" },
-  ];
-  const formatTZS = (amount: number) => amount.toLocaleString();
-  return (
-    <section id="pricing" className="py-24 sm:py-32 lg:py-40 relative overflow-hidden">
-      <div className="absolute inset-0 bg-[#050c18]" />
-      <div className="absolute inset-0 bg-gradient-to-br from-teal-950/50 via-[#081525] to-cyan-950/30" />
-      <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-teal-500/[0.035] rounded-full blur-[140px]" />
-      <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
-        <div className="text-center mb-12 sm:mb-20">
-          <ScrollReveal animation="blur-in">
-            <span className="text-xs font-bold text-teal-400 tracking-[0.2em] uppercase mb-4 sm:mb-5 block">Pricing</span>
-          </ScrollReveal>
-          <ScrollReveal animation="reveal-up" stagger={1}>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-[1.1] mb-4 sm:mb-5 tracking-tight">Simple, Transparent Pricing</h2>
-          </ScrollReveal>
-          <ScrollReveal animation="reveal-up" stagger={2}>
-            <p className="text-base sm:text-lg text-white/35 max-w-2xl mx-auto mb-8 sm:mb-10">Choose the plan that fits your business. All plans include our core RBT features with no hidden fees.</p>
-          </ScrollReveal>
-          <div className="inline-flex glass rounded-full p-1.5">
-            <button onClick={() => setAnnual(false)} className={`px-8 py-3 rounded-full text-sm font-semibold transition-all duration-300 ${!annual ? "bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-lg shadow-teal-500/20" : "text-white/35 hover:text-white/55"}`}>Monthly</button>
-            <button onClick={() => setAnnual(true)} className={`px-8 py-3 rounded-full text-sm font-semibold transition-all duration-300 ${annual ? "bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-lg shadow-teal-500/20" : "text-white/35 hover:text-white/55"}`}>
-              Annual <span className="ml-2 text-[10px] font-bold bg-teal-400/15 text-teal-300 px-2 py-0.5 rounded-full">-20%</span>
-            </button>
-          </div>
-        </div>
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-5 sm:gap-7">
-          {plans.map((plan) => (
-            <div key={plan.name} className={`relative rounded-2xl sm:rounded-[1.5rem] p-6 sm:p-9 transition-all duration-500 ${plan.popular ? "glass-premium glow-teal-strong sm:scale-[1.02]" : "glass-card"}`}>
-              {plan.popular && (
-                <div className="absolute -top-5 left-1/2 -translate-x-1/2">
-                  <span className="bg-gradient-to-r from-teal-500 to-cyan-500 text-white text-[11px] font-bold px-6 py-2.5 rounded-full uppercase tracking-[0.15em] shadow-xl shadow-teal-500/30 animate-pulse-badge">Most Popular</span>
-                </div>
-              )}
-              <h3 className="text-xl font-bold text-white mb-2 tracking-tight">{plan.name}</h3>
-              <p className="text-white/30 text-sm mb-7">{plan.description}</p>
-              <div className="mb-9">
-                {plan.name === "Enterprise" ? (
-                  <span className="text-5xl font-extrabold text-white tracking-tight">Custom</span>
-                ) : (
-                  <>
-                    <span className="text-lg font-bold text-teal-400 tracking-tight">TZS</span>
-                    <span className="text-5xl font-extrabold text-white tracking-tight ml-2">{formatTZS(annual ? plan.annualPrice : plan.monthlyPrice)}</span>
-                  </>
-                )}
-                {plan.perLabel && <span className="text-white/25 text-sm ml-2">{plan.perLabel}</span>}
-                {annual && plan.name !== "Enterprise" && <p className="text-teal-400 text-xs mt-2 font-semibold">Billed annually</p>}
-              </div>
-              <ul className="space-y-3 mb-9">
-                {plan.features.map((feature) => (<li key={feature} className="flex items-start gap-3"><CheckCircle2 className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" /><span className="text-white/50 text-sm">{feature}</span></li>))}
-              </ul>
-              <Button asChild className={`w-full font-semibold rounded-full py-5 transition-all duration-300 ${plan.popular ? "bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-white shadow-lg shadow-teal-500/20 hover:scale-[1.02]" : "glass hover:bg-white/10 text-white hover:scale-[1.02]"}`}>
-                <a href="#contact">{plan.cta}</a>
-              </Button>
-            </div>
-          ))}
-        </div>
-        <ScrollReveal animation="reveal-up" stagger={3}>
-          <div className="text-center mt-8">
-            <a href="#contact" className="text-teal-400/60 hover:text-teal-300 text-sm font-medium transition-colors duration-300 underline underline-offset-4 decoration-teal-400/20 hover:decoration-teal-400/40">Compare Plans in Detail</a>
-          </div>
-        </ScrollReveal>
       </div>
     </section>
   );
@@ -1442,7 +1368,6 @@ export default function HomePage() {
         <StepsSection />
         <IntegrationsSection />
         <TelecomIntegrationsSection />
-        <PricingSection />
         <PricingTiersSection />
         <TestimonialsSection />
         <RBTsSection />
