@@ -14,6 +14,7 @@ import {
   Sheet,
   SheetContent,
   SheetTitle,
+  SheetDescription,
 } from "@/components/ui/sheet";
 import {
   Music,
@@ -190,6 +191,7 @@ function Navbar() {
             <div className="flex items-center gap-3 mb-8 pt-1">
               <img src="/logo.png" alt="TunePoa" className="h-7 w-auto max-w-[100px] object-contain" />
               <SheetTitle className="sr-only">TunePoa Navigation Menu</SheetTitle>
+              <SheetDescription className="sr-only">Main navigation links for the TunePoa website</SheetDescription>
             </div>
             <div className="flex flex-col gap-1">
               {navLinks.map((link, i) => (
