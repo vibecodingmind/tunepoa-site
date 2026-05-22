@@ -1012,64 +1012,76 @@ function ContactSection() {
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-cyan-500/[0.03] rounded-full blur-[100px]" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
-        <div className="grid lg:grid-cols-2 gap-12 sm:gap-16 lg:gap-20 items-start">
-          {/* Left - Info */}
-          <ScrollReveal animation="reveal-left">
-            <div>
-              <div className="gradient-border-animated inline-block mb-6 sm:mb-8"><span>Contact Us</span></div>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-[1.1] mb-5 sm:mb-7 tracking-tight">
-                Let&apos;s Make Your <span className="bg-gradient-to-r from-teal-300 via-emerald-400 to-cyan-400 bg-clip-text text-transparent">Calls Memorable</span>
-              </h2>
-              <p className="text-base sm:text-lg text-white/40 leading-relaxed mb-10 sm:mb-12 max-w-lg">
-                Ready to transform your call-waiting experience? Get in touch and we&apos;ll help you find the perfect ringback tone solution for your business.
-              </p>
+        {/* Section Header */}
+        <div className="text-center mb-12 sm:mb-16">
+          <ScrollReveal animation="blur-in">
+            <div className="gradient-border-animated inline-block mb-6 sm:mb-8"><span>Contact Us</span></div>
+          </ScrollReveal>
+          <ScrollReveal animation="reveal-up" stagger={1}>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-[1.1] mb-4 sm:mb-5 tracking-tight">
+              Let&apos;s Make Your <span className="bg-gradient-to-r from-teal-300 via-emerald-400 to-cyan-400 bg-clip-text text-transparent">Calls Memorable</span>
+            </h2>
+          </ScrollReveal>
+          <ScrollReveal animation="reveal-up" stagger={2}>
+            <p className="text-base sm:text-lg text-white/40 leading-relaxed max-w-2xl mx-auto">
+              Ready to transform your call-waiting experience? Get in touch and we&apos;ll help you find the perfect ringback tone solution for your business.
+            </p>
+          </ScrollReveal>
+        </div>
 
-              <div className="space-y-6">
+        <div className="grid lg:grid-cols-5 gap-8 sm:gap-10 lg:gap-12 items-stretch">
+          {/* Left - Info Card */}
+          <ScrollReveal animation="reveal-left" className="lg:col-span-2">
+            <div className="glass-card rounded-[1.5rem] p-6 sm:p-8 h-full flex flex-col">
+              <h3 className="text-lg font-bold text-white mb-6 tracking-tight">Get in Touch</h3>
+              <div className="space-y-5 flex-1">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-teal-500/10 to-cyan-500/10 flex items-center justify-center text-teal-400 shrink-0">
+                  <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-teal-500/15 to-cyan-500/15 flex items-center justify-center text-teal-400 shrink-0">
                     <Mail className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="text-white/30 text-xs font-medium uppercase tracking-wider mb-1">Email</p>
+                    <p className="text-white/30 text-[11px] font-semibold uppercase tracking-wider mb-0.5">Email</p>
                     <a href="mailto:hello@tunepoa.com" className="text-white/70 hover:text-teal-300 transition-colors text-sm font-medium">hello@tunepoa.com</a>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-teal-500/10 to-cyan-500/10 flex items-center justify-center text-teal-400 shrink-0">
+                  <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-teal-500/15 to-cyan-500/15 flex items-center justify-center text-teal-400 shrink-0">
                     <Phone className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="text-white/30 text-xs font-medium uppercase tracking-wider mb-1">Phone</p>
+                    <p className="text-white/30 text-[11px] font-semibold uppercase tracking-wider mb-0.5">Phone</p>
                     <a href="tel:+255123456789" className="text-white/70 hover:text-teal-300 transition-colors text-sm font-medium">+255 123 456 789</a>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-teal-500/10 to-cyan-500/10 flex items-center justify-center text-teal-400 shrink-0">
+                  <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-teal-500/15 to-cyan-500/15 flex items-center justify-center text-teal-400 shrink-0">
                     <MapPin className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="text-white/30 text-xs font-medium uppercase tracking-wider mb-1">Location</p>
+                    <p className="text-white/30 text-[11px] font-semibold uppercase tracking-wider mb-0.5">Location</p>
                     <p className="text-white/70 text-sm font-medium">Dar es Salaam, Tanzania</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-teal-500/10 to-cyan-500/10 flex items-center justify-center text-teal-400 shrink-0">
+                  <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-teal-500/15 to-cyan-500/15 flex items-center justify-center text-teal-400 shrink-0">
                     <MessageSquare className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="text-white/30 text-xs font-medium uppercase tracking-wider mb-1">Live Chat</p>
+                    <p className="text-white/30 text-[11px] font-semibold uppercase tracking-wider mb-0.5">Live Chat</p>
                     <p className="text-white/70 text-sm font-medium">We respond within minutes</p>
                   </div>
                 </div>
               </div>
-
-
+              <div className="line-glow mt-6 mb-5" />
+              <p className="text-white/25 text-xs leading-relaxed">
+                Our team is available Monday to Friday, 8 AM - 6 PM (EAT). We typically respond within a few hours.
+              </p>
             </div>
           </ScrollReveal>
 
-          {/* Right - Form */}
-          <ScrollReveal animation="reveal-right">
-            <div className="glass-card rounded-[1.5rem] p-6 sm:p-8 lg:p-10">
+          {/* Right - Form Card */}
+          <ScrollReveal animation="reveal-right" className="lg:col-span-3">
+            <div className="glass-card rounded-[1.5rem] p-6 sm:p-8 lg:p-10 h-full">
               {sent ? (
                 <div className="text-center py-12">
                   <div className="w-20 h-20 rounded-full bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center mx-auto mb-6 shadow-xl shadow-teal-500/20">
