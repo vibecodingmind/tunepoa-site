@@ -29,7 +29,12 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (!authLoading && user) {
-      router.push("/dashboard");
+      // Redirect by role: admin → /admin, user → /dashboard
+      if (user.role === "admin") {
+        router.push("/admin");
+      } else {
+        router.push("/dashboard");
+      }
     }
   }, [user, authLoading, router]);
 
@@ -39,7 +44,7 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await login(loginEmail, loginPassword);
-      router.push("/dashboard");
+      // Redirect handled by useEffect based on role
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
     } finally {
@@ -61,7 +66,7 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await register(regName, regEmail, regPassword, regPhone || undefined, regCompany || undefined);
-      router.push("/dashboard");
+      // New users go to /dashboard (role = "user")
     } catch (err) {
       setError(err instanceof Error ? err.message : "Registration failed");
     } finally {

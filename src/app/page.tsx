@@ -170,9 +170,9 @@ function Navbar() {
           </Button>
           {user ? (
             <div className="flex items-center gap-3">
-              <a href="/dashboard" className="flex items-center gap-2 text-[13px] text-teal-300 hover:text-teal-200 font-semibold transition-colors duration-300">
+              <a href={user?.role === "admin" ? "/admin" : "/dashboard"} className="flex items-center gap-2 text-[13px] text-teal-300 hover:text-teal-200 font-semibold transition-colors duration-300">
                 <Users className="w-4 h-4" />
-                Dashboard
+                {user?.role === "admin" ? "Admin Panel" : "Dashboard"}
               </a>
               <button onClick={logout} className="text-[13px] text-white/40 hover:text-white/70 font-medium transition-colors duration-300">
                 Logout
@@ -206,7 +206,7 @@ function Navbar() {
                 {user ? (
                   <>
                     <Button asChild variant="ghost" className="text-teal-300 hover:text-teal-200 hover:bg-white/5 font-medium px-7 rounded-full border border-teal-500/20 transition-all duration-300">
-                      <a href="/dashboard" onClick={() => setMobileOpen(false)}>Dashboard</a>
+                      <a href={user?.role === "admin" ? "/admin" : "/dashboard"} onClick={() => setMobileOpen(false)}>{user?.role === "admin" ? "Admin Panel" : "Dashboard"}</a>
                     </Button>
                     <button onClick={() => { logout(); setMobileOpen(false); }} className="text-white/40 hover:text-white/70 text-sm font-medium py-2 transition-colors duration-300">
                       Logout

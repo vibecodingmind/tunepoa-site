@@ -8,8 +8,6 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-// Dummy URL for build time - Prisma generate doesn't connect to DB
-
 model User {
   id            String    @id @default(cuid())
   email         String    @unique
@@ -19,48 +17,52 @@ model User {
   company       String?
   avatar        String?
   role          String    @default("user") // "user" | "admin"
+  status        String    @default("active") // "active" | "suspended"
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   subscriptions Subscription[]
 }
 
 model Package {
-  id          String   @id @default(cuid())
-  category    String   // "starter" | "business" | "premium"
-  tier        String   // "silver" | "bronze" | "gold" | "ruby"
-  name        String   // Display name
-  maxPhoneNumbers Int   // Max phone numbers for RBT
-  features    String   // JSON string of features
-  price3mo    Int      // Price for 3 months in TZS
-  price6mo    Int      // Price for 6 months in TZS
-  price12mo   Int      // Price for 12 months in TZS
-  popular     Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  subscriptions Subscription[]
+  id             String   @id @default(cuid())
+  category       String   // "starter" | "business" | "premium"
+  tier           String   // "silver" | "bronze" | "gold" | "ruby"
+  name           String   // Display name
+  maxPhoneNumbers Int     // Max phone numbers for RBT
+  features       String   // JSON string of features
+  price3mo       Int      // Price for 3 months in TZS
+  price6mo       Int      // Price for 6 months in TZS
+  price12mo      Int      // Price for 12 months in TZS
+  popular        Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  subscriptions  Subscription[]
 }
 
 model Subscription {
-  id          String   @id @default(cuid())
-  userId      String
-  user        User     @relation(fields: [userId], references: [id])
-  packageId   String
-  package     Package  @relation(fields: [packageId], references: [id])
-  billingCycle String  // "3mo" | "6mo" | "12mo"
-  status      String   @default("active") // "active" | "cancelled" | "expired"
-  phoneNumbers String  // JSON array of assigned phone numbers
-  startDate   DateTime @default(now())
-  endDate     DateTime
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id           String            @id @default(cuid())
+  userId       String
+  user         User              @relation(fields: [userId], references: [id])
+  packageId    String
+  package      Package           @relation(fields: [packageId], references: [id])
+  billingCycle String            // "3mo" | "6mo" | "12mo"
+  status       String            @default("active") // "active" | "pending" | "cancelled" | "expired"
+  adminNotes   String?
+  startDate    DateTime          @default(now())
+  endDate      DateTime
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  numbers      AssignedNumber[]
 }
 
-model AdminService {
-  id          String   @id @default(cuid())
-  title       String
-  description String
-  icon        String?
-  active      Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+model AssignedNumber {
+  id             String       @id @default(cuid())
+  subscriptionId String
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  phoneNumber    String
+  toneName       String?
+  toneCategory   String?      // "music" | "ad" | "message" | "promo"
+  status         String       @default("active") // "active" | "inactive" | "pending"
+  assignedAt     DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
 }
