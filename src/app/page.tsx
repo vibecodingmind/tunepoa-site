@@ -22,7 +22,6 @@ import {
   ChevronLeft,
   Menu,
   ArrowRight,
-  Twitter,
   Linkedin,
   Facebook,
   Instagram,
@@ -1307,18 +1306,6 @@ function ContactSection() {
 
 /* ─── Footer ─── */
 function Footer() {
-  const [email, setEmail] = useState("");
-  const [subscribed, setSubscribed] = useState(false);
-
-  const handleSubscribe = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email) {
-      setSubscribed(true);
-      setEmail("");
-      setTimeout(() => setSubscribed(false), 3000);
-    }
-  };
-
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   return (
@@ -1332,25 +1319,8 @@ function Footer() {
               <img src="/logo.png" alt="TunePoa" className="h-9 w-auto" />
             </div>
             <p className="text-white/30 text-sm font-medium leading-relaxed mb-8 max-w-xs">Make your callers&apos; wait unique to you. Whether you want a song that defines your mood or a personalized message, our service lets you choose the perfect tone to fit your style.</p>
-            {/* Newsletter signup */}
-            <div className="mb-6">
-              <p className="text-white/40 text-xs font-semibold uppercase tracking-wider mb-3">Stay Updated</p>
-              <form onSubmit={handleSubscribe} className="flex gap-2">
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
-                  className="flex-1 bg-white/[0.04] border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-teal-400/40 transition-all duration-300"
-                />
-                <Button type="submit" size="sm" className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-white font-semibold rounded-lg px-4 shrink-0 transition-all duration-300">
-                  {subscribed ? "✓" : "Subscribe"}
-                </Button>
-              </form>
-            </div>
             <div className="flex items-center gap-3">
-              {[{ icon: <Facebook className="w-4 h-4" />, label: "Facebook", href: "https://www.facebook.com/tunepoa" }, { icon: <Linkedin className="w-4 h-4" />, label: "LinkedIn", href: "https://www.linkedin.com/company/tunepoa" }, { icon: <Instagram className="w-4 h-4" />, label: "Instagram", href: "https://www.instagram.com/tunepoa" }, { icon: <Twitter className="w-4 h-4" />, label: "X", href: "#" }].map((social) => (
+              {[{ icon: <Facebook className="w-4 h-4" />, label: "Facebook", href: "https://www.facebook.com/tunepoa" }, { icon: <Linkedin className="w-4 h-4" />, label: "LinkedIn", href: "https://www.linkedin.com/company/tunepoa" }, { icon: <Instagram className="w-4 h-4" />, label: "Instagram", href: "https://www.instagram.com/tunepoa" }].map((social) => (
                 <a key={social.label} href={social.href} target="_blank" rel="noopener noreferrer" aria-label={social.label} className="w-10 h-10 rounded-xl glass hover:bg-white/10 flex items-center justify-center text-white/30 hover:text-white transition-all duration-300 hover:scale-110">{social.icon}</a>
               ))}
             </div>
