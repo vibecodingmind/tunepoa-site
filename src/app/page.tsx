@@ -647,27 +647,27 @@ function TelecomIntegrationsSection() {
 
 /* ─── Pricing Tiers Section ─── */
 function PricingTiersSection() {
-  const columns = [
-    { label: "1 Month", sub: "per line", color: "text-orange-400", accent: "border-orange-500/20 bg-orange-500/[0.03]" },
-    { label: "3 Months", sub: "per line", color: "text-blue-400", accent: "border-blue-500/20 bg-blue-500/[0.04]", badge: "Popular" },
-    { label: "6 Months", sub: "per line", color: "text-pink-400", accent: "border-pink-500/20 bg-pink-500/[0.03]" },
-    { label: "12 Months", sub: "per line", color: "text-emerald-400", accent: "border-emerald-500/20 bg-emerald-500/[0.04]", badge: "Best Value" },
+  const durations = [
+    { label: "1 Month", badge: null },
+    { label: "3 Months", badge: "Popular" },
+    { label: "6 Months", badge: null },
+    { label: "12 Months", badge: "Best Value" },
   ];
 
-  const rows = [
-    { lines: "1 - 10", prices: ["25,000", "23,000", "21,000", "19,000"], savings: ["", "8%", "16%", "24%"] },
-    { lines: "11 - 25", prices: ["23,000", "21,000", "19,000", "17,000"], savings: ["", "9%", "17%", "26%"] },
-    { lines: "25 - 50", prices: ["21,000", "19,000", "17,000", "15,000"], savings: ["", "10%", "19%", "29%"] },
-    { lines: "50+", prices: ["19,000", "17,000", "15,000", "13,000"], savings: ["", "11%", "21%", "32%"] },
+  const tiers = [
+    { lines: "1–10", prices: ["25,000", "23,000", "21,000", "19,000"] },
+    { lines: "11–25", prices: ["23,000", "21,000", "19,000", "17,000"] },
+    { lines: "25–50", prices: ["21,000", "19,000", "17,000", "15,000"] },
+    { lines: "50+", prices: ["19,000", "17,000", "15,000", "13,000"] },
   ];
 
   return (
     <section id="pricing-tiers" className="py-24 sm:py-32 lg:py-40 relative overflow-hidden">
       <div className="absolute inset-0 bg-[#050c18]" />
       <div className="absolute inset-0 bg-gradient-to-br from-teal-950/50 via-[#081525] to-cyan-950/30" />
-      <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
-      <div className="absolute top-[10%] left-[20%] w-[500px] h-[500px] bg-teal-500/[0.025] rounded-full blur-[140px]" />
-      <div className="absolute bottom-[10%] right-[15%] w-[400px] h-[400px] bg-cyan-500/[0.02] rounded-full blur-[120px]" />
+      <div className="absolute inset-0 opacity-[0.015]" style={{ backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
+      <div className="absolute top-[5%] left-[15%] w-[600px] h-[600px] bg-teal-500/[0.02] rounded-full blur-[160px]" />
+      <div className="absolute bottom-[5%] right-[10%] w-[500px] h-[500px] bg-cyan-500/[0.02] rounded-full blur-[140px]" />
 
       <div className="relative z-10 max-w-5xl mx-auto px-5 sm:px-8 lg:px-10">
         {/* Section Header */}
@@ -680,127 +680,147 @@ function PricingTiersSection() {
           </ScrollReveal>
           <ScrollReveal animation="reveal-up" stagger={1}>
             <h2 className="text-3xl sm:text-4xl lg:text-[3.5rem] font-extrabold text-white leading-[1.08] mb-4 sm:mb-6 tracking-tight">
-              Pay Per Line,<br /><span className="bg-gradient-to-r from-teal-300 via-emerald-400 to-cyan-400 bg-clip-text text-transparent">Save Per Month</span>
+              Simple, Transparent<br /><span className="bg-gradient-to-r from-teal-300 via-emerald-400 to-cyan-400 bg-clip-text text-transparent">Per-Line Pricing</span>
             </h2>
           </ScrollReveal>
           <ScrollReveal animation="reveal-up" stagger={2}>
-            <p className="text-base sm:text-lg text-white/30 max-w-lg mx-auto">One price per line. Commit longer, pay less. No surprises.</p>
+            <p className="text-base sm:text-lg text-white/30 max-w-lg mx-auto">Commit longer, pay less. Every line includes full RBT service with no hidden fees.</p>
           </ScrollReveal>
         </div>
 
-        {/* Pricing Table - World Class */}
+        {/* Pricing Table */}
         <ScrollReveal animation="reveal-up" stagger={2}>
           <div className="relative">
-            {/* Outer glow ring */}
-            <div className="absolute -inset-[1px] bg-gradient-to-b from-white/[0.08] via-white/[0.02] to-white/[0.05] rounded-[1.75rem] sm:rounded-[2.25rem]" />
-            <div className="relative bg-[#0a1628]/90 backdrop-blur-xl rounded-[1.75rem] sm:rounded-[2.25rem] overflow-hidden border border-white/[0.04]">
+            {/* Subtle glow border */}
+            <div className="absolute -inset-[1px] bg-gradient-to-b from-white/[0.06] via-transparent to-white/[0.04] rounded-[2rem] sm:rounded-[2.5rem]" />
+            <div className="relative bg-[#080f1e]/95 backdrop-blur-2xl rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden border border-white/[0.05]">
+
+              {/* Column Headers */}
               <div className="overflow-x-auto">
-                <table className="w-full min-w-[560px]">
+                <table className="w-full min-w-[600px]">
                   <thead>
-                    <tr>
-                      <th className="text-left py-6 sm:py-8 px-6 sm:px-8">
-                        <div className="flex items-center gap-2">
-                          <Phone className="w-4 h-4 text-white/20" />
-                          <span className="text-white/25 text-[11px] font-bold uppercase tracking-[0.25em]">Lines</span>
-                        </div>
+                    <tr className="border-b border-white/[0.06]">
+                      <th className="text-left py-7 sm:py-9 px-6 sm:px-8">
+                        <span className="text-white/20 text-[10px] font-bold uppercase tracking-[0.3em]">Lines</span>
                       </th>
-                      {columns.map((col) => (
-                        <th key={col.label} className="py-6 sm:py-8 px-3 sm:px-5 text-center">
-                          <div className="flex flex-col items-center gap-1.5">
-                            {col.badge ? (
-                              <span className="text-[8px] font-bold uppercase tracking-[0.2em] text-teal-400 bg-teal-400/10 px-2.5 py-1 rounded-full">
-                                {col.badge}
+                      {durations.map((dur) => (
+                        <th key={dur.label} className="py-7 sm:py-9 px-2 sm:px-4 text-center relative">
+                          <div className="flex flex-col items-center gap-2">
+                            {dur.badge ? (
+                              <span className={`text-[8px] font-extrabold uppercase tracking-[0.25em] px-3 py-1 rounded-full ${
+                                dur.badge === "Popular"
+                                  ? "text-teal-300 bg-teal-400/[0.12] ring-1 ring-teal-400/20"
+                                  : "text-emerald-300 bg-emerald-400/[0.12] ring-1 ring-emerald-400/20"
+                              }`}>
+                                {dur.badge}
                               </span>
-                            ) : <div className="h-4" />}
-                            <span className={`text-sm sm:text-base font-bold ${col.color}`}>{col.label}</span>
+                            ) : <div className="h-[22px]" />}
+                            <span className="text-white/50 text-xs sm:text-sm font-semibold tracking-wide">{dur.label}</span>
                           </div>
                         </th>
                       ))}
                     </tr>
                   </thead>
+
                   <tbody>
-                    {rows.map((row, rowIdx) => (
-                      <tr key={row.lines} className={`group transition-all duration-300 ${rowIdx % 2 === 0 ? "bg-white/[0.008]" : ""} hover:bg-white/[0.035]`}>
-                        <td className="py-5 sm:py-6 px-6 sm:px-8">
+                    {tiers.map((tier, idx) => (
+                      <tr
+                        key={tier.lines}
+                        className={`group transition-all duration-300 ${
+                          idx !== tiers.length - 1 ? "border-b border-white/[0.04]" : ""
+                        } hover:bg-white/[0.03]`}
+                      >
+                        <td className="py-5 sm:py-7 px-6 sm:px-8">
                           <div className="flex items-center gap-3">
-                            <div className="w-2 h-2 rounded-full bg-gradient-to-r from-teal-400 to-cyan-400 opacity-40 group-hover:opacity-100 transition-opacity duration-300" />
-                            <span className="text-white/60 font-semibold text-sm tracking-tight group-hover:text-white/80 transition-colors duration-300">{row.lines} lines</span>
+                            <div className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-teal-400 to-cyan-400 opacity-30 group-hover:opacity-80 transition-opacity duration-300" />
+                            <span className="text-white/50 font-semibold text-sm group-hover:text-white/70 transition-colors duration-300">
+                              {tier.lines} <span className="hidden sm:inline text-white/20">lines</span>
+                            </span>
                           </div>
                         </td>
-                        {row.prices.map((price, colIdx) => (
-                          <td key={colIdx} className="py-5 sm:py-6 px-3 sm:px-5 text-center">
-                            <div className="flex flex-col items-center gap-1">
-                              <span className="text-white font-bold text-base sm:text-lg tracking-tight">{price}</span>
-                              {row.savings[colIdx] ? (
-                                <span className={`text-[9px] font-bold ${columns[colIdx].color} opacity-70`}>
-                                  save {row.savings[colIdx]}
+                        {tier.prices.map((price, colIdx) => {
+                          const isPopular = durations[colIdx]?.badge === "Popular";
+                          const isBestValue = durations[colIdx]?.badge === "Best Value";
+                          return (
+                            <td key={colIdx} className="py-5 sm:py-7 px-2 sm:px-4 text-center">
+                              <div className="flex flex-col items-center">
+                                <span className={`font-bold text-base sm:text-lg tracking-tight ${
+                                  isBestValue
+                                    ? "text-emerald-300"
+                                    : isPopular
+                                    ? "text-teal-300"
+                                    : "text-white/80"
+                                }`}>
+                                  {price}
                                 </span>
-                              ) : (
-                                <span className="text-[9px] text-white/10 font-medium">baseline</span>
-                              )}
-                            </div>
-                          </td>
-                        ))}
+                                <span className="text-white/15 text-[9px] font-medium mt-0.5">TZS</span>
+                              </div>
+                            </td>
+                          );
+                        })}
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
 
-              {/* Divider */}
-              <div className="mx-6 sm:mx-8 h-[1px] bg-gradient-to-r from-transparent via-white/[0.08] to-transparent" />
-
-              {/* Audio Recording */}
-              <div className="flex items-center justify-between px-6 sm:px-8 py-5 sm:py-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-violet-500/10 flex items-center justify-center">
-                    <AudioLines className="w-4 h-4 text-violet-400" />
+              {/* Audio Recording Row */}
+              <div className="border-t border-white/[0.06]">
+                <div className="flex items-center justify-between px-6 sm:px-8 py-5 sm:py-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-violet-500/[0.08] flex items-center justify-center">
+                      <AudioLines className="w-4 h-4 text-violet-400/80" />
+                    </div>
+                    <span className="text-white/50 font-semibold text-sm">Audio Recording</span>
+                    <span className="text-[8px] font-bold text-violet-400/50 bg-violet-400/[0.06] px-2.5 py-0.5 rounded-full hidden sm:inline uppercase tracking-wider">one-time</span>
                   </div>
-                  <span className="text-white/60 font-semibold text-sm">Audio Recording</span>
-                  <span className="text-[9px] font-bold text-violet-400/60 bg-violet-400/[0.07] px-2 py-0.5 rounded-full hidden sm:inline">one-time</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-white font-bold text-lg tracking-tight">50,000</span>
-                  <span className="text-white/25 text-xs font-medium">TZS</span>
-                  <span className="text-[9px] font-bold text-violet-400/60 bg-violet-400/[0.07] px-2 py-0.5 rounded-full sm:hidden">one-time</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-white/80 font-bold text-lg tracking-tight">50,000</span>
+                    <span className="text-white/15 text-xs font-medium">TZS</span>
+                    <span className="text-[8px] font-bold text-violet-400/50 bg-violet-400/[0.06] px-2.5 py-0.5 rounded-full sm:hidden uppercase tracking-wider">one-time</span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </ScrollReveal>
 
-        {/* Starter Package - Premium Card */}
+        {/* Starter Package */}
         <ScrollReveal animation="reveal-up" stagger={3}>
           <div className="mt-6 sm:mt-8">
             <div className="relative">
-              {/* Glow border */}
-              <div className="absolute -inset-[1px] bg-gradient-to-r from-amber-500/30 via-orange-500/20 to-rose-500/30 rounded-[1.5rem] sm:rounded-[1.75rem]" />
-              <div className="relative bg-[#0d1520]/95 backdrop-blur-xl rounded-[1.5rem] sm:rounded-[1.75rem] overflow-hidden border border-amber-500/10">
+              {/* Animated glow border */}
+              <div className="absolute -inset-[1px] bg-gradient-to-r from-amber-500/25 via-orange-500/15 to-rose-500/25 rounded-[1.75rem] sm:rounded-[2rem] animate-pulse-glow" />
+              <div className="relative bg-[#0b1320]/95 backdrop-blur-2xl rounded-[1.75rem] sm:rounded-[2rem] overflow-hidden border border-amber-500/[0.08]">
                 {/* Ambient glow */}
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[400px] h-[200px] bg-amber-500/[0.06] rounded-full blur-[100px]" />
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[180px] bg-amber-500/[0.04] rounded-full blur-[100px]" />
 
-                <div className="relative z-10 px-6 sm:px-8 lg:px-10 py-6 sm:py-8">
+                <div className="relative z-10 px-6 sm:px-8 lg:px-10 py-7 sm:py-9">
                   <div className="flex flex-col lg:flex-row items-start lg:items-center gap-6 lg:gap-10">
-                    {/* Left */}
+                    {/* Left - Content */}
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2.5 mb-4">
-                        <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[9px] font-bold uppercase tracking-[0.2em] px-4 py-1.5 rounded-full shadow-lg shadow-amber-500/20">
+                      <div className="flex items-center gap-2.5 mb-5">
+                        <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[9px] font-extrabold uppercase tracking-[0.2em] px-4 py-1.5 rounded-full shadow-lg shadow-amber-500/15">
                           Starter Package
                         </div>
-                        <div className="text-[9px] font-bold text-rose-400 bg-rose-400/10 px-3 py-1.5 rounded-full">SAVE 40%</div>
+                        <div className="text-[9px] font-extrabold text-rose-400 bg-rose-400/[0.08] px-3 py-1.5 rounded-full ring-1 ring-rose-400/15">SAVE 40%</div>
                       </div>
-                      <div className="flex items-baseline gap-3 mb-4">
-                        <span className="text-white/20 text-lg sm:text-xl font-bold line-through">125,000</span>
+                      <div className="flex items-baseline gap-3 mb-5">
+                        <span className="text-white/15 text-lg sm:text-xl font-bold line-through decoration-1">125,000</span>
                         <div className="flex items-baseline gap-1.5">
-                          <span className="text-3xl sm:text-[2.75rem] font-extrabold text-white tracking-tight leading-none">75,000</span>
-                          <span className="text-white/30 text-sm font-semibold">TZS</span>
+                          <span className="text-4xl sm:text-[3.25rem] font-extrabold text-white tracking-tighter leading-none">75,000</span>
+                          <span className="text-white/25 text-sm font-semibold">TZS</span>
                         </div>
                       </div>
-                      <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-                        {["3 Months", "No Setup Fees", "Free Audio Recording"].map((f) => (
-                          <div key={f} className="flex items-center gap-1.5">
-                            <CheckCircle2 className="w-3.5 h-3.5 text-amber-500/70 shrink-0" />
-                            <span className="text-white/45 text-xs sm:text-sm font-medium">{f}</span>
+                      <div className="flex flex-wrap items-center gap-x-5 gap-y-2.5">
+                        {[
+                          { icon: <Clock className="w-3.5 h-3.5" />, text: "3 Months" },
+                          { icon: <ShieldCheck className="w-3.5 h-3.5" />, text: "No Setup Fees" },
+                          { icon: <AudioLines className="w-3.5 h-3.5" />, text: "Free Audio Recording" },
+                        ].map((f) => (
+                          <div key={f.text} className="flex items-center gap-2">
+                            <span className="text-amber-500/60">{f.icon}</span>
+                            <span className="text-white/40 text-xs sm:text-sm font-medium">{f.text}</span>
                           </div>
                         ))}
                       </div>
@@ -808,7 +828,7 @@ function PricingTiersSection() {
 
                     {/* Right - CTA */}
                     <div className="shrink-0 w-full lg:w-auto">
-                      <Button asChild size="lg" className="w-full lg:w-auto bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-bold px-8 sm:px-10 py-6 sm:py-7 rounded-xl shadow-xl shadow-amber-500/20 hover:shadow-amber-500/35 transition-all duration-300 hover:scale-[1.03] text-sm sm:text-base">
+                      <Button asChild size="lg" className="w-full lg:w-auto bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-bold px-8 sm:px-12 py-6 sm:py-7 rounded-2xl shadow-xl shadow-amber-500/15 hover:shadow-amber-500/30 transition-all duration-300 hover:scale-[1.03] text-sm sm:text-base">
                         <a href="#contact">Get Started <ArrowRight className="w-4 sm:w-5 h-4 sm:h-5 ml-2" /></a>
                       </Button>
                     </div>
@@ -1330,8 +1350,8 @@ function Footer() {
               </form>
             </div>
             <div className="flex items-center gap-3">
-              {[{ icon: <Twitter className="w-4 h-4" />, label: "X-twitter" }, { icon: <Linkedin className="w-4 h-4" />, label: "Linkedin" }, { icon: <Facebook className="w-4 h-4" />, label: "Facebook" }, { icon: <Instagram className="w-4 h-4" />, label: "Instagram" }].map((social) => (
-                <a key={social.label} href="#" aria-label={social.label} className="w-10 h-10 rounded-xl glass hover:bg-white/10 flex items-center justify-center text-white/30 hover:text-white transition-all duration-300 hover:scale-110">{social.icon}</a>
+              {[{ icon: <Facebook className="w-4 h-4" />, label: "Facebook", href: "https://www.facebook.com/tunepoa" }, { icon: <Linkedin className="w-4 h-4" />, label: "LinkedIn", href: "https://www.linkedin.com/company/tunepoa" }, { icon: <Instagram className="w-4 h-4" />, label: "Instagram", href: "https://www.instagram.com/tunepoa" }, { icon: <Twitter className="w-4 h-4" />, label: "X", href: "#" }].map((social) => (
+                <a key={social.label} href={social.href} target="_blank" rel="noopener noreferrer" aria-label={social.label} className="w-10 h-10 rounded-xl glass hover:bg-white/10 flex items-center justify-center text-white/30 hover:text-white transition-all duration-300 hover:scale-110">{social.icon}</a>
               ))}
             </div>
           </div>
