@@ -647,18 +647,18 @@ function TelecomIntegrationsSection() {
 
 /* ─── Pricing Tiers Section ─── */
 function PricingTiersSection() {
-  const tiers = [
-    { label: "1 Month", icon: <Clock className="w-5 h-5" />, color: "from-orange-500 to-amber-500", glowColor: "shadow-orange-500/10", badge: "" },
-    { label: "3 Months", icon: <CalendarClock className="w-5 h-5" />, color: "from-blue-500 to-indigo-500", glowColor: "shadow-blue-500/15", badge: "Popular" },
-    { label: "6 Months", icon: <CalendarClock className="w-5 h-5" />, color: "from-pink-500 to-rose-500", glowColor: "shadow-pink-500/10", badge: "" },
-    { label: "12 Months", icon: <ShieldCheck className="w-5 h-5" />, color: "from-emerald-500 to-green-500", glowColor: "shadow-emerald-500/15", badge: "Best Value" },
+  const columns = [
+    { label: "1 Month", sub: "per line", color: "text-orange-400", accent: "border-orange-500/20 bg-orange-500/[0.03]" },
+    { label: "3 Months", sub: "per line", color: "text-blue-400", accent: "border-blue-500/20 bg-blue-500/[0.04]", badge: "Popular" },
+    { label: "6 Months", sub: "per line", color: "text-pink-400", accent: "border-pink-500/20 bg-pink-500/[0.03]" },
+    { label: "12 Months", sub: "per line", color: "text-emerald-400", accent: "border-emerald-500/20 bg-emerald-500/[0.04]", badge: "Best Value" },
   ];
 
   const rows = [
-    { lines: "1 - 10", icon: <Phone className="w-4 h-4" />, prices: ["25,000", "23,000", "21,000", "19,000"], savings: ["", "8%", "16%", "24%"] },
-    { lines: "11 - 25", icon: <Users className="w-4 h-4" />, prices: ["23,000", "21,000", "19,000", "17,000"], savings: ["", "9%", "17%", "26%"] },
-    { lines: "25 - 50", icon: <Users className="w-4 h-4" />, prices: ["21,000", "19,000", "17,000", "15,000"], savings: ["", "10%", "19%", "29%"] },
-    { lines: "50+", icon: <Rocket className="w-4 h-4" />, prices: ["19,000", "17,000", "15,000", "13,000"], savings: ["", "11%", "21%", "32%"] },
+    { lines: "1 - 10", prices: ["25,000", "23,000", "21,000", "19,000"], savings: ["", "8%", "16%", "24%"] },
+    { lines: "11 - 25", prices: ["23,000", "21,000", "19,000", "17,000"], savings: ["", "9%", "17%", "26%"] },
+    { lines: "25 - 50", prices: ["21,000", "19,000", "17,000", "15,000"], savings: ["", "10%", "19%", "29%"] },
+    { lines: "50+", prices: ["19,000", "17,000", "15,000", "13,000"], savings: ["", "11%", "21%", "32%"] },
   ];
 
   return (
@@ -666,159 +666,152 @@ function PricingTiersSection() {
       <div className="absolute inset-0 bg-[#050c18]" />
       <div className="absolute inset-0 bg-gradient-to-br from-teal-950/50 via-[#081525] to-cyan-950/30" />
       <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
-      <div className="absolute top-0 left-1/4 w-[600px] h-[400px] bg-teal-500/[0.03] rounded-full blur-[140px]" />
-      <div className="absolute bottom-0 right-1/4 w-[500px] h-[300px] bg-cyan-500/[0.025] rounded-full blur-[120px]" />
+      <div className="absolute top-[10%] left-[20%] w-[500px] h-[500px] bg-teal-500/[0.025] rounded-full blur-[140px]" />
+      <div className="absolute bottom-[10%] right-[15%] w-[400px] h-[400px] bg-cyan-500/[0.02] rounded-full blur-[120px]" />
 
-      <div className="relative z-10 max-w-6xl mx-auto px-5 sm:px-8 lg:px-10">
+      <div className="relative z-10 max-w-5xl mx-auto px-5 sm:px-8 lg:px-10">
         {/* Section Header */}
         <div className="text-center mb-14 sm:mb-20">
           <ScrollReveal animation="blur-in">
-            <div className="inline-flex items-center gap-2 glass rounded-full px-5 py-2 mb-6 sm:mb-8 border-teal-400/10">
+            <div className="inline-flex items-center gap-2.5 glass rounded-full px-5 py-2.5 mb-6 sm:mb-8 border-teal-400/10">
               <Sparkles className="w-4 h-4 text-teal-400" />
-              <span className="text-xs font-bold text-teal-400 tracking-[0.15em] uppercase">Service Pricing</span>
+              <span className="text-xs font-bold text-teal-400 tracking-[0.15em] uppercase">Pricing</span>
             </div>
           </ScrollReveal>
           <ScrollReveal animation="reveal-up" stagger={1}>
             <h2 className="text-3xl sm:text-4xl lg:text-[3.5rem] font-extrabold text-white leading-[1.08] mb-4 sm:mb-6 tracking-tight">
-              Simple Pricing,<br /><span className="bg-gradient-to-r from-teal-300 via-emerald-400 to-cyan-400 bg-clip-text text-transparent">Maximum Value</span>
+              Pay Per Line,<br /><span className="bg-gradient-to-r from-teal-300 via-emerald-400 to-cyan-400 bg-clip-text text-transparent">Save Per Month</span>
             </h2>
           </ScrollReveal>
           <ScrollReveal animation="reveal-up" stagger={2}>
-            <p className="text-base sm:text-lg text-white/35 max-w-xl mx-auto">Per-line pricing that rewards commitment. Longer plans save you more.</p>
+            <p className="text-base sm:text-lg text-white/30 max-w-lg mx-auto">One price per line. Commit longer, pay less. No surprises.</p>
           </ScrollReveal>
         </div>
 
-        {/* Duration Cards Row */}
+        {/* Pricing Table - World Class */}
         <ScrollReveal animation="reveal-up" stagger={2}>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-8 sm:mb-10">
-            {tiers.map((tier) => (
-              <div key={tier.label} className={`relative rounded-2xl sm:rounded-[1.25rem] p-4 sm:p-5 text-center transition-all duration-300 hover:scale-[1.03] ${tier.badge ? "glass-premium glow-teal-strong" : "glass-card"} group`}>
-                {tier.badge && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span className={`bg-gradient-to-r ${tier.color} text-white text-[9px] font-bold uppercase tracking-[0.15em] px-4 py-1.5 rounded-full shadow-lg`}>
-                      {tier.badge}
-                    </span>
-                  </div>
-                )}
-                <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br ${tier.color} flex items-center justify-center text-white mx-auto mb-3 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                  {tier.icon}
-                </div>
-                <h4 className={`text-sm sm:text-base font-bold bg-gradient-to-r ${tier.color} bg-clip-text text-transparent`}>{tier.label}</h4>
-              </div>
-            ))}
-          </div>
-        </ScrollReveal>
-
-        {/* Pricing Table */}
-        <ScrollReveal animation="reveal-up" stagger={3}>
-          <div className="glass-card rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[540px]">
-                <thead>
-                  <tr className="border-b border-white/[0.05]">
-                    <th className="text-left py-5 sm:py-6 px-5 sm:px-7 text-white/30 text-[11px] font-bold uppercase tracking-[0.2em]">Lines</th>
-                    {tiers.map((tier) => (
-                      <th key={tier.label} className="py-5 sm:py-6 px-2 sm:px-4 text-center">
-                        <span className={`text-xs sm:text-sm font-bold bg-gradient-to-r ${tier.color} bg-clip-text text-transparent`}>{tier.label}</span>
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {rows.map((row, rowIdx) => (
-                    <tr key={row.lines} className={`group transition-all duration-300 border-b border-white/[0.03] last:border-b-0 ${rowIdx % 2 === 0 ? "bg-white/[0.01]" : ""} hover:bg-white/[0.04]`}>
-                      <td className="py-4 sm:py-5 px-5 sm:px-7">
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-lg bg-white/[0.05] flex items-center justify-center text-white/40 group-hover:text-teal-400 transition-colors duration-300 shrink-0">
-                            {row.icon}
-                          </div>
-                          <span className="text-white/70 font-bold text-sm tracking-tight">{row.lines} lines</span>
+          <div className="relative">
+            {/* Outer glow ring */}
+            <div className="absolute -inset-[1px] bg-gradient-to-b from-white/[0.08] via-white/[0.02] to-white/[0.05] rounded-[1.75rem] sm:rounded-[2.25rem]" />
+            <div className="relative bg-[#0a1628]/90 backdrop-blur-xl rounded-[1.75rem] sm:rounded-[2.25rem] overflow-hidden border border-white/[0.04]">
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[560px]">
+                  <thead>
+                    <tr>
+                      <th className="text-left py-6 sm:py-8 px-6 sm:px-8">
+                        <div className="flex items-center gap-2">
+                          <Phone className="w-4 h-4 text-white/20" />
+                          <span className="text-white/25 text-[11px] font-bold uppercase tracking-[0.25em]">Lines</span>
                         </div>
-                      </td>
-                      {row.prices.map((price, colIdx) => (
-                        <td key={colIdx} className="py-4 sm:py-5 px-2 sm:px-4 text-center">
-                          <div className="flex flex-col items-center gap-0.5">
-                            <span className="text-white font-extrabold text-sm sm:text-base tracking-tight">{price}</span>
-                            {row.savings[colIdx] && (
-                              <span className={`text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-gradient-to-r ${tiers[colIdx].color} text-white`}>
-                                -{row.savings[colIdx]}
+                      </th>
+                      {columns.map((col) => (
+                        <th key={col.label} className="py-6 sm:py-8 px-3 sm:px-5 text-center">
+                          <div className="flex flex-col items-center gap-1.5">
+                            {col.badge ? (
+                              <span className="text-[8px] font-bold uppercase tracking-[0.2em] text-teal-400 bg-teal-400/10 px-2.5 py-1 rounded-full">
+                                {col.badge}
                               </span>
-                            )}
+                            ) : <div className="h-4" />}
+                            <span className={`text-sm sm:text-base font-bold ${col.color}`}>{col.label}</span>
                           </div>
-                        </td>
+                        </th>
                       ))}
                     </tr>
-                  ))}
-                  {/* Audio Recording Row */}
-                  <tr className="group hover:bg-white/[0.04] transition-all duration-300">
-                    <td className="py-5 sm:py-6 px-5 sm:px-7 border-t border-white/[0.05]">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500/20 to-purple-500/20 flex items-center justify-center text-violet-400 shrink-0">
-                          <AudioLines className="w-4 h-4" />
-                        </div>
-                        <span className="text-white/70 font-bold text-sm tracking-tight">Audio Recording</span>
-                      </div>
-                    </td>
-                    <td colSpan={4} className="py-5 sm:py-6 px-5 border-t border-white/[0.05] text-center">
-                      <div className="inline-flex items-center gap-2">
-                        <span className="text-white font-extrabold text-lg tracking-tight">50,000</span>
-                        <span className="text-white/30 text-xs font-medium">TZS</span>
-                        <span className="text-[9px] font-bold text-violet-400 bg-violet-400/10 px-2 py-0.5 rounded-full ml-1">one-time</span>
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {rows.map((row, rowIdx) => (
+                      <tr key={row.lines} className={`group transition-all duration-300 ${rowIdx % 2 === 0 ? "bg-white/[0.008]" : ""} hover:bg-white/[0.035]`}>
+                        <td className="py-5 sm:py-6 px-6 sm:px-8">
+                          <div className="flex items-center gap-3">
+                            <div className="w-2 h-2 rounded-full bg-gradient-to-r from-teal-400 to-cyan-400 opacity-40 group-hover:opacity-100 transition-opacity duration-300" />
+                            <span className="text-white/60 font-semibold text-sm tracking-tight group-hover:text-white/80 transition-colors duration-300">{row.lines} lines</span>
+                          </div>
+                        </td>
+                        {row.prices.map((price, colIdx) => (
+                          <td key={colIdx} className="py-5 sm:py-6 px-3 sm:px-5 text-center">
+                            <div className="flex flex-col items-center gap-1">
+                              <span className="text-white font-bold text-base sm:text-lg tracking-tight">{price}</span>
+                              {row.savings[colIdx] ? (
+                                <span className={`text-[9px] font-bold ${columns[colIdx].color} opacity-70`}>
+                                  save {row.savings[colIdx]}
+                                </span>
+                              ) : (
+                                <span className="text-[9px] text-white/10 font-medium">baseline</span>
+                              )}
+                            </div>
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Divider */}
+              <div className="mx-6 sm:mx-8 h-[1px] bg-gradient-to-r from-transparent via-white/[0.08] to-transparent" />
+
+              {/* Audio Recording */}
+              <div className="flex items-center justify-between px-6 sm:px-8 py-5 sm:py-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-violet-500/10 flex items-center justify-center">
+                    <AudioLines className="w-4 h-4 text-violet-400" />
+                  </div>
+                  <span className="text-white/60 font-semibold text-sm">Audio Recording</span>
+                  <span className="text-[9px] font-bold text-violet-400/60 bg-violet-400/[0.07] px-2 py-0.5 rounded-full hidden sm:inline">one-time</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-white font-bold text-lg tracking-tight">50,000</span>
+                  <span className="text-white/25 text-xs font-medium">TZS</span>
+                  <span className="text-[9px] font-bold text-violet-400/60 bg-violet-400/[0.07] px-2 py-0.5 rounded-full sm:hidden">one-time</span>
+                </div>
+              </div>
             </div>
           </div>
         </ScrollReveal>
 
-        {/* Starter Package - Hero Promo */}
-        <ScrollReveal animation="reveal-up" stagger={4}>
-          <div className="mt-8 sm:mt-10">
-            <div className="relative rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden">
-              {/* Gradient background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-amber-600/20 via-orange-600/10 to-rose-600/15" />
-              <div className="absolute inset-0 glass" />
-              <div className="absolute top-0 right-0 w-64 h-64 bg-amber-400/[0.08] rounded-full blur-[100px]" />
-              <div className="absolute bottom-0 left-0 w-48 h-48 bg-orange-400/[0.06] rounded-full blur-[80px]" />
+        {/* Starter Package - Premium Card */}
+        <ScrollReveal animation="reveal-up" stagger={3}>
+          <div className="mt-6 sm:mt-8">
+            <div className="relative">
+              {/* Glow border */}
+              <div className="absolute -inset-[1px] bg-gradient-to-r from-amber-500/30 via-orange-500/20 to-rose-500/30 rounded-[1.5rem] sm:rounded-[1.75rem]" />
+              <div className="relative bg-[#0d1520]/95 backdrop-blur-xl rounded-[1.5rem] sm:rounded-[1.75rem] overflow-hidden border border-amber-500/10">
+                {/* Ambient glow */}
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[400px] h-[200px] bg-amber-500/[0.06] rounded-full blur-[100px]" />
 
-              <div className="relative z-10 p-6 sm:p-8 lg:p-10">
-                <div className="flex flex-col lg:flex-row items-start lg:items-center gap-6 lg:gap-10">
-                  {/* Left - Deal */}
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[10px] font-bold uppercase tracking-[0.15em] px-5 py-2 rounded-full shadow-lg shadow-amber-500/25 animate-pulse-badge">
-                        Starter Package
+                <div className="relative z-10 px-6 sm:px-8 lg:px-10 py-6 sm:py-8">
+                  <div className="flex flex-col lg:flex-row items-start lg:items-center gap-6 lg:gap-10">
+                    {/* Left */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2.5 mb-4">
+                        <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[9px] font-bold uppercase tracking-[0.2em] px-4 py-1.5 rounded-full shadow-lg shadow-amber-500/20">
+                          Starter Package
+                        </div>
+                        <div className="text-[9px] font-bold text-rose-400 bg-rose-400/10 px-3 py-1.5 rounded-full">SAVE 40%</div>
                       </div>
-                      <span className="text-[10px] font-bold bg-rose-500/15 text-rose-400 px-3 py-1.5 rounded-full">SAVE 40%</span>
-                    </div>
-                    <div className="flex items-baseline gap-3 mb-5">
-                      <span className="text-white/25 text-xl sm:text-2xl font-bold line-through tracking-tight">125,000</span>
-                      <span className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">75,000</span>
-                      <span className="text-white/40 text-base font-semibold">TZS</span>
-                    </div>
-                    <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-                      <div className="flex items-center gap-2">
-                        <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
-                        <span className="text-white/60 text-sm font-medium">3 Months</span>
+                      <div className="flex items-baseline gap-3 mb-4">
+                        <span className="text-white/20 text-lg sm:text-xl font-bold line-through">125,000</span>
+                        <div className="flex items-baseline gap-1.5">
+                          <span className="text-3xl sm:text-[2.75rem] font-extrabold text-white tracking-tight leading-none">75,000</span>
+                          <span className="text-white/30 text-sm font-semibold">TZS</span>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
-                        <span className="text-white/60 text-sm font-medium">No Setup Fees</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
-                        <span className="text-white/60 text-sm font-medium">Free Audio Recording</span>
+                      <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+                        {["3 Months", "No Setup Fees", "Free Audio Recording"].map((f) => (
+                          <div key={f} className="flex items-center gap-1.5">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-amber-500/70 shrink-0" />
+                            <span className="text-white/45 text-xs sm:text-sm font-medium">{f}</span>
+                          </div>
+                        ))}
                       </div>
                     </div>
-                  </div>
 
-                  {/* Right - CTA */}
-                  <div className="shrink-0 w-full lg:w-auto">
-                    <Button asChild size="lg" className="w-full lg:w-auto bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-bold px-10 py-7 rounded-2xl shadow-xl shadow-amber-500/25 hover:shadow-amber-500/40 transition-all duration-300 hover:scale-105 text-base">
-                      <a href="#contact">Get Started <ArrowRight className="w-5 h-5 ml-2" /></a>
-                    </Button>
+                    {/* Right - CTA */}
+                    <div className="shrink-0 w-full lg:w-auto">
+                      <Button asChild size="lg" className="w-full lg:w-auto bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-bold px-8 sm:px-10 py-6 sm:py-7 rounded-xl shadow-xl shadow-amber-500/20 hover:shadow-amber-500/35 transition-all duration-300 hover:scale-[1.03] text-sm sm:text-base">
+                        <a href="#contact">Get Started <ArrowRight className="w-4 sm:w-5 h-4 sm:h-5 ml-2" /></a>
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
