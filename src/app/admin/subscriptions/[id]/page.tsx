@@ -48,7 +48,9 @@ import {
   AlertCircle,
   CheckCircle2,
   Hash,
+  Upload,
 } from "lucide-react";
+import { toast } from "sonner";
 
 interface AssignedNumberItem {
   id: string;
@@ -140,6 +142,11 @@ export default function SubscriptionDetailPage() {
   // Change status
   const [changingStatus, setChangingStatus] = useState(false);
 
+  // CSV upload
+  const [csvDialogOpen, setCsvDialogOpen] = useState(false);
+  const [csvData, setCsvData] = useState("");
+  const [uploadingCsv, setUploadingCsv] = useState(false);
+
   const fetchSubscription = useCallback(async () => {
     try {
       const res = await fetch(`/api/admin/subscriptions/${subId}`, { credentials: "include" });
@@ -190,11 +197,11 @@ export default function SubscriptionDetailPage() {
       });
       if (!res.ok) throw new Error("Failed to update");
       setSubscription((prev) => (prev ? { ...prev, status: newStatus } : prev));
+      toast.success(`Subscription ${newStatus === "active" ? "activated" : "updated"}!`);
     } catch (err) {
       console.error("Failed to change status:", err);
       alert("Failed to update subscription status");
-    } finally {
-      setChangingStatus(false);
+      toast.error("Failed to update subscription status");
     }
   };
 
@@ -225,9 +232,7 @@ export default function SubscriptionDetailPage() {
         prev ? { ...prev, numbers: [...prev.numbers, data.number] } : prev
       );
       setAddNumberOpen(false);
-    } catch (err) {
-      console.error("Failed to add number:", err);
-      alert(err instanceof Error ? err.message : "Failed to add number");
+      toast.success("Phone number added successfully!");
     } finally {
       setAddingNumber(false);
     }
@@ -270,9 +275,7 @@ export default function SubscriptionDetailPage() {
           : prev
       );
       setEditNumberOpen(false);
-    } catch (err) {
-      console.error("Failed to edit number:", err);
-      alert(err instanceof Error ? err.message : "Failed to update number");
+      toast.success("Phone number updated successfully!");
     } finally {
       setSavingEdit(false);
     }
@@ -293,9 +296,7 @@ export default function SubscriptionDetailPage() {
           : prev
       );
       setRemoveNumberId(null);
-    } catch (err) {
-      console.error("Failed to remove number:", err);
-      alert("Failed to remove number");
+      toast.success("Phone number removed successfully!");
     } finally {
       setRemovingNumber(false);
     }
@@ -467,6 +468,13 @@ export default function SubscriptionDetailPage() {
             className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-white font-semibold h-8 rounded-lg shadow-lg shadow-teal-500/20 transition-all duration-300 text-xs gap-1.5"
           >
             <Plus className="w-3.5 h-3.5" /> Add Number
+          </Button>
+          <Button
+            onClick={() => { setCsvData(""); setCsvDialogOpen(true); }}
+            variant="outline"
+            className="bg-white/5 text-white/60 border-white/10 hover:bg-white/10 hover:text-white h-8 rounded-lg text-xs gap-1.5"
+          >
+            <Upload className="w-3.5 h-3.5" /> Upload CSV
           </Button>
         </div>
 
@@ -698,6 +706,64 @@ export default function SubscriptionDetailPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* CSV Upload Dialog */}
+      <Dialog open={csvDialogOpen} onOpenChange={setCsvDialogOpen}>
+        <DialogContent className="bg-[#0a1628] border-white/10 text-white max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-white">Upload CSV Numbers</DialogTitle>
+            <DialogDescription className="text-white/40">
+              Upload a CSV file with phone numbers. Format: phoneNumber,toneName,toneCategory
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-2">
+              <Label className="text-white/60 text-xs">CSV Data</Label>
+              <textarea
+                value={csvData}
+                onChange={(e) => setCsvData(e.target.value)}
+                placeholder={`phoneNumber,toneName,toneCategory\n+255712345678,Welcome Tune,music\n+255798765432,Ad Promo,ad`}
+                rows={6}
+                className="w-full bg-white/5 border border-white/10 text-white placeholder:text-white/25 focus:border-teal-500/50 focus:ring-teal-500/20 rounded-lg text-xs p-2.5 resize-none font-mono"
+              />
+            </div>
+            <div className="p-3 rounded-lg bg-white/[0.03] border border-white/5">
+              <p className="text-white/40 text-[10px]">Header row is required. Supported columns: phoneNumber (required), toneName (optional), toneCategory (optional)</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3 pt-2">
+            <Button variant="ghost" onClick={() => setCsvDialogOpen(false)} className="flex-1 text-white/40 hover:text-white hover:bg-white/5 h-9 rounded-xl text-xs">Cancel</Button>
+            <Button
+              onClick={async () => {
+                if (!csvData.trim()) return;
+                setUploadingCsv(true);
+                try {
+                  const res = await fetch(`/api/admin/subscriptions/${subId}/numbers/bulk`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "include",
+                    body: JSON.stringify({ csv: csvData }),
+                  });
+                  const data = await res.json();
+                  if (!res.ok) throw new Error(data.error || "Upload failed");
+                  toast.success(`${data.created} numbers created!${data.errors?.length > 0 ? ` (${data.errors.length} errors)` : ""}`);
+                  setCsvDialogOpen(false);
+                  fetchSubscription();
+                } catch (err) {
+                  toast.error(err instanceof Error ? err.message : "Failed to upload CSV");
+                } finally {
+                  setUploadingCsv(false);
+                }
+              }}
+              disabled={uploadingCsv || !csvData.trim()}
+              className="flex-1 bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-white font-semibold h-9 rounded-xl shadow-lg shadow-teal-500/20 transition-all duration-300 text-xs"
+            >
+              {uploadingCsv ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-3.5 h-3.5 mr-1.5" />}
+              {uploadingCsv ? "Uploading..." : "Upload"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

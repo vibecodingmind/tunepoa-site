@@ -36,7 +36,9 @@ import {
   Calendar,
   ArrowRight,
   X,
+  Download,
 } from "lucide-react";
+import { toast } from "sonner";
 
 interface SubscriptionItem {
   id: string;
@@ -111,6 +113,7 @@ export default function AdminSubscriptionsPage() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [exporting, setExporting] = useState(false);
 
   // Create subscription dialog
   const [createOpen, setCreateOpen] = useState(false);
@@ -139,6 +142,7 @@ export default function AdminSubscriptionsPage() {
       setSubscriptions(data.subscriptions || []);
     } catch (err) {
       console.error("Failed to fetch subscriptions:", err);
+      toast.error("Failed to load subscriptions");
     } finally {
       setLoading(false);
     }
@@ -200,9 +204,10 @@ export default function AdminSubscriptionsPage() {
       if (!res.ok) throw new Error(data.error || "Failed to create");
       setCreateOpen(false);
       await fetchSubscriptions();
+      toast.success("Subscription created successfully!");
     } catch (err) {
       console.error("Failed to create subscription:", err);
-      alert(err instanceof Error ? err.message : "Failed to create subscription");
+      toast.error(err instanceof Error ? err.message : "Failed to create subscription");
     } finally {
       setCreating(false);
     }
@@ -221,9 +226,10 @@ export default function AdminSubscriptionsPage() {
       setSubscriptions((prev) =>
         prev.map((s) => (s.id === subId ? { ...s, status: newStatus } : s))
       );
+      toast.success(`Subscription ${newStatus === "active" ? "activated" : "cancelled"} successfully!`);
     } catch (err) {
       console.error("Failed to change status:", err);
-      alert("Failed to update subscription status");
+      toast.error("Failed to update subscription status");
     } finally {
       setChangingStatusId(null);
     }
@@ -254,7 +260,6 @@ export default function AdminSubscriptionsPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to add number");
 
-      // Update local state
       setSubscriptions((prev) =>
         prev.map((s) =>
           s.id === addNumberSubId
@@ -263,9 +268,10 @@ export default function AdminSubscriptionsPage() {
         )
       );
       setAddNumberOpen(false);
+      toast.success("Phone number added successfully!");
     } catch (err) {
       console.error("Failed to add number:", err);
-      alert(err instanceof Error ? err.message : "Failed to add number");
+      toast.error(err instanceof Error ? err.message : "Failed to add number");
     } finally {
       setAddingNumber(false);
     }
@@ -286,11 +292,33 @@ export default function AdminSubscriptionsPage() {
             : s
         )
       );
+      toast.success("Phone number removed successfully!");
     } catch (err) {
       console.error("Failed to remove number:", err);
-      alert("Failed to remove number");
+      toast.error("Failed to remove number");
     } finally {
       setRemovingNumberId(null);
+    }
+  };
+
+  const handleExportCSV = async () => {
+    setExporting(true);
+    try {
+      const res = await fetch("/api/admin/export?type=subscriptions", { credentials: "include" });
+      if (!res.ok) throw new Error("Export failed");
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "subscriptions.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+      toast.success("Subscriptions exported successfully!");
+    } catch (err) {
+      console.error("Export error:", err);
+      toast.error("Failed to export subscriptions");
+    } finally {
+      setExporting(false);
     }
   };
 
@@ -330,13 +358,25 @@ export default function AdminSubscriptionsPage() {
           <h1 className="text-2xl font-bold text-white tracking-tight">Subscription Management</h1>
           <p className="text-white/40 text-sm mt-1">Manage all user subscriptions and assigned numbers</p>
         </div>
-        <Button
-          onClick={openCreateDialog}
-          className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-white font-semibold h-10 rounded-xl shadow-lg shadow-teal-500/20 hover:shadow-teal-500/30 transition-all duration-300 gap-2 self-start"
-        >
-          <Plus className="w-4 h-4" />
-          Create Subscription
-        </Button>
+        <div className="flex items-center gap-2 self-start">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleExportCSV}
+            disabled={exporting}
+            className="bg-white/5 text-white/60 border-white/10 hover:bg-white/10 hover:text-white text-xs h-8 gap-1.5"
+          >
+            {exporting ? <Loader2 className="w-3 h-3 animate-spin" /> : <Download className="w-3 h-3" />}
+            Export CSV
+          </Button>
+          <Button
+            onClick={openCreateDialog}
+            className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-white font-semibold h-10 rounded-xl shadow-lg shadow-teal-500/20 hover:shadow-teal-500/30 transition-all duration-300 gap-2"
+          >
+            <Plus className="w-4 h-4" />
+            Create Subscription
+          </Button>
+        </div>
       </div>
 
       {/* Stats */}
@@ -388,10 +428,8 @@ export default function AdminSubscriptionsPage() {
             const activeNumbers = sub.numbers.filter((n) => n.status === "active").length;
             return (
               <div key={sub.id} className="glass-card rounded-xl overflow-hidden">
-                {/* Subscription Row */}
                 <div className="p-4 sm:p-5">
                   <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
-                    {/* Main Info */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1.5">
                         <h4 className="text-white font-semibold text-sm truncate">{sub.package.name}</h4>
@@ -400,78 +438,45 @@ export default function AdminSubscriptionsPage() {
                         </Badge>
                       </div>
                       <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-white/35">
-                        <span className="flex items-center gap-1">
-                          <User className="w-3 h-3" /> {sub.user.name}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Package className="w-3 h-3" /> {sub.package.tier}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Calendar className="w-3 h-3" /> {getCycleLabel(sub.billingCycle)}
-                        </span>
+                        <span className="flex items-center gap-1"><User className="w-3 h-3" /> {sub.user.name}</span>
+                        <span className="flex items-center gap-1"><Package className="w-3 h-3" /> {sub.package.tier}</span>
+                        <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> {getCycleLabel(sub.billingCycle)}</span>
                         <span>{formatPrice(price)} TZS</span>
-                        <span className="flex items-center gap-1">
-                          <Phone className="w-3 h-3" /> {activeNumbers}/{sub.package.maxPhoneNumbers} numbers
-                        </span>
+                        <span className="flex items-center gap-1"><Phone className="w-3 h-3" /> {activeNumbers}/{sub.package.maxPhoneNumbers} numbers</span>
                       </div>
                     </div>
 
-                    {/* Actions */}
                     <div className="flex items-center gap-2">
                       {sub.status === "active" && (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleChangeStatus(sub.id, "cancelled")}
-                          disabled={changingStatusId === sub.id}
-                          className="text-red-400/60 hover:text-red-400 hover:bg-red-500/10 text-[10px] h-7 gap-1"
-                        >
+                        <Button variant="ghost" size="sm" onClick={() => handleChangeStatus(sub.id, "cancelled")} disabled={changingStatusId === sub.id}
+                          className="text-red-400/60 hover:text-red-400 hover:bg-red-500/10 text-[10px] h-7 gap-1">
                           {changingStatusId === sub.id ? <Loader2 className="w-3 h-3 animate-spin" /> : "Cancel"}
                         </Button>
                       )}
                       {(sub.status === "cancelled" || sub.status === "expired" || sub.status === "pending") && (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleChangeStatus(sub.id, "active")}
-                          disabled={changingStatusId === sub.id}
-                          className="text-emerald-400/60 hover:text-emerald-400 hover:bg-emerald-500/10 text-[10px] h-7 gap-1"
-                        >
+                        <Button variant="ghost" size="sm" onClick={() => handleChangeStatus(sub.id, "active")} disabled={changingStatusId === sub.id}
+                          className="text-emerald-400/60 hover:text-emerald-400 hover:bg-emerald-500/10 text-[10px] h-7 gap-1">
                           {changingStatusId === sub.id ? <Loader2 className="w-3 h-3 animate-spin" /> : "Activate"}
                         </Button>
                       )}
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => router.push(`/admin/subscriptions/${sub.id}`)}
-                        className="text-teal-400/60 hover:text-teal-400 hover:bg-teal-500/10 text-[10px] h-7 gap-1"
-                      >
+                      <Button variant="ghost" size="sm" onClick={() => router.push(`/admin/subscriptions/${sub.id}`)}
+                        className="text-teal-400/60 hover:text-teal-400 hover:bg-teal-500/10 text-[10px] h-7 gap-1">
                         View <ArrowRight className="w-3 h-3" />
                       </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setExpandedId(isExpanded ? null : sub.id)}
-                        className="text-white/30 hover:text-white/60 hover:bg-white/5 h-7 px-2"
-                      >
+                      <Button variant="ghost" size="sm" onClick={() => setExpandedId(isExpanded ? null : sub.id)}
+                        className="text-white/30 hover:text-white/60 hover:bg-white/5 h-7 px-2">
                         {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                       </Button>
                     </div>
                   </div>
                 </div>
 
-                {/* Expanded: Numbers */}
                 {isExpanded && (
                   <div className="border-t border-white/5 px-4 sm:px-5 py-4 bg-white/[0.01]">
                     <div className="flex items-center justify-between mb-3">
                       <h5 className="text-white/60 text-xs font-semibold">Assigned Numbers ({sub.numbers.length})</h5>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => openAddNumber(sub.id)}
-                        disabled={activeNumbers >= sub.package.maxPhoneNumbers}
-                        className="text-teal-400/60 hover:text-teal-400 hover:bg-teal-500/10 text-[10px] h-7 gap-1"
-                      >
+                      <Button variant="ghost" size="sm" onClick={() => openAddNumber(sub.id)} disabled={activeNumbers >= sub.package.maxPhoneNumbers}
+                        className="text-teal-400/60 hover:text-teal-400 hover:bg-teal-500/10 text-[10px] h-7 gap-1">
                         <Plus className="w-3 h-3" /> Add Number
                       </Button>
                     </div>
@@ -481,10 +486,7 @@ export default function AdminSubscriptionsPage() {
                     ) : (
                       <div className="space-y-2 max-h-48 overflow-y-auto">
                         {sub.numbers.map((num) => (
-                          <div
-                            key={num.id}
-                            className="flex items-center justify-between bg-white/[0.02] border border-white/5 rounded-lg px-3 py-2"
-                          >
+                          <div key={num.id} className="flex items-center justify-between bg-white/[0.02] border border-white/5 rounded-lg px-3 py-2">
                             <div className="flex items-center gap-3 min-w-0">
                               <Phone className="w-3.5 h-3.5 text-teal-400/50 shrink-0" />
                               <div className="min-w-0">
@@ -496,21 +498,10 @@ export default function AdminSubscriptionsPage() {
                               </div>
                             </div>
                             <div className="flex items-center gap-2">
-                              <Badge className={`text-[9px] px-1.5 py-0 ${statusColors[num.status] || "bg-white/5 text-white/40"}`}>
-                                {num.status}
-                              </Badge>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => handleRemoveNumber(sub.id, num.id)}
-                                disabled={removingNumberId === num.id}
-                                className="text-white/20 hover:text-red-400 hover:bg-red-500/10 h-6 w-6 p-0"
-                              >
-                                {removingNumberId === num.id ? (
-                                  <Loader2 className="w-3 h-3 animate-spin" />
-                                ) : (
-                                  <X className="w-3 h-3" />
-                                )}
+                              <Badge className={`text-[9px] px-1.5 py-0 ${statusColors[num.status] || "bg-white/5 text-white/40"}`}>{num.status}</Badge>
+                              <Button variant="ghost" size="sm" onClick={() => handleRemoveNumber(sub.id, num.id)} disabled={removingNumberId === num.id}
+                                className="text-white/20 hover:text-red-400 hover:bg-red-500/10 h-6 w-6 p-0">
+                                {removingNumberId === num.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <X className="w-3 h-3" />}
                               </Button>
                             </div>
                           </div>
@@ -530,11 +521,8 @@ export default function AdminSubscriptionsPage() {
         <DialogContent className="bg-[#0a1628] border-white/10 text-white max-w-md">
           <DialogHeader>
             <DialogTitle className="text-white">Create Subscription</DialogTitle>
-            <DialogDescription className="text-white/40">
-              Assign a package to a user
-            </DialogDescription>
+            <DialogDescription className="text-white/40">Assign a package to a user</DialogDescription>
           </DialogHeader>
-
           <div className="space-y-4 py-2">
             <div className="space-y-2">
               <Label className="text-white/60 text-xs">User</Label>
@@ -543,15 +531,10 @@ export default function AdminSubscriptionsPage() {
                   <SelectValue placeholder="Select a user" />
                 </SelectTrigger>
                 <SelectContent className="bg-[#0a1628] border-white/10 max-h-60">
-                  {userOptions.map((u) => (
-                    <SelectItem key={u.id} value={u.id}>
-                      {u.name} ({u.email})
-                    </SelectItem>
-                  ))}
+                  {userOptions.map((u) => (<SelectItem key={u.id} value={u.id}>{u.name} ({u.email})</SelectItem>))}
                 </SelectContent>
               </Select>
             </div>
-
             <div className="space-y-2">
               <Label className="text-white/60 text-xs">Package</Label>
               <Select value={createForm.packageId} onValueChange={(v) => setCreateForm({ ...createForm, packageId: v })}>
@@ -559,21 +542,14 @@ export default function AdminSubscriptionsPage() {
                   <SelectValue placeholder="Select a package" />
                 </SelectTrigger>
                 <SelectContent className="bg-[#0a1628] border-white/10 max-h-60">
-                  {packageOptions.map((p) => (
-                    <SelectItem key={p.id} value={p.id}>
-                      {p.name} — {p.tier} ({p.category})
-                    </SelectItem>
-                  ))}
+                  {packageOptions.map((p) => (<SelectItem key={p.id} value={p.id}>{p.name} — {p.tier} ({p.category})</SelectItem>))}
                 </SelectContent>
               </Select>
             </div>
-
             <div className="space-y-2">
               <Label className="text-white/60 text-xs">Billing Cycle</Label>
               <Select value={createForm.billingCycle} onValueChange={(v) => setCreateForm({ ...createForm, billingCycle: v })}>
-                <SelectTrigger className="bg-white/5 border-white/10 text-white h-9 rounded-lg text-xs">
-                  <SelectValue />
-                </SelectTrigger>
+                <SelectTrigger className="bg-white/5 border-white/10 text-white h-9 rounded-lg text-xs"><SelectValue /></SelectTrigger>
                 <SelectContent className="bg-[#0a1628] border-white/10">
                   <SelectItem value="3mo">3 Months</SelectItem>
                   <SelectItem value="6mo">6 Months</SelectItem>
@@ -582,20 +558,10 @@ export default function AdminSubscriptionsPage() {
               </Select>
             </div>
           </div>
-
           <div className="flex items-center gap-3 pt-2">
-            <Button
-              variant="ghost"
-              onClick={() => setCreateOpen(false)}
-              className="flex-1 text-white/40 hover:text-white hover:bg-white/5 h-9 rounded-xl text-xs"
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={handleCreateSubscription}
-              disabled={creating || !createForm.userId || !createForm.packageId}
-              className="flex-1 bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-white font-semibold h-9 rounded-xl shadow-lg shadow-teal-500/20 transition-all duration-300 text-xs"
-            >
+            <Button variant="ghost" onClick={() => setCreateOpen(false)} className="flex-1 text-white/40 hover:text-white hover:bg-white/5 h-9 rounded-xl text-xs">Cancel</Button>
+            <Button onClick={handleCreateSubscription} disabled={creating || !createForm.userId || !createForm.packageId}
+              className="flex-1 bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-white font-semibold h-9 rounded-xl shadow-lg shadow-teal-500/20 transition-all duration-300 text-xs">
               {creating ? <Loader2 className="w-4 h-4 animate-spin" /> : "Create Subscription"}
             </Button>
           </div>
@@ -607,38 +573,23 @@ export default function AdminSubscriptionsPage() {
         <DialogContent className="bg-[#0a1628] border-white/10 text-white max-w-md">
           <DialogHeader>
             <DialogTitle className="text-white">Add Phone Number</DialogTitle>
-            <DialogDescription className="text-white/40">
-              Assign a new phone number to this subscription
-            </DialogDescription>
+            <DialogDescription className="text-white/40">Assign a new phone number to this subscription</DialogDescription>
           </DialogHeader>
-
           <div className="space-y-4 py-2">
             <div className="space-y-2">
               <Label className="text-white/60 text-xs">Phone Number</Label>
-              <Input
-                value={newPhoneNumber}
-                onChange={(e) => setNewPhoneNumber(e.target.value)}
-                placeholder="+255 7XX XXX XXX"
-                className="bg-white/5 border-white/10 text-white placeholder:text-white/25 focus:border-teal-500/50 focus:ring-teal-500/20 h-9 rounded-lg text-xs"
-              />
+              <Input value={newPhoneNumber} onChange={(e) => setNewPhoneNumber(e.target.value)} placeholder="+255 7XX XXX XXX"
+                className="bg-white/5 border-white/10 text-white placeholder:text-white/25 focus:border-teal-500/50 focus:ring-teal-500/20 h-9 rounded-lg text-xs" />
             </div>
-
             <div className="space-y-2">
               <Label className="text-white/60 text-xs">Tone Name (optional)</Label>
-              <Input
-                value={newToneName}
-                onChange={(e) => setNewToneName(e.target.value)}
-                placeholder="e.g., Company Welcome Tune"
-                className="bg-white/5 border-white/10 text-white placeholder:text-white/25 focus:border-teal-500/50 focus:ring-teal-500/20 h-9 rounded-lg text-xs"
-              />
+              <Input value={newToneName} onChange={(e) => setNewToneName(e.target.value)} placeholder="e.g., Company Welcome Tune"
+                className="bg-white/5 border-white/10 text-white placeholder:text-white/25 focus:border-teal-500/50 focus:ring-teal-500/20 h-9 rounded-lg text-xs" />
             </div>
-
             <div className="space-y-2">
               <Label className="text-white/60 text-xs">Tone Category (optional)</Label>
               <Select value={newToneCategory} onValueChange={setNewToneCategory}>
-                <SelectTrigger className="bg-white/5 border-white/10 text-white h-9 rounded-lg text-xs">
-                  <SelectValue placeholder="Select category" />
-                </SelectTrigger>
+                <SelectTrigger className="bg-white/5 border-white/10 text-white h-9 rounded-lg text-xs"><SelectValue placeholder="Select category" /></SelectTrigger>
                 <SelectContent className="bg-[#0a1628] border-white/10">
                   <SelectItem value="music">Music</SelectItem>
                   <SelectItem value="ad">Ad</SelectItem>
@@ -648,20 +599,10 @@ export default function AdminSubscriptionsPage() {
               </Select>
             </div>
           </div>
-
           <div className="flex items-center gap-3 pt-2">
-            <Button
-              variant="ghost"
-              onClick={() => setAddNumberOpen(false)}
-              className="flex-1 text-white/40 hover:text-white hover:bg-white/5 h-9 rounded-xl text-xs"
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={handleAddNumber}
-              disabled={addingNumber || !newPhoneNumber}
-              className="flex-1 bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-white font-semibold h-9 rounded-xl shadow-lg shadow-teal-500/20 transition-all duration-300 text-xs"
-            >
+            <Button variant="ghost" onClick={() => setAddNumberOpen(false)} className="flex-1 text-white/40 hover:text-white hover:bg-white/5 h-9 rounded-xl text-xs">Cancel</Button>
+            <Button onClick={handleAddNumber} disabled={addingNumber || !newPhoneNumber}
+              className="flex-1 bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-white font-semibold h-9 rounded-xl shadow-lg shadow-teal-500/20 transition-all duration-300 text-xs">
               {addingNumber ? <Loader2 className="w-4 h-4 animate-spin" /> : "Add Number"}
             </Button>
           </div>

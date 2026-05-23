@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
@@ -17,10 +18,14 @@ model User {
   avatar        String?
   role          String    @default("user") // "user" | "admin"
   status        String    @default("active") // "active" | "suspended"
+  locale        String    @default("en") // "en" | "sw"
+  resetToken    String?
+  resetTokenExpiry DateTime?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   subscriptions    Subscription[]
   contactMessages  ContactMessage[]
+  payments         Payment[]
 }
 
 model Package {
@@ -37,6 +42,7 @@ model Package {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   subscriptions  Subscription[]
+  payments       Payment[]
 }
 
 model Subscription {
@@ -53,6 +59,7 @@ model Subscription {
   createdAt    DateTime          @default(now())
   updatedAt    DateTime          @updatedAt
   numbers      AssignedNumber[]
+  payments     Payment[]
 }
 
 model AssignedNumber {
@@ -68,13 +75,48 @@ model AssignedNumber {
 }
 
 model ContactMessage {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  subject   String
-  message   String
-  status    String   @default("open") // "open" | "in_progress" | "resolved" | "closed"
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subject    String
+  message    String
+  status     String   @default("open") // "open" | "in_progress" | "resolved" | "closed"
   adminReply String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Payment {
+  id              String       @id @default(cuid())
+  userId          String
+  user            User         @relation(fields: [userId], references: [id])
+  subscriptionId  String?
+  subscription    Subscription? @relation(fields: [subscriptionId], references: [id])
+  amount          Int          // Amount in TZS
+  currency        String       @default("TZS")
+  billingCycle    String       // "3mo" | "6mo" | "12mo"
+  packageId       String
+  package         Package      @relation(fields: [packageId], references: [id])
+  status          String       @default("pending") // "pending" | "completed" | "failed" | "refunded"
+  pesapalTrackingId String?   // PesaPal tracking ID
+  pesapalOrderId  String?     // Our internal order ID sent to PesaPal
+  pesapalNotificationId String? // IPN notification ID
+  paymentMethod   String?     // "mpesa" | "tigopesa" | "airtel" | "visa" | "mastercard"
+  phoneUsed       String?     // Phone number used for payment
+  failureReason   String?
+  paidAt          DateTime?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?  // Admin who performed the action
+  userName  String?  // Denormalized for quick display
+  action    String   // "create" | "update" | "delete" | "login" | "payment" | etc.
+  entity    String   // "user" | "subscription" | "package" | "number" | "payment" | "message"
+  entityId  String?  // ID of the affected entity
+  details   String?  // JSON string with change details
+  ipAddress String?
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }

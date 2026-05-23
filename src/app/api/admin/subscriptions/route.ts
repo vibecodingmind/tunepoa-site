@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
+import { logAudit } from "@/lib/audit";
 
 export async function GET() {
   try {
@@ -22,8 +23,9 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  let session;
   try {
-    await requireAdmin();
+    session = await requireAdmin();
   } catch {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
@@ -54,6 +56,15 @@ export async function POST(request: Request) {
     const subscription = await db.subscription.create({
       data: { userId, packageId, billingCycle, status: "active", adminNotes: adminNotes || null, startDate, endDate },
       include: { user: { select: { id: true, name: true, email: true } }, package: true },
+    });
+
+    await logAudit({
+      userId: session.userId,
+      userName: session.email,
+      action: "create",
+      entity: "subscription",
+      entityId: subscription.id,
+      details: `Created subscription for ${user.name}: ${pkg.name} (${billingCycle})`,
     });
 
     return NextResponse.json({ subscription }, { status: 201 });

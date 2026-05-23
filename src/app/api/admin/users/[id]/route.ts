@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
+import { logAudit } from "@/lib/audit";
 
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -25,8 +26,9 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
 }
 
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  let session;
   try {
-    await requireAdmin();
+    session = await requireAdmin();
   } catch {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
@@ -48,6 +50,15 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
         ...(body.role && { role: body.role }),
       },
       select: { id: true, email: true, name: true, phone: true, company: true, role: true, status: true, createdAt: true, updatedAt: true },
+    });
+
+    await logAudit({
+      userId: session.userId,
+      userName: session.email,
+      action: "update",
+      entity: "user",
+      entityId: id,
+      details: `Updated user ${existing.name}: ${JSON.stringify(body)}`,
     });
 
     return NextResponse.json({ user });

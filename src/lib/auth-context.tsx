@@ -11,6 +11,7 @@ interface User {
   avatar?: string | null;
   role: string;
   status: string;
+  locale?: string;
   createdAt: string;
   updatedAt: string;
 }

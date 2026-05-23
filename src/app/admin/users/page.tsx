@@ -20,7 +20,6 @@ import {
   Users,
   Search,
   Loader2,
-  Eye,
   ToggleLeft,
   ToggleRight,
   UserCheck,
@@ -29,7 +28,9 @@ import {
   Building,
   AlertCircle,
   ShieldCheck,
+  Download,
 } from "lucide-react";
+import { toast } from "sonner";
 
 interface UserItem {
   id: string;
@@ -59,6 +60,7 @@ export default function AdminUsersPage() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [togglingId, setTogglingId] = useState<string | null>(null);
+  const [exporting, setExporting] = useState(false);
 
   // Confirm dialog
   const [confirmDialog, setConfirmDialog] = useState<{
@@ -75,6 +77,7 @@ export default function AdminUsersPage() {
       setUsers(data.users || []);
     } catch (err) {
       console.error("Failed to fetch users:", err);
+      toast.error("Failed to load users");
     } finally {
       setLoading(false);
     }
@@ -104,12 +107,34 @@ export default function AdminUsersPage() {
       setUsers((prev) =>
         prev.map((u) => (u.id === userId ? { ...u, status: newStatus } : u))
       );
+      toast.success(`User ${action === "activate" ? "activated" : "suspended"} successfully!`);
     } catch (err) {
       console.error("Failed to toggle user status:", err);
-      alert("Failed to update user status");
+      toast.error("Failed to update user status");
     } finally {
       setTogglingId(null);
       setConfirmDialog(null);
+    }
+  };
+
+  const handleExportCSV = async () => {
+    setExporting(true);
+    try {
+      const res = await fetch("/api/admin/export?type=users", { credentials: "include" });
+      if (!res.ok) throw new Error("Export failed");
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "users.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+      toast.success("Users exported successfully!");
+    } catch (err) {
+      console.error("Export error:", err);
+      toast.error("Failed to export users");
+    } finally {
+      setExporting(false);
     }
   };
 
@@ -150,6 +175,16 @@ export default function AdminUsersPage() {
           <Badge variant="outline" className="bg-teal-500/10 text-teal-400 border-teal-500/20 text-[10px] gap-1">
             <ShieldCheck className="w-3 h-3" /> {adminCount} Admin
           </Badge>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleExportCSV}
+            disabled={exporting}
+            className="bg-white/5 text-white/60 border-white/10 hover:bg-white/10 hover:text-white text-xs h-8 gap-1.5"
+          >
+            {exporting ? <Loader2 className="w-3 h-3 animate-spin" /> : <Download className="w-3 h-3" />}
+            Export CSV
+          </Button>
         </div>
       </div>
 

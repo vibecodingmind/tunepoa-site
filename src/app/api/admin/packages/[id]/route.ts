@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
+import { logAudit } from "@/lib/audit";
 
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  let session;
   try {
-    await requireAdmin();
+    session = await requireAdmin();
   } catch {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
@@ -31,6 +33,15 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
       },
     });
 
+    await logAudit({
+      userId: session.userId,
+      userName: session.email,
+      action: "update",
+      entity: "package",
+      entityId: id,
+      details: `Updated package: ${pkg.name}`,
+    });
+
     return NextResponse.json({ package: pkg });
   } catch (error) {
     console.error("Update package error:", error);
@@ -39,8 +50,9 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 }
 
 export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  let session;
   try {
-    await requireAdmin();
+    session = await requireAdmin();
   } catch {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
@@ -51,6 +63,16 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
     if (!existing) return NextResponse.json({ error: "Package not found" }, { status: 404 });
 
     await db.package.delete({ where: { id } });
+
+    await logAudit({
+      userId: session.userId,
+      userName: session.email,
+      action: "delete",
+      entity: "package",
+      entityId: id,
+      details: `Deleted package: ${existing.name}`,
+    });
+
     return NextResponse.json({ message: "Package deleted" });
   } catch (error) {
     console.error("Delete package error:", error);

@@ -1,14 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
+import { logAudit } from "@/lib/audit";
 
 // PATCH /api/admin/messages/[id] - Update message status or add admin reply
 export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  let session;
   try {
-    await requireAdmin();
+    session = await requireAdmin();
   } catch {
     return NextResponse.json({ error: "Forbidden: Admin access required" }, { status: 403 });
   }
@@ -30,6 +32,15 @@ export async function PATCH(
     const updated = await db.contactMessage.update({
       where: { id },
       data: updateData,
+    });
+
+    await logAudit({
+      userId: session.userId,
+      userName: session.email,
+      action: "update",
+      entity: "message",
+      entityId: id,
+      details: `Updated message: status=${status || existing.status}, reply=${adminReply !== undefined ? 'added' : 'unchanged'}`,
     });
 
     return NextResponse.json({ message: updated });

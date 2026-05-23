@@ -1,16 +1,18 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
+import { logAudit } from "@/lib/audit";
 
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string; numberId: string }> }) {
+  let session;
   try {
-    await requireAdmin();
+    session = await requireAdmin();
   } catch {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
   try {
-    const { numberId } = await params;
+    const { id, numberId } = await params;
     const body = await request.json();
 
     const existing = await db.assignedNumber.findUnique({ where: { id: numberId } });
@@ -26,6 +28,15 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
       },
     });
 
+    await logAudit({
+      userId: session.userId,
+      userName: session.email,
+      action: "update",
+      entity: "number",
+      entityId: numberId,
+      details: `Updated number ${existing.phoneNumber}: ${JSON.stringify(body)}`,
+    });
+
     return NextResponse.json({ number });
   } catch (error) {
     console.error("Update number error:", error);
@@ -34,18 +45,29 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 }
 
 export async function DELETE(request: Request, { params }: { params: Promise<{ id: string; numberId: string }> }) {
+  let session;
   try {
-    await requireAdmin();
+    session = await requireAdmin();
   } catch {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
   try {
-    const { numberId } = await params;
+    const { id, numberId } = await params;
     const existing = await db.assignedNumber.findUnique({ where: { id: numberId } });
     if (!existing) return NextResponse.json({ error: "Number not found" }, { status: 404 });
 
     await db.assignedNumber.delete({ where: { id: numberId } });
+
+    await logAudit({
+      userId: session.userId,
+      userName: session.email,
+      action: "delete",
+      entity: "number",
+      entityId: numberId,
+      details: `Removed number ${existing.phoneNumber} from subscription ${id}`,
+    });
+
     return NextResponse.json({ message: "Number removed" });
   } catch (error) {
     console.error("Delete number error:", error);

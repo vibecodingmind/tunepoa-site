@@ -16,6 +16,21 @@ import {
   Package,
   Activity,
 } from "lucide-react";
+import {
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+} from "recharts";
 
 interface DashboardStats {
   totalUsers: number;
@@ -27,6 +42,14 @@ interface DashboardStats {
   activeNumbers: number;
   totalPackages: number;
   totalRevenue: number;
+}
+
+interface AnalyticsData {
+  monthlyRevenue: { month: string; revenue: number }[];
+  subscriptionGrowth: { month: string; total: number; active: number }[];
+  subscriptionStatus: { status: string; count: number }[];
+  packagePopularity: { name: string; tier: string; subscriptions: number }[];
+  paymentMethodDistribution: { method: string; count: number }[];
 }
 
 const defaultStats: DashboardStats = {
@@ -45,21 +68,39 @@ function formatTZS(amount: number): string {
   return amount.toLocaleString("en-TZ");
 }
 
+const STATUS_COLORS: Record<string, string> = {
+  active: "#10b981",
+  pending: "#f59e0b",
+  cancelled: "#ef4444",
+  expired: "#6b7280",
+};
+
+const CHART_COLORS = ["#14b8a6", "#06b6d4", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6"];
+
 export default function AdminOverviewPage() {
   const router = useRouter();
   const { isAdmin, loading: authLoading } = useAuth();
   const [stats, setStats] = useState<DashboardStats>(defaultStats);
+  const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const fetchStats = useCallback(async () => {
+  const fetchData = useCallback(async () => {
     try {
-      const res = await fetch("/api/admin/stats", { credentials: "include" });
-      if (!res.ok) throw new Error("Failed to fetch stats");
-      const data = await res.json();
-      setStats(data.stats || defaultStats);
+      const [statsRes, analyticsRes] = await Promise.all([
+        fetch("/api/admin/stats", { credentials: "include" }),
+        fetch("/api/admin/analytics", { credentials: "include" }),
+      ]);
+      if (statsRes.ok) {
+        const data = await statsRes.json();
+        setStats(data.stats || defaultStats);
+      }
+      if (analyticsRes.ok) {
+        const data = await analyticsRes.json();
+        setAnalytics(data);
+      }
     } catch (err) {
-      console.error("Failed to fetch stats:", err);
+      console.error("Failed to fetch data:", err);
       setError("Failed to load dashboard statistics");
     } finally {
       setLoading(false);
@@ -68,9 +109,9 @@ export default function AdminOverviewPage() {
 
   useEffect(() => {
     if (!authLoading && isAdmin) {
-      fetchStats();
+      fetchData();
     }
-  }, [authLoading, isAdmin, fetchStats]);
+  }, [authLoading, isAdmin, fetchData]);
 
   useEffect(() => {
     if (!authLoading && !isAdmin) {
@@ -98,7 +139,7 @@ export default function AdminOverviewPage() {
           </div>
           <p className="text-white/60 text-sm mb-4">{error}</p>
           <button
-            onClick={() => { setLoading(true); setError(""); fetchStats(); }}
+            onClick={() => { setLoading(true); setError(""); fetchData(); }}
             className="text-teal-400 hover:text-teal-300 text-sm font-medium transition-colors"
           >
             Try again
@@ -194,9 +235,7 @@ export default function AdminOverviewPage() {
           const DetailIcon = card.detailIcon;
           return (
             <div key={card.label} className="glass-card rounded-2xl p-5 relative overflow-hidden group">
-              {/* Background glow */}
               <div className={`absolute -top-8 -right-8 w-32 h-32 bg-${card.bgGlow} rounded-full blur-[60px] group-hover:bg-opacity-20 transition-all duration-500`} />
-
               <div className="relative z-10">
                 <div className="flex items-start justify-between mb-4">
                   <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${card.gradient} flex items-center justify-center shadow-lg shadow-black/20`}>
@@ -238,6 +277,91 @@ export default function AdminOverviewPage() {
           );
         })}
       </div>
+
+      {/* Charts Section */}
+      {analytics && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Revenue Chart */}
+          <div className="glass-card rounded-2xl p-5 sm:p-6">
+            <h3 className="text-white font-semibold text-sm mb-4">Revenue (Last 6 Months)</h3>
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={analytics.monthlyRevenue}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                  <XAxis dataKey="month" tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 11 }} axisLine={{ stroke: "rgba(255,255,255,0.1)" }} />
+                  <YAxis tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 11 }} axisLine={{ stroke: "rgba(255,255,255,0.1)" }} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
+                  <Tooltip
+                    contentStyle={{ background: "#0a1628", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "12px", color: "#fff", fontSize: 12 }}
+                    formatter={(value: number) => [`${formatTZS(value)} TZS`, "Revenue"]}
+                  />
+                  <Line type="monotone" dataKey="revenue" stroke="#14b8a6" strokeWidth={2.5} dot={{ r: 4, fill: "#14b8a6" }} activeDot={{ r: 6, fill: "#14b8a6" }} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Subscription Growth Chart */}
+          <div className="glass-card rounded-2xl p-5 sm:p-6">
+            <h3 className="text-white font-semibold text-sm mb-4">Subscription Growth</h3>
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={analytics.subscriptionGrowth}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                  <XAxis dataKey="month" tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 11 }} axisLine={{ stroke: "rgba(255,255,255,0.1)" }} />
+                  <YAxis tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 11 }} axisLine={{ stroke: "rgba(255,255,255,0.1)" }} />
+                  <Tooltip contentStyle={{ background: "#0a1628", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "12px", color: "#fff", fontSize: 12 }} />
+                  <Bar dataKey="total" fill="#06b6d4" radius={[4, 4, 0, 0]} name="New" />
+                  <Bar dataKey="active" fill="#14b8a6" radius={[4, 4, 0, 0]} name="Active" />
+                  <Legend wrapperStyle={{ color: "rgba(255,255,255,0.5)", fontSize: 11 }} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Subscription Status Pie */}
+          <div className="glass-card rounded-2xl p-5 sm:p-6">
+            <h3 className="text-white font-semibold text-sm mb-4">Subscription Status</h3>
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={analytics.subscriptionStatus}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={50}
+                    outerRadius={80}
+                    paddingAngle={4}
+                    dataKey="count"
+                    nameKey="status"
+                    label={({ status, percent }) => `${status} ${(percent * 100).toFixed(0)}%`}
+                  >
+                    {analytics.subscriptionStatus.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={STATUS_COLORS[entry.status] || CHART_COLORS[index % CHART_COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip contentStyle={{ background: "#0a1628", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "12px", color: "#fff", fontSize: 12 }} />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Package Popularity */}
+          <div className="glass-card rounded-2xl p-5 sm:p-6">
+            <h3 className="text-white font-semibold text-sm mb-4">Package Popularity</h3>
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={analytics.packagePopularity} layout="vertical">
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                  <XAxis type="number" tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 11 }} axisLine={{ stroke: "rgba(255,255,255,0.1)" }} />
+                  <YAxis dataKey="name" type="category" tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 10 }} axisLine={{ stroke: "rgba(255,255,255,0.1)" }} width={100} />
+                  <Tooltip contentStyle={{ background: "#0a1628", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "12px", color: "#fff", fontSize: 12 }} />
+                  <Bar dataKey="subscriptions" fill="#f59e0b" radius={[0, 4, 4, 0]} name="Subscriptions" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Quick Actions */}
       <div className="glass-card rounded-2xl p-6">

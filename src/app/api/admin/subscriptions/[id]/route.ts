@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
+import { logAudit } from "@/lib/audit";
 
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -32,8 +33,9 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
 }
 
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  let session;
   try {
-    await requireAdmin();
+    session = await requireAdmin();
   } catch {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
@@ -55,6 +57,15 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
       include: { user: { select: { id: true, name: true, email: true } }, package: true, numbers: true },
     });
 
+    await logAudit({
+      userId: session.userId,
+      userName: session.email,
+      action: "update",
+      entity: "subscription",
+      entityId: id,
+      details: `Updated subscription: status=${body.status || existing.status}, notes=${body.adminNotes !== undefined ? 'updated' : 'unchanged'}`,
+    });
+
     return NextResponse.json({ subscription });
   } catch (error) {
     console.error("Update subscription error:", error);
@@ -63,8 +74,9 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 }
 
 export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  let session;
   try {
-    await requireAdmin();
+    session = await requireAdmin();
   } catch {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
@@ -76,6 +88,15 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
 
     await db.assignedNumber.deleteMany({ where: { subscriptionId: id } });
     await db.subscription.delete({ where: { id } });
+
+    await logAudit({
+      userId: session.userId,
+      userName: session.email,
+      action: "delete",
+      entity: "subscription",
+      entityId: id,
+      details: `Deleted subscription for user ${existing.userId}`,
+    });
 
     return NextResponse.json({ message: "Subscription deleted" });
   } catch (error) {

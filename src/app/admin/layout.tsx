@@ -25,7 +25,10 @@ import {
   X,
   ChevronLeft,
   Mail,
+  FileText,
+  Globe,
 } from "lucide-react";
+import { useI18n } from "@/lib/i18n-context";
 
 const navItems = [
   { label: "Overview", href: "/admin", icon: LayoutDashboard },
@@ -33,6 +36,7 @@ const navItems = [
   { label: "Users", href: "/admin/users", icon: Users },
   { label: "Subscriptions", href: "/admin/subscriptions", icon: CreditCard },
   { label: "Messages", href: "/admin/messages", icon: Mail },
+  { label: "Audit Logs", href: "/admin/audit-logs", icon: FileText },
 ];
 
 /* ─── Sidebar Content Component (declared outside render) ─── */
@@ -142,6 +146,7 @@ export default function AdminLayout({
   const { user, isAdmin, loading: authLoading, logout } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const { locale, setLocale, t } = useI18n();
 
   useEffect(() => {
     if (!authLoading) {
@@ -251,6 +256,15 @@ export default function AdminLayout({
               </div>
             </div>
             <div className="flex items-center gap-3">
+              {/* Language Toggle */}
+              <button
+                onClick={() => setLocale(locale === "en" ? "sw" : "en")}
+                className="flex items-center gap-1.5 text-white/40 hover:text-teal-400 text-[10px] font-medium px-2 py-1 rounded-lg hover:bg-white/5 transition-colors"
+                title={locale === "en" ? "Badilisha kwa Kiswahili" : "Switch to English"}
+              >
+                <Globe className="w-3.5 h-3.5" />
+                <span className="uppercase">{locale}</span>
+              </button>
               <div className="hidden sm:flex items-center gap-2">
                 <div className="w-7 h-7 rounded-full bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center text-white text-[10px] font-bold">
                   {user.name.charAt(0).toUpperCase()}

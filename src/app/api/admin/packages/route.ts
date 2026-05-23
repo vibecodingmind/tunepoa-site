@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
+import { logAudit } from "@/lib/audit";
 
 export async function GET() {
   try {
@@ -21,8 +22,9 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  let session;
   try {
-    await requireAdmin();
+    session = await requireAdmin();
   } catch {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
@@ -41,6 +43,15 @@ export async function POST(request: Request) {
         features: typeof features === "string" ? features : JSON.stringify(features),
         price3mo, price6mo, price12mo, popular: popular || false,
       },
+    });
+
+    await logAudit({
+      userId: session.userId,
+      userName: session.email,
+      action: "create",
+      entity: "package",
+      entityId: pkg.id,
+      details: `Created package: ${name} (${tier})`,
     });
 
     return NextResponse.json({ package: pkg }, { status: 201 });

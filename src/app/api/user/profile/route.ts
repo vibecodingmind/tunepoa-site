@@ -1,13 +1,19 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireAuth } from "@/lib/auth";
+import { logAudit } from "@/lib/audit";
 
 export async function PATCH(request: Request) {
+  let session;
   try {
-    const session = await requireAuth();
+    session = await requireAuth();
+  } catch {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
+  try {
     const body = await request.json();
-    const { name, phone, company } = body;
+    const { name, phone, company, locale } = body;
 
     const user = await db.user.update({
       where: { id: session.userId },
@@ -15,8 +21,18 @@ export async function PATCH(request: Request) {
         ...(name && { name }),
         ...(phone != null && { phone }),
         ...(company != null && { company }),
+        ...(locale && { locale }),
       },
-      select: { id: true, email: true, name: true, phone: true, company: true, role: true, status: true, createdAt: true, updatedAt: true },
+      select: { id: true, email: true, name: true, phone: true, company: true, role: true, status: true, locale: true, createdAt: true, updatedAt: true },
+    });
+
+    await logAudit({
+      userId: session.userId,
+      userName: session.email,
+      action: "update",
+      entity: "user",
+      entityId: session.userId,
+      details: "Profile updated",
     });
 
     return NextResponse.json({ user });

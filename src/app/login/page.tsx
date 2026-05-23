@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Music, ArrowLeft, Loader2, Mail, Lock, User, Phone, Building } from "lucide-react";
+import { toast } from "sonner";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -29,7 +30,6 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (!authLoading && user) {
-      // Redirect by role: admin → /admin, user → /dashboard
       if (user.role === "admin") {
         router.push("/admin");
       } else {
@@ -44,9 +44,11 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await login(loginEmail, loginPassword);
-      // Redirect handled by useEffect based on role
+      toast.success("Welcome back!");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Login failed");
+      const msg = err instanceof Error ? err.message : "Login failed";
+      setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -57,18 +59,22 @@ export default function LoginPage() {
     setError("");
     if (!regName || !regEmail || !regPassword) {
       setError("Name, email, and password are required");
+      toast.error("Name, email, and password are required");
       return;
     }
     if (regPassword.length < 6) {
       setError("Password must be at least 6 characters");
+      toast.error("Password must be at least 6 characters");
       return;
     }
     setLoading(true);
     try {
       await register(regName, regEmail, regPassword, regPhone || undefined, regCompany || undefined);
-      // New users go to /dashboard (role = "user")
+      toast.success("Account created successfully!");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Registration failed");
+      const msg = err instanceof Error ? err.message : "Registration failed";
+      setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -179,7 +185,16 @@ export default function LoginPage() {
                   Sign In
                 </Button>
               </form>
-              <div className="mt-4 p-3 rounded-lg bg-white/[0.03] border border-white/[0.06]">
+              <div className="mt-3 text-center">
+                <button
+                  type="button"
+                  onClick={() => router.push("/forgot-password")}
+                  className="text-teal-400/70 hover:text-teal-400 text-xs transition-colors"
+                >
+                  Forgot Password?
+                </button>
+              </div>
+              <div className="mt-3 p-3 rounded-lg bg-white/[0.03] border border-white/[0.06]">
                 <p className="text-white/30 text-xs text-center">
                   Demo admin: <span className="text-teal-400/70">admin@tunepoa.com</span> / <span className="text-teal-400/70">admin123</span>
                 </p>

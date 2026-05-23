@@ -34,7 +34,9 @@ import {
   Building,
   Mail,
   Reply,
+  Download,
 } from "lucide-react";
+import { toast } from "sonner";
 
 interface ContactMessageItem {
   id: string;
@@ -84,6 +86,7 @@ export default function AdminMessagesPage() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState<string>("all");
+  const [exporting, setExporting] = useState(false);
 
   // Reply dialog
   const [replyOpen, setReplyOpen] = useState(false);
@@ -100,6 +103,7 @@ export default function AdminMessagesPage() {
       setMessages(data.messages || []);
     } catch (err) {
       console.error("Failed to fetch messages:", err);
+      toast.error("Failed to load messages");
     } finally {
       setLoading(false);
     }
@@ -139,9 +143,10 @@ export default function AdminMessagesPage() {
         prev.map((m) => (m.id === replyingTo.id ? { ...m, ...data.message } : m))
       );
       setReplyOpen(false);
+      toast.success("Reply sent successfully!");
     } catch (err) {
       console.error("Failed to send reply:", err);
-      alert("Failed to send reply");
+      toast.error("Failed to send reply");
     } finally {
       setSendingReply(false);
     }
@@ -160,9 +165,31 @@ export default function AdminMessagesPage() {
       setMessages((prev) =>
         prev.map((m) => (m.id === msgId ? { ...m, ...data.message } : m))
       );
+      toast.success(`Message marked as ${statusLabels[newStatus] || newStatus}`);
     } catch (err) {
       console.error("Failed to update status:", err);
-      alert("Failed to update message status");
+      toast.error("Failed to update message status");
+    }
+  };
+
+  const handleExportCSV = async () => {
+    setExporting(true);
+    try {
+      const res = await fetch("/api/admin/export?type=messages", { credentials: "include" });
+      if (!res.ok) throw new Error("Export failed");
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "messages.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+      toast.success("Messages exported successfully!");
+    } catch (err) {
+      console.error("Export error:", err);
+      toast.error("Failed to export messages");
+    } finally {
+      setExporting(false);
     }
   };
 
@@ -204,6 +231,11 @@ export default function AdminMessagesPage() {
           <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-[10px] gap-1">
             <CheckCircle2 className="w-3 h-3" /> {resolvedCount} Resolved
           </Badge>
+          <Button variant="outline" size="sm" onClick={handleExportCSV} disabled={exporting}
+            className="bg-white/5 text-white/60 border-white/10 hover:bg-white/10 hover:text-white text-xs h-8 gap-1.5">
+            {exporting ? <Loader2 className="w-3 h-3 animate-spin" /> : <Download className="w-3 h-3" />}
+            Export CSV
+          </Button>
         </div>
       </div>
 
@@ -211,12 +243,8 @@ export default function AdminMessagesPage() {
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/25" />
-          <Input
-            placeholder="Search by subject, message, or user..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-white/25 focus:border-teal-500/50 focus:ring-teal-500/20 h-10 rounded-xl"
-          />
+          <Input placeholder="Search by subject, message, or user..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-white/25 focus:border-teal-500/50 focus:ring-teal-500/20 h-10 rounded-xl" />
         </div>
         <Select value={filterStatus} onValueChange={setFilterStatus}>
           <SelectTrigger className="bg-white/5 border-white/10 text-white h-10 rounded-xl w-[160px] text-xs">
@@ -238,12 +266,8 @@ export default function AdminMessagesPage() {
           <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center mx-auto mb-4">
             <MessageCircle className="w-8 h-8 text-white/20" />
           </div>
-          <p className="text-white/40 text-sm mb-1">
-            {searchQuery ? "No messages match your search" : "No support messages yet"}
-          </p>
-          <p className="text-white/25 text-xs">
-            {searchQuery ? "Try a different search term" : "User messages will appear here when they contact support"}
-          </p>
+          <p className="text-white/40 text-sm mb-1">{searchQuery ? "No messages match your search" : "No support messages yet"}</p>
+          <p className="text-white/25 text-xs">{searchQuery ? "Try a different search term" : "User messages will appear here when they contact support"}</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -251,12 +275,9 @@ export default function AdminMessagesPage() {
             <div key={msg.id} className="glass-card rounded-xl overflow-hidden">
               <div className="p-4 sm:p-5">
                 <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4">
-                  {/* User Avatar */}
                   <div className="w-10 h-10 rounded-full bg-gradient-to-br from-teal-500/20 to-cyan-500/20 flex items-center justify-center text-teal-400 text-sm font-bold shrink-0">
                     {msg.user.name.charAt(0).toUpperCase()}
                   </div>
-
-                  {/* Content */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1 flex-wrap">
                       <h4 className="text-white font-semibold text-sm">{msg.subject}</h4>
@@ -266,23 +287,11 @@ export default function AdminMessagesPage() {
                     </div>
                     <p className="text-white/40 text-xs mb-2 line-clamp-2">{msg.message}</p>
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[10px] text-white/30">
-                      <span className="flex items-center gap-1">
-                        <User className="w-3 h-3" /> {msg.user.name}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Mail className="w-3 h-3" /> {msg.user.email}
-                      </span>
-                      {msg.user.company && (
-                        <span className="flex items-center gap-1">
-                          <Building className="w-3 h-3" /> {msg.user.company}
-                        </span>
-                      )}
-                      <span className="flex items-center gap-1">
-                        <Clock className="w-3 h-3" /> {formatDate(msg.createdAt)}
-                      </span>
+                      <span className="flex items-center gap-1"><User className="w-3 h-3" /> {msg.user.name}</span>
+                      <span className="flex items-center gap-1"><Mail className="w-3 h-3" /> {msg.user.email}</span>
+                      {msg.user.company && <span className="flex items-center gap-1"><Building className="w-3 h-3" /> {msg.user.company}</span>}
+                      <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {formatDate(msg.createdAt)}</span>
                     </div>
-
-                    {/* Admin Reply */}
                     {msg.adminReply && (
                       <div className="mt-3 p-3 rounded-lg bg-teal-500/[0.06] border border-teal-500/10">
                         <div className="flex items-center gap-1.5 mb-1.5">
@@ -293,34 +302,20 @@ export default function AdminMessagesPage() {
                       </div>
                     )}
                   </div>
-
-                  {/* Actions */}
                   <div className="flex items-center gap-2 sm:flex-col sm:items-end shrink-0">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => openReplyDialog(msg)}
-                      className="text-teal-400/60 hover:text-teal-400 hover:bg-teal-500/10 text-[10px] h-7 gap-1"
-                    >
+                    <Button variant="ghost" size="sm" onClick={() => openReplyDialog(msg)}
+                      className="text-teal-400/60 hover:text-teal-400 hover:bg-teal-500/10 text-[10px] h-7 gap-1">
                       <Reply className="w-3.5 h-3.5" /> Reply
                     </Button>
                     {msg.status === "open" && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleChangeStatus(msg.id, "in_progress")}
-                        className="text-blue-400/60 hover:text-blue-400 hover:bg-blue-500/10 text-[10px] h-7 gap-1"
-                      >
+                      <Button variant="ghost" size="sm" onClick={() => handleChangeStatus(msg.id, "in_progress")}
+                        className="text-blue-400/60 hover:text-blue-400 hover:bg-blue-500/10 text-[10px] h-7 gap-1">
                         <Clock className="w-3.5 h-3.5" /> In Progress
                       </Button>
                     )}
                     {(msg.status === "open" || msg.status === "in_progress") && !msg.adminReply && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleChangeStatus(msg.id, "resolved")}
-                        className="text-emerald-400/60 hover:text-emerald-400 hover:bg-emerald-500/10 text-[10px] h-7 gap-1"
-                      >
+                      <Button variant="ghost" size="sm" onClick={() => handleChangeStatus(msg.id, "resolved")}
+                        className="text-emerald-400/60 hover:text-emerald-400 hover:bg-emerald-500/10 text-[10px] h-7 gap-1">
                         <CheckCircle2 className="w-3.5 h-3.5" /> Resolve
                       </Button>
                     )}
@@ -337,14 +332,10 @@ export default function AdminMessagesPage() {
         <DialogContent className="bg-[#0a1628] border-white/10 text-white max-w-md">
           <DialogHeader>
             <DialogTitle className="text-white">Reply to Message</DialogTitle>
-            <DialogDescription className="text-white/40">
-              Respond to {replyingTo?.user.name}&apos;s support request
-            </DialogDescription>
+            <DialogDescription className="text-white/40">Respond to {replyingTo?.user.name}&apos;s support request</DialogDescription>
           </DialogHeader>
-
           {replyingTo && (
             <div className="space-y-4 py-2">
-              {/* Original Message */}
               <div className="p-3 rounded-lg bg-white/[0.03] border border-white/5">
                 <div className="flex items-center gap-2 mb-1.5">
                   <span className="text-white text-xs font-semibold">{replyingTo.user.name}</span>
@@ -353,33 +344,17 @@ export default function AdminMessagesPage() {
                 <p className="text-white/50 text-xs font-medium mb-1">{replyingTo.subject}</p>
                 <p className="text-white/35 text-xs">{replyingTo.message}</p>
               </div>
-
               <div className="space-y-2">
                 <Label className="text-white/60 text-xs">Your Reply</Label>
-                <textarea
-                  value={replyText}
-                  onChange={(e) => setReplyText(e.target.value)}
-                  placeholder="Type your response..."
-                  rows={4}
-                  className="w-full bg-white/5 border border-white/10 text-white placeholder:text-white/25 focus:border-teal-500/50 focus:ring-teal-500/20 rounded-lg text-xs p-2.5 resize-none"
-                />
+                <textarea value={replyText} onChange={(e) => setReplyText(e.target.value)} placeholder="Type your response..." rows={4}
+                  className="w-full bg-white/5 border border-white/10 text-white placeholder:text-white/25 focus:border-teal-500/50 focus:ring-teal-500/20 rounded-lg text-xs p-2.5 resize-none" />
               </div>
             </div>
           )}
-
           <div className="flex items-center gap-3 pt-2">
-            <Button
-              variant="ghost"
-              onClick={() => setReplyOpen(false)}
-              className="flex-1 text-white/40 hover:text-white hover:bg-white/5 h-9 rounded-xl text-xs"
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={handleSendReply}
-              disabled={sendingReply || !replyText.trim()}
-              className="flex-1 bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-white font-semibold h-9 rounded-xl shadow-lg shadow-teal-500/20 transition-all duration-300 text-xs"
-            >
+            <Button variant="ghost" onClick={() => setReplyOpen(false)} className="flex-1 text-white/40 hover:text-white hover:bg-white/5 h-9 rounded-xl text-xs">Cancel</Button>
+            <Button onClick={handleSendReply} disabled={sendingReply || !replyText.trim()}
+              className="flex-1 bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-white font-semibold h-9 rounded-xl shadow-lg shadow-teal-500/20 transition-all duration-300 text-xs">
               {sendingReply ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-3.5 h-3.5 mr-1.5" />}
               {sendingReply ? "Sending..." : "Send Reply"}
             </Button>

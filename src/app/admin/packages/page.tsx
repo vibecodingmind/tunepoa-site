@@ -46,6 +46,7 @@ import {
   CheckCircle2,
   AlertCircle,
 } from "lucide-react";
+import { toast } from "sonner";
 
 interface PackageItem {
   id: string;
@@ -122,6 +123,7 @@ export default function AdminPackagesPage() {
       setPackages(data.packages || []);
     } catch (err) {
       console.error("Failed to fetch packages:", err);
+      toast.error("Failed to load packages");
     } finally {
       setLoading(false);
     }
@@ -203,9 +205,10 @@ export default function AdminPackagesPage() {
 
       setDialogOpen(false);
       await fetchPackages();
+      toast.success(editingPkg ? "Package updated successfully!" : "Package created successfully!");
     } catch (err) {
       console.error("Failed to save package:", err);
-      alert(err instanceof Error ? err.message : "Failed to save package");
+      toast.error(err instanceof Error ? err.message : "Failed to save package");
     } finally {
       setSubmitting(false);
     }
@@ -222,9 +225,10 @@ export default function AdminPackagesPage() {
       if (!res.ok) throw new Error("Failed to delete");
       setDeleteId(null);
       await fetchPackages();
+      toast.success("Package deleted successfully!");
     } catch (err) {
       console.error("Failed to delete package:", err);
-      alert("Failed to delete package");
+      toast.error("Failed to delete package");
     } finally {
       setDeleting(false);
     }

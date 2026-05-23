@@ -1,9 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/sonner";
 import { LiveChat } from "@/components/LiveChat";
 import { AuthProvider } from "@/lib/auth-context";
+import { I18nProvider } from "@/lib/i18n-context";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -230,9 +231,11 @@ export default function RootLayout({
       </head>
       <body className={`${inter.variable} antialiased bg-background text-foreground font-sans overflow-x-hidden`}>
         <AuthProvider>
-          {children}
+          <I18nProvider>
+            {children}
+          </I18nProvider>
         </AuthProvider>
-        <Toaster />
+        <Toaster richColors position="top-right" />
         <LiveChat />
       </body>
     </html>

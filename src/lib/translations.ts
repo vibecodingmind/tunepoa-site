@@ -1,0 +1,193 @@
+export const translations = {
+  en: {
+    // Navigation
+    "nav.dashboard": "Dashboard",
+    "nav.packages": "Packages",
+    "nav.subscriptions": "Subscriptions",
+    "nav.messages": "Messages",
+    "nav.users": "Users",
+    "nav.logout": "Logout",
+    "nav.admin": "Admin",
+    "nav.auditLogs": "Audit Logs",
+    "nav.browsePackages": "Browse Packages",
+    "nav.myPayments": "My Payments",
+
+    // Dashboard
+    "dashboard.welcome": "Welcome back",
+    "dashboard.activePlans": "Active Plans",
+    "dashboard.assignedNumbers": "Assigned Numbers",
+    "dashboard.totalSubscriptions": "Total Subscriptions",
+    "dashboard.mySubscriptions": "My Subscriptions",
+    "dashboard.noSubscriptions": "No subscriptions yet",
+    "dashboard.noSubscriptionsDesc": "Browse available packages and subscribe to get started.",
+    "dashboard.contactSupport": "Contact Support",
+    "dashboard.myProfile": "My Profile",
+    "dashboard.myPayments": "My Payments",
+    "dashboard.renew": "Renew",
+    "dashboard.daysLeft": "days left",
+    "dashboard.expired": "Expired",
+
+    // Common Buttons
+    "btn.subscribe": "Subscribe",
+    "btn.renew": "Renew Subscription",
+    "btn.save": "Save Changes",
+    "btn.cancel": "Cancel",
+    "btn.delete": "Delete",
+    "btn.create": "Create",
+    "btn.edit": "Edit",
+    "btn.search": "Search",
+    "btn.export": "Export CSV",
+    "btn.send": "Send Message",
+    "btn.upload": "Upload CSV",
+    "btn.addNumber": "Add Number",
+    "btn.back": "Back",
+    "btn.forgotPassword": "Forgot Password?",
+    "btn.resetPassword": "Reset Password",
+    "btn.login": "Sign In",
+    "btn.register": "Create Account",
+
+    // Subscription terms
+    "sub.billingCycle": "Billing Cycle",
+    "sub.3mo": "3 Months",
+    "sub.6mo": "6 Months",
+    "sub.12mo": "12 Months",
+    "sub.status": "Status",
+    "sub.active": "Active",
+    "sub.pending": "Pending",
+    "sub.cancelled": "Cancelled",
+    "sub.expired": "Expired",
+    "sub.startDate": "Start Date",
+    "sub.endDate": "End Date",
+    "sub.remaining": "Remaining",
+    "sub.selectCycle": "Select billing cycle",
+    "sub.confirmPayment": "Proceed to Payment",
+
+    // Payment
+    "payment.initiated": "Payment initiated! Redirecting to PesaPal...",
+    "payment.success": "Payment completed successfully!",
+    "payment.failed": "Payment failed. Please try again.",
+    "payment.pending": "Payment is being processed...",
+    "payment.amount": "Amount",
+    "payment.method": "Payment Method",
+    "payment.date": "Payment Date",
+    "payment.noPayments": "No payments yet",
+    "payment.noPaymentsDesc": "Your payment history will appear here.",
+
+    // Packages
+    "pkg.popular": "POPULAR",
+    "pkg.numbers": "numbers",
+    "pkg.upto": "Up to",
+    "pkg.maxNumbers": "Max Numbers",
+    "pkg.features": "Features",
+    "pkg.category": "Category",
+    "pkg.tier": "Tier",
+
+    // Language
+    "lang.en": "English",
+    "lang.sw": "Swahili",
+
+    // Password Reset
+    "reset.checkEmail": "Check your email for a reset link.",
+    "reset.newPassword": "New Password",
+    "reset.confirmPassword": "Confirm Password",
+    "reset.sent": "Reset link sent!",
+    "reset.success": "Password reset successfully!",
+  },
+  sw: {
+    // Navigation
+    "nav.dashboard": "Dashibodi",
+    "nav.packages": "Pakiti",
+    "nav.subscriptions": "Usajili",
+    "nav.messages": "Ujumbe",
+    "nav.users": "Watumiaji",
+    "nav.logout": "Ondoka",
+    "nav.admin": "Msimamizi",
+    "nav.auditLogs": "Kumbukumbu",
+    "nav.browsePackages": "Tazama Pakiti",
+    "nav.myPayments": "Malipo Yangu",
+
+    // Dashboard
+    "dashboard.welcome": "Karibu tena",
+    "dashboard.activePlans": "Mpango Hai",
+    "dashboard.assignedNumbers": "Namba Zilizogawiwa",
+    "dashboard.totalSubscriptions": "Jumla ya Usajili",
+    "dashboard.mySubscriptions": "Usajili Wangu",
+    "dashboard.noSubscriptions": "Hakuna usajili bado",
+    "dashboard.noSubscriptionsDesc": "Tazama pakiti zinazopatikana na ujisajili kuanza.",
+    "dashboard.contactSupport": "Wasiliana Nasi",
+    "dashboard.myProfile": "Wasifu Wangu",
+    "dashboard.myPayments": "Malipo Yangu",
+    "dashboard.renew": "Sasisha",
+    "dashboard.daysLeft": "siku zimesalia",
+    "dashboard.expired": "Imeisha",
+
+    // Common Buttons
+    "btn.subscribe": "Jisajili",
+    "btn.renew": "Sasisha Usajili",
+    "btn.save": "Hifadhi Mabadiliko",
+    "btn.cancel": "Ghairi",
+    "btn.delete": "Futa",
+    "btn.create": "Unda",
+    "btn.edit": "Hariri",
+    "btn.search": "Tafuta",
+    "btn.export": "Hamisha CSV",
+    "btn.send": "Tuma Ujumbe",
+    "btn.upload": "Pakia CSV",
+    "btn.addNumber": "Ongeza Namba",
+    "btn.back": "Rudi",
+    "btn.forgotPassword": "Umesahau Nenosiri?",
+    "btn.resetPassword": "Weka upya Nenosiri",
+    "btn.login": "Ingia",
+    "btn.register": "Unda Akaunti",
+
+    // Subscription terms
+    "sub.billingCycle": "Mzunguko wa Malipo",
+    "sub.3mo": "Miezi 3",
+    "sub.6mo": "Miezi 6",
+    "sub.12mo": "Miezi 12",
+    "sub.status": "Hali",
+    "sub.active": "Hai",
+    "sub.pending": "Inasubiri",
+    "sub.cancelled": "Imeghairiwa",
+    "sub.expired": "Imeisha",
+    "sub.startDate": "Tarehe ya Kuanza",
+    "sub.endDate": "Tarehe ya Kuisha",
+    "sub.remaining": "Zimesalia",
+    "sub.selectCycle": "Chagua mzunguko wa malipo",
+    "sub.confirmPayment": "Endelea kwa Malipo",
+
+    // Payment
+    "payment.initiated": "Malipo yameanza! Inaelekeza kwa PesaPal...",
+    "payment.success": "Malipo yamekamilika!",
+    "payment.failed": "Malipo yameshindwa. Tafadhali jaribu tena.",
+    "payment.pending": "Malipo yanashughulikiwa...",
+    "payment.amount": "Kiasi",
+    "payment.method": "Njia ya Malipo",
+    "payment.date": "Tarehe ya Malipo",
+    "payment.noPayments": "Hakuna malipo bado",
+    "payment.noPaymentsDesc": "Historia yako ya malipo itaonekana hapa.",
+
+    // Packages
+    "pkg.popular": "MAZURI",
+    "pkg.numbers": "namba",
+    "pkg.upto": "Hadi",
+    "pkg.maxNumbers": "Namba Juu",
+    "pkg.features": "Vipengele",
+    "pkg.category": "Kategoria",
+    "pkg.tier": "Daraja",
+
+    // Language
+    "lang.en": "Kiingereza",
+    "lang.sw": "Kiswahili",
+
+    // Password Reset
+    "reset.checkEmail": "Angalia barua pepe yako kwa kiungo cha kuweka upya.",
+    "reset.newPassword": "Nenosiri Jipya",
+    "reset.confirmPassword": "Thibitisha Nenosiri",
+    "reset.sent": "Kiungo cha kuweka upya kimetumwa!",
+    "reset.success": "Nenosiri limewekwa upya!",
+  },
+} as const;
+
+export type TranslationKey = keyof typeof translations.en;
+export type Locale = "en" | "sw";

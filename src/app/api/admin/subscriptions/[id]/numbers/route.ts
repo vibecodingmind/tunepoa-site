@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
+import { logAudit } from "@/lib/audit";
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  let session;
   try {
-    await requireAdmin();
+    session = await requireAdmin();
   } catch {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
@@ -35,6 +37,15 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
         toneCategory: toneCategory || null,
         status: "active",
       },
+    });
+
+    await logAudit({
+      userId: session.userId,
+      userName: session.email,
+      action: "create",
+      entity: "number",
+      entityId: number.id,
+      details: `Added number ${phoneNumber} to subscription ${id}`,
     });
 
     return NextResponse.json({ number }, { status: 201 });
