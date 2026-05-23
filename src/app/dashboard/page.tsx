@@ -19,6 +19,11 @@ import {
   User,
   Building,
   Save,
+  MessageCircle,
+  Send,
+  Clock,
+  CheckCircle2,
+  XCircle,
 } from "lucide-react";
 
 /* ─── Types ─── */
@@ -58,6 +63,16 @@ interface SubscriptionItem {
   numbers: AssignedNumberItem[];
 }
 
+interface ContactMessageItem {
+  id: string;
+  subject: string;
+  message: string;
+  status: string;
+  adminReply: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
 function formatDate(dateStr: string): string {
   return new Date(dateStr).toLocaleDateString("en-US", {
     year: "numeric", month: "short", day: "numeric",
@@ -91,13 +106,26 @@ export default function UserDashboardPage() {
   const [profileCompany, setProfileCompany] = useState("");
   const [savingProfile, setSavingProfile] = useState(false);
 
+  // Contact support
+  const [contactMessages, setContactMessages] = useState<ContactMessageItem[]>([]);
+  const [contactSubject, setContactSubject] = useState("");
+  const [contactMessageText, setContactMessageText] = useState("");
+  const [sendingContact, setSendingContact] = useState(false);
+
   const fetchData = useCallback(async () => {
     if (!user) return;
     try {
-      const res = await fetch("/api/user/subscriptions", { credentials: "include" });
-      if (res.ok) {
-        const data = await res.json();
+      const [subsRes, msgsRes] = await Promise.all([
+        fetch("/api/user/subscriptions", { credentials: "include" }),
+        fetch("/api/user/contact", { credentials: "include" }),
+      ]);
+      if (subsRes.ok) {
+        const data = await subsRes.json();
         setSubscriptions(data.subscriptions || []);
+      }
+      if (msgsRes.ok) {
+        const data = await msgsRes.json();
+        setContactMessages(data.messages || []);
       }
     } catch (err) {
       console.error("Failed to fetch:", err);
@@ -154,6 +182,33 @@ export default function UserDashboardPage() {
       console.error("Failed to save profile:", err);
     } finally {
       setSavingProfile(false);
+    }
+  };
+
+  const handleSendContact = async () => {
+    if (!contactSubject.trim() || !contactMessageText.trim()) return;
+    setSendingContact(true);
+    try {
+      const res = await fetch("/api/user/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ subject: contactSubject, message: contactMessageText }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setContactMessages((prev) => [data.message, ...prev]);
+        setContactSubject("");
+        setContactMessageText("");
+      } else {
+        const data = await res.json();
+        alert(data.error || "Failed to send message");
+      }
+    } catch (err) {
+      console.error("Failed to send contact:", err);
+      alert("Failed to send message");
+    } finally {
+      setSendingContact(false);
     }
   };
 
@@ -339,6 +394,92 @@ export default function UserDashboardPage() {
                         </div>
                       );
                     })}
+                  </div>
+                )}
+              </section>
+
+              <div className="line-glow" />
+
+              {/* ─── Contact Support ─── */}
+              <section>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-500/20 to-cyan-500/20 flex items-center justify-center text-teal-400">
+                    <MessageCircle className="w-5 h-5" />
+                  </div>
+                  <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">Contact Support</h2>
+                </div>
+
+                {/* New Message Form */}
+                <div className="glass-card rounded-2xl p-5 sm:p-6 mb-4">
+                  <h3 className="text-white/60 text-sm font-semibold mb-4">Send us a message</h3>
+                  <div className="space-y-3">
+                    <div className="space-y-2">
+                      <Label className="text-white/60 text-sm">Subject</Label>
+                      <Input
+                        value={contactSubject}
+                        onChange={(e) => setContactSubject(e.target.value)}
+                        placeholder="e.g., Need help with my subscription"
+                        className="bg-white/5 border-white/10 text-white placeholder:text-white/25 focus:border-teal-500/50 focus:ring-teal-500/20 h-10 rounded-xl"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-white/60 text-sm">Message</Label>
+                      <textarea
+                        value={contactMessageText}
+                        onChange={(e) => setContactMessageText(e.target.value)}
+                        placeholder="Describe your issue or question..."
+                        rows={4}
+                        className="w-full bg-white/5 border border-white/10 text-white placeholder:text-white/25 focus:border-teal-500/50 focus:ring-teal-500/20 rounded-xl text-sm p-3 resize-none"
+                      />
+                    </div>
+                    <Button
+                      onClick={handleSendContact}
+                      disabled={sendingContact || !contactSubject.trim() || !contactMessageText.trim()}
+                      className="bg-gradient-to-r from-teal-500 to-cyan-500 text-white font-semibold h-10 rounded-xl px-6"
+                    >
+                      {sendingContact ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4 mr-2" />}
+                      {sendingContact ? "Sending..." : "Send Message"}
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Previous Messages */}
+                {contactMessages.length > 0 && (
+                  <div className="space-y-3">
+                    <h3 className="text-white/40 text-xs font-semibold uppercase tracking-wider">Your Messages</h3>
+                    {contactMessages.map((msg) => (
+                      <div key={msg.id} className="glass-card rounded-xl p-4">
+                        <div className="flex items-start justify-between gap-3 mb-2">
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-1">
+                              <h4 className="text-white text-sm font-semibold truncate">{msg.subject}</h4>
+                              <Badge className={`text-[9px] px-1.5 py-0 ${
+                                msg.status === "open" ? "bg-amber-500/15 text-amber-400 border-amber-500/25" :
+                                msg.status === "in_progress" ? "bg-blue-500/15 text-blue-400 border-blue-500/25" :
+                                msg.status === "resolved" ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/25" :
+                                "bg-white/5 text-white/40 border-white/10"
+                              }`}>
+                                {msg.status === "in_progress" ? "In Progress" : msg.status.charAt(0).toUpperCase() + msg.status.slice(1)}
+                              </Badge>
+                            </div>
+                            <p className="text-white/35 text-xs line-clamp-2">{msg.message}</p>
+                          </div>
+                          <span className="text-white/20 text-[10px] shrink-0 flex items-center gap-1">
+                            <Clock className="w-3 h-3" />
+                            {formatDate(msg.createdAt)}
+                          </span>
+                        </div>
+                        {msg.adminReply && (
+                          <div className="mt-3 p-3 rounded-lg bg-teal-500/[0.06] border border-teal-500/10">
+                            <div className="flex items-center gap-1.5 mb-1.5">
+                              <CheckCircle2 className="w-3 h-3 text-teal-400" />
+                              <span className="text-teal-400 text-[10px] font-semibold uppercase tracking-wider">Admin Reply</span>
+                            </div>
+                            <p className="text-white/60 text-xs">{msg.adminReply}</p>
+                          </div>
+                        )}
+                      </div>
+                    ))}
                   </div>
                 )}
               </section>

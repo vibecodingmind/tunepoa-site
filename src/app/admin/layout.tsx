@@ -24,6 +24,7 @@ import {
   ShieldCheck,
   X,
   ChevronLeft,
+  Mail,
 } from "lucide-react";
 
 const navItems = [
@@ -31,6 +32,7 @@ const navItems = [
   { label: "Packages", href: "/admin/packages", icon: Package },
   { label: "Users", href: "/admin/users", icon: Users },
   { label: "Subscriptions", href: "/admin/subscriptions", icon: CreditCard },
+  { label: "Messages", href: "/admin/messages", icon: Mail },
 ];
 
 /* ─── Sidebar Content Component (declared outside render) ─── */

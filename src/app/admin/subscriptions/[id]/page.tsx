@@ -142,13 +142,13 @@ export default function SubscriptionDetailPage() {
 
   const fetchSubscription = useCallback(async () => {
     try {
-      // Fetch all subscriptions and find this one (since there's no individual GET)
-      const res = await fetch("/api/admin/subscriptions", { credentials: "include" });
-      if (!res.ok) throw new Error("Failed to fetch");
+      const res = await fetch(`/api/admin/subscriptions/${subId}`, { credentials: "include" });
+      if (!res.ok) {
+        if (res.status === 404) throw new Error("Subscription not found");
+        throw new Error("Failed to fetch");
+      }
       const data = await res.json();
-      const sub = (data.subscriptions || []).find((s: SubscriptionDetail) => s.id === subId);
-      if (!sub) throw new Error("Subscription not found");
-      setSubscription(sub);
+      setSubscription(data.subscription);
     } catch (err) {
       console.error("Failed to fetch subscription:", err);
       setError(err instanceof Error ? err.message : "Failed to load subscription");

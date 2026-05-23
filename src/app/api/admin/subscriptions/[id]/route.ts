@@ -2,6 +2,35 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
 
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    await requireAdmin();
+  } catch {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
+  try {
+    const { id } = await params;
+    const subscription = await db.subscription.findUnique({
+      where: { id },
+      include: {
+        user: { select: { id: true, name: true, email: true, company: true } },
+        package: true,
+        numbers: { orderBy: { assignedAt: "desc" } },
+      },
+    });
+
+    if (!subscription) {
+      return NextResponse.json({ error: "Subscription not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ subscription });
+  } catch (error) {
+    console.error("Get subscription error:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
+}
+
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     await requireAdmin();
