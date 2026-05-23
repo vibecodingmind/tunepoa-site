@@ -58,7 +58,7 @@ export default function NotificationBell({ apiPrefix = "user", className = "" }:
 
   const fetchNotifications = useCallback(async () => {
     try {
-      const res = await fetch(`/${apiPrefix}/notifications?limit=15`, { credentials: "include" });
+      const res = await fetch(`/api/${apiPrefix}/notifications?limit=15`, { credentials: "include" });
       if (res.ok) {
         const data = await res.json();
         setNotifications(data.notifications || []);
@@ -89,7 +89,7 @@ export default function NotificationBell({ apiPrefix = "user", className = "" }:
 
   const handleMarkRead = async (id: string) => {
     try {
-      const res = await fetch(`/${apiPrefix}/notifications/${id}`, {
+      const res = await fetch(`/api/${apiPrefix}/notifications/${id}`, {
         method: "PATCH",
         credentials: "include",
       });
@@ -107,7 +107,7 @@ export default function NotificationBell({ apiPrefix = "user", className = "" }:
   const handleMarkAllRead = async () => {
     setMarkingAll(true);
     try {
-      const res = await fetch(`/${apiPrefix}/notifications`, {
+      const res = await fetch(`/api/${apiPrefix}/notifications`, {
         method: "PATCH",
         credentials: "include",
       });
@@ -125,7 +125,7 @@ export default function NotificationBell({ apiPrefix = "user", className = "" }:
   const handleDelete = async (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
     try {
-      const res = await fetch(`/${apiPrefix}/notifications/${id}`, {
+      const res = await fetch(`/api/${apiPrefix}/notifications/${id}`, {
         method: "DELETE",
         credentials: "include",
       });
