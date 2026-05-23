@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import bcrypt from "bcryptjs";
 import { logAudit } from "@/lib/audit";
+import { sendPasswordResetEmail } from "@/lib/email";
 
 export async function POST(request: NextRequest) {
   try {
@@ -30,9 +30,16 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // In production, send email with reset link. For now, log the token.
-    console.log(`Password reset token for ${email}: ${resetToken}`);
-    console.log(`Reset URL: ${process.env.NEXT_PUBLIC_BASE_URL || "https://tunepoa.com"}/reset-password?token=${resetToken}`);
+    // Send password reset email
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://tunepoa.com";
+    const resetUrl = `${baseUrl}/reset-password?token=${resetToken}`;
+
+    try {
+      await sendPasswordResetEmail(user.email, user.name, resetUrl);
+    } catch (emailErr) {
+      console.error("Failed to send reset email:", emailErr);
+      // Don't fail the request - still return success to not reveal user existence
+    }
 
     await logAudit({
       userId: user.id,

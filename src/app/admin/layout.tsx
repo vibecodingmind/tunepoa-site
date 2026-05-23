@@ -29,6 +29,7 @@ import {
   Globe,
 } from "lucide-react";
 import { useI18n } from "@/lib/i18n-context";
+import NotificationBell from "@/components/NotificationBell";
 
 const navItems = [
   { label: "Overview", href: "/admin", icon: LayoutDashboard },
@@ -265,6 +266,8 @@ export default function AdminLayout({
                 <Globe className="w-3.5 h-3.5" />
                 <span className="uppercase">{locale}</span>
               </button>
+              {/* Notifications */}
+              <NotificationBell apiPrefix="admin" />
               <div className="hidden sm:flex items-center gap-2">
                 <div className="w-7 h-7 rounded-full bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center text-white text-[10px] font-bold">
                   {user.name.charAt(0).toUpperCase()}

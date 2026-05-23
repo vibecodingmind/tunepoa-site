@@ -11,6 +11,7 @@ export const translations = {
     "nav.auditLogs": "Audit Logs",
     "nav.browsePackages": "Browse Packages",
     "nav.myPayments": "My Payments",
+    "nav.notifications": "Notifications",
 
     // Dashboard
     "dashboard.welcome": "Welcome back",
@@ -26,6 +27,9 @@ export const translations = {
     "dashboard.renew": "Renew",
     "dashboard.daysLeft": "days left",
     "dashboard.expired": "Expired",
+    "dashboard.overview": "Overview",
+    "dashboard.totalRevenue": "Total Revenue",
+    "dashboard.quickActions": "Quick Actions",
 
     // Common Buttons
     "btn.subscribe": "Subscribe",
@@ -45,6 +49,11 @@ export const translations = {
     "btn.resetPassword": "Reset Password",
     "btn.login": "Sign In",
     "btn.register": "Create Account",
+    "btn.loading": "Loading...",
+    "btn.confirm": "Confirm",
+    "btn.close": "Close",
+    "btn.viewAll": "View All",
+    "btn.markAllRead": "Mark All Read",
 
     // Subscription terms
     "sub.billingCycle": "Billing Cycle",
@@ -61,6 +70,9 @@ export const translations = {
     "sub.remaining": "Remaining",
     "sub.selectCycle": "Select billing cycle",
     "sub.confirmPayment": "Proceed to Payment",
+    "sub.createSubscription": "Create Subscription",
+    "sub.manageSubscriptions": "Manage Subscriptions",
+    "sub.noSubscriptionsFound": "No subscriptions found",
 
     // Payment
     "payment.initiated": "Payment initiated! Redirecting to PesaPal...",
@@ -72,6 +84,12 @@ export const translations = {
     "payment.date": "Payment Date",
     "payment.noPayments": "No payments yet",
     "payment.noPaymentsDesc": "Your payment history will appear here.",
+    "payment.receipt": "Payment Receipt",
+    "payment.trackingId": "Tracking ID",
+    "payment.history": "Payment History",
+    "payment.processing": "Processing payment...",
+    "payment.redirecting": "Redirecting to payment provider...",
+    "payment.checkStatus": "Check Payment Status",
 
     // Packages
     "pkg.popular": "POPULAR",
@@ -81,6 +99,14 @@ export const translations = {
     "pkg.features": "Features",
     "pkg.category": "Category",
     "pkg.tier": "Tier",
+    "pkg.starter": "Starter",
+    "pkg.business": "Business",
+    "pkg.premium": "Premium",
+    "pkg.managePackages": "Manage Packages",
+    "pkg.addPackage": "Add Package",
+    "pkg.editPackage": "Edit Package",
+    "pkg.deletePackage": "Delete Package",
+    "pkg.noPackages": "No packages yet",
 
     // Language
     "lang.en": "English",
@@ -92,6 +118,68 @@ export const translations = {
     "reset.confirmPassword": "Confirm Password",
     "reset.sent": "Reset link sent!",
     "reset.success": "Password reset successfully!",
+    "reset.expired": "Reset link has expired. Please request a new one.",
+    "reset.invalidToken": "Invalid reset token.",
+
+    // Auth
+    "auth.login": "Sign In",
+    "auth.register": "Create Account",
+    "auth.email": "Email",
+    "auth.password": "Password",
+    "auth.name": "Full Name",
+    "auth.phone": "Phone Number",
+    "auth.company": "Company",
+    "auth.noAccount": "Don't have an account?",
+    "auth.hasAccount": "Already have an account?",
+    "auth.welcomeBack": "Welcome back",
+    "auth.createAccount": "Create your account",
+
+    // Notifications
+    "notif.title": "Notifications",
+    "notif.noNotifications": "No notifications yet",
+    "notif.markAllRead": "Mark All Read",
+    "notif.subscription": "Subscription",
+    "notif.payment": "Payment",
+    "notif.system": "System",
+    "notif.support": "Support",
+    "notif.general": "General",
+
+    // Admin
+    "admin.overview": "Dashboard Overview",
+    "admin.users": "User Management",
+    "admin.userActivated": "User activated successfully!",
+    "admin.userSuspended": "User suspended successfully!",
+    "admin.packageCreated": "Package created successfully!",
+    "admin.packageUpdated": "Package updated successfully!",
+    "admin.packageDeleted": "Package deleted successfully!",
+    "admin.subscriptionCreated": "Subscription created successfully!",
+    "admin.subscriptionUpdated": "Subscription updated successfully!",
+    "admin.numberAdded": "Phone number added successfully!",
+    "admin.numberRemoved": "Phone number removed successfully!",
+    "admin.exportSuccess": "Data exported successfully!",
+    "admin.exportFailed": "Failed to export data",
+
+    // Common
+    "common.search": "Search...",
+    "common.noResults": "No results found",
+    "common.loading": "Loading...",
+    "common.error": "An error occurred",
+    "common.success": "Success!",
+    "common.save": "Save",
+    "common.delete": "Delete",
+    "common.edit": "Edit",
+    "common.view": "View",
+    "common.actions": "Actions",
+    "common.status": "Status",
+    "common.name": "Name",
+    "common.email": "Email",
+    "common.role": "Role",
+    "common.company": "Company",
+    "common.date": "Date",
+    "common.amount": "Amount",
+    "common.total": "Total",
+    "common.active": "Active",
+    "common.suspended": "Suspended",
   },
   sw: {
     // Navigation
@@ -105,6 +193,7 @@ export const translations = {
     "nav.auditLogs": "Kumbukumbu",
     "nav.browsePackages": "Tazama Pakiti",
     "nav.myPayments": "Malipo Yangu",
+    "nav.notifications": "Arifa",
 
     // Dashboard
     "dashboard.welcome": "Karibu tena",
@@ -120,6 +209,9 @@ export const translations = {
     "dashboard.renew": "Sasisha",
     "dashboard.daysLeft": "siku zimesalia",
     "dashboard.expired": "Imeisha",
+    "dashboard.overview": "Muhtasari",
+    "dashboard.totalRevenue": "Jumla ya Mapato",
+    "dashboard.quickActions": "Vitendo Haraka",
 
     // Common Buttons
     "btn.subscribe": "Jisajili",
@@ -139,6 +231,11 @@ export const translations = {
     "btn.resetPassword": "Weka upya Nenosiri",
     "btn.login": "Ingia",
     "btn.register": "Unda Akaunti",
+    "btn.loading": "Inapakia...",
+    "btn.confirm": "Thibitisha",
+    "btn.close": "Funga",
+    "btn.viewAll": "Tazama Zote",
+    "btn.markAllRead": "Weka Zote Zimesomwa",
 
     // Subscription terms
     "sub.billingCycle": "Mzunguko wa Malipo",
@@ -155,6 +252,9 @@ export const translations = {
     "sub.remaining": "Zimesalia",
     "sub.selectCycle": "Chagua mzunguko wa malipo",
     "sub.confirmPayment": "Endelea kwa Malipo",
+    "sub.createSubscription": "Unda Usajili",
+    "sub.manageSubscriptions": "Simamia Usajili",
+    "sub.noSubscriptionsFound": "Hakuna usajili uliopatikana",
 
     // Payment
     "payment.initiated": "Malipo yameanza! Inaelekeza kwa PesaPal...",
@@ -166,6 +266,12 @@ export const translations = {
     "payment.date": "Tarehe ya Malipo",
     "payment.noPayments": "Hakuna malipo bado",
     "payment.noPaymentsDesc": "Historia yako ya malipo itaonekana hapa.",
+    "payment.receipt": "Risiti ya Malipo",
+    "payment.trackingId": "Kitambulisho cha Ufuatiliaji",
+    "payment.history": "Historia ya Malipo",
+    "payment.processing": "Inashughulikia malipo...",
+    "payment.redirecting": "Inaelekeza kwa mtoa huduma wa malipo...",
+    "payment.checkStatus": "Angalia Hali ya Malipo",
 
     // Packages
     "pkg.popular": "MAZURI",
@@ -175,6 +281,14 @@ export const translations = {
     "pkg.features": "Vipengele",
     "pkg.category": "Kategoria",
     "pkg.tier": "Daraja",
+    "pkg.starter": "Mwanzo",
+    "pkg.business": "Biashara",
+    "pkg.premium": "Bora",
+    "pkg.managePackages": "Simamia Pakiti",
+    "pkg.addPackage": "Ongeza Pakiti",
+    "pkg.editPackage": "Hariri Pakiti",
+    "pkg.deletePackage": "Futa Pakiti",
+    "pkg.noPackages": "Hakuna pakiti bado",
 
     // Language
     "lang.en": "Kiingereza",
@@ -186,6 +300,68 @@ export const translations = {
     "reset.confirmPassword": "Thibitisha Nenosiri",
     "reset.sent": "Kiungo cha kuweka upya kimetumwa!",
     "reset.success": "Nenosiri limewekwa upya!",
+    "reset.expired": "Kiungo cha kuweka upya kimeisha. Tafadhali omba kipya.",
+    "reset.invalidToken": "Kitambulisho cha kuweka upya si halali.",
+
+    // Auth
+    "auth.login": "Ingia",
+    "auth.register": "Unda Akaunti",
+    "auth.email": "Barua Pepe",
+    "auth.password": "Nenosiri",
+    "auth.name": "Jina Kamili",
+    "auth.phone": "Namba ya Simu",
+    "auth.company": "Kampuni",
+    "auth.noAccount": "Huna akaunti?",
+    "auth.hasAccount": "Tayari una akaunti?",
+    "auth.welcomeBack": "Karibu tena",
+    "auth.createAccount": "Unda akaunti yako",
+
+    // Notifications
+    "notif.title": "Arifa",
+    "notif.noNotifications": "Hakuna arifa bado",
+    "notif.markAllRead": "Weka Zote Zimesomwa",
+    "notif.subscription": "Usajili",
+    "notif.payment": "Malipo",
+    "notif.system": "Mfumo",
+    "notif.support": "Msaada",
+    "notif.general": "Kawaida",
+
+    // Admin
+    "admin.overview": "Muhtasari wa Dashibodi",
+    "admin.users": "Usimamizi wa Watumiaji",
+    "admin.userActivated": "Mtumiaji amewashwa!",
+    "admin.userSuspended": "Mtumiaji amesimamishwa!",
+    "admin.packageCreated": "Pakiti imeundwa!",
+    "admin.packageUpdated": "Pakiti imesasishwa!",
+    "admin.packageDeleted": "Pakiti imefutwa!",
+    "admin.subscriptionCreated": "Usajili umeundwa!",
+    "admin.subscriptionUpdated": "Usajili umesasishwa!",
+    "admin.numberAdded": "Namba ya simu imeongezwa!",
+    "admin.numberRemoved": "Namba ya simu imeondolewa!",
+    "admin.exportSuccess": "Data imehamishwa!",
+    "admin.exportFailed": "Imeshindwa kuhamisha data",
+
+    // Common
+    "common.search": "Tafuta...",
+    "common.noResults": "Hakuna matokeo",
+    "common.loading": "Inapakia...",
+    "common.error": "Kosa limetokea",
+    "common.success": "Mafanikio!",
+    "common.save": "Hifadhi",
+    "common.delete": "Futa",
+    "common.edit": "Hariri",
+    "common.view": "Tazama",
+    "common.actions": "Vitendo",
+    "common.status": "Hali",
+    "common.name": "Jina",
+    "common.email": "Barua Pepe",
+    "common.role": "Jukumu",
+    "common.company": "Kampuni",
+    "common.date": "Tarehe",
+    "common.amount": "Kiasi",
+    "common.total": "Jumla",
+    "common.active": "Hai",
+    "common.suspended": "Imesimamishwa",
   },
 } as const;
 

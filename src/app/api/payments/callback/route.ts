@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { getTransactionStatus } from "@/lib/pesapal";
 import { logAudit } from "@/lib/audit";
+import {
+  sendSubscriptionConfirmationEmail,
+  sendPaymentReceiptEmail,
+} from "@/lib/email";
 
 /**
  * GET /api/payments/callback - PesaPal return URL after payment
@@ -53,7 +57,10 @@ export async function GET(request: NextRequest) {
 }
 
 async function completePayment(paymentId: string, trackingId: string, paymentMethod: string | undefined) {
-  const payment = await db.payment.findUnique({ where: { id: paymentId } });
+  const payment = await db.payment.findUnique({
+    where: { id: paymentId },
+    include: { package: true, user: true },
+  });
   if (!payment || payment.status === "completed") return;
 
   await db.payment.update({
@@ -65,6 +72,8 @@ async function completePayment(paymentId: string, trackingId: string, paymentMet
       paidAt: new Date(),
     },
   });
+
+  let subscriptionId: string | null = null;
 
   // If no subscription linked yet, auto-create one
   if (!payment.subscriptionId) {
@@ -90,6 +99,8 @@ async function completePayment(paymentId: string, trackingId: string, paymentMet
       data: { subscriptionId: subscription.id },
     });
 
+    subscriptionId = subscription.id;
+
     await logAudit({
       userId: payment.userId,
       action: "create",
@@ -98,6 +109,7 @@ async function completePayment(paymentId: string, trackingId: string, paymentMet
       details: `Auto-created from payment ${paymentId}`,
     });
   } else {
+    subscriptionId = payment.subscriptionId;
     // Extend existing subscription (renewal)
     const sub = await db.subscription.findUnique({ where: { id: payment.subscriptionId } });
     if (sub) {
@@ -128,4 +140,35 @@ async function completePayment(paymentId: string, trackingId: string, paymentMet
     entityId: paymentId,
     details: `Payment completed: ${payment.amount} TZS`,
   });
+
+  // ─── Send emails (non-blocking) ───
+  const cycleLabel =
+    payment.billingCycle === "3mo" ? "3 Months" :
+    payment.billingCycle === "6mo" ? "6 Months" : "12 Months";
+
+  // Fetch subscription for dates
+  if (subscriptionId) {
+    const sub = await db.subscription.findUnique({ where: { id: subscriptionId } });
+    if (sub) {
+      sendSubscriptionConfirmationEmail(
+        payment.user.email,
+        payment.user.name,
+        payment.package.name,
+        payment.billingCycle,
+        payment.amount,
+        sub.startDate.toISOString(),
+        sub.endDate.toISOString()
+      ).catch((err) => console.error("Failed to send subscription confirmation email:", err));
+    }
+  }
+
+  sendPaymentReceiptEmail(
+    payment.user.email,
+    payment.user.name,
+    payment.package.name,
+    payment.amount,
+    payment.billingCycle,
+    paymentMethod || null,
+    trackingId
+  ).catch((err) => console.error("Failed to send payment receipt email:", err));
 }

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import bcrypt from "bcryptjs";
 import { createToken } from "@/lib/auth";
+import { sendWelcomeEmail } from "@/lib/email";
 
 export async function POST(request: Request) {
   try {
@@ -49,6 +50,11 @@ export async function POST(request: Request) {
       userId: user.id,
       email: user.email,
       role: user.role,
+    });
+
+    // Send welcome email (non-blocking)
+    sendWelcomeEmail(user.email, user.name).catch((err) => {
+      console.error("Failed to send welcome email:", err);
     });
 
     const { password: _, ...userWithoutPassword } = user;

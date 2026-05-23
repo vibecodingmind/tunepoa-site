@@ -46,6 +46,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useI18n } from "@/lib/i18n-context";
+import NotificationBell from "@/components/NotificationBell";
 
 /* ─── Types ─── */
 interface PackageItem {
@@ -404,6 +405,8 @@ export default function UserDashboardPage() {
                 <Globe className="w-3.5 h-3.5" />
                 <span className="uppercase">{locale}</span>
               </button>
+              {/* Notifications */}
+              <NotificationBell apiPrefix="user" />
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center text-white text-xs font-bold">
                 {user.name.charAt(0).toUpperCase()}
               </div>

@@ -25,6 +25,7 @@ model User {
   subscriptions    Subscription[]
   contactMessages  ContactMessage[]
   payments         Payment[]
+  notifications    Notification[]
 }
 
 model Package {
@@ -103,6 +104,8 @@ model Payment {
   paymentMethod   String?     // "mpesa" | "tigopesa" | "airtel" | "visa" | "mastercard"
   phoneUsed       String?     // Phone number used for payment
   failureReason   String?
+  refundedAt      DateTime?
+  refundReason    String?
   paidAt          DateTime?
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt
@@ -118,4 +121,29 @@ model AuditLog {
   details   String?  // JSON string with change details
   ipAddress String?
   createdAt DateTime @default(now())
+}
+
+model Notification {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  message     String
+  type        String   @default("info")  // info, success, warning, error
+  category    String   @default("general") // payment, subscription, system, support
+  isRead      Boolean  @default(false)
+  actionUrl   String?  // URL to navigate to when clicked
+  createdAt   DateTime @default(now())
+
+  @@index([userId, isRead])
+  @@index([userId, createdAt])
+}
+
+model Setting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String
+  label String?
+
+  @@index([key])
 }
